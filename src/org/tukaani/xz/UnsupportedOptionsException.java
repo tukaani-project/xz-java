@@ -1,0 +1,34 @@
+/*
+ * UnsupportedOptionsException
+ *
+ * Author: Lasse Collin <lasse.collin@tukaani.org>
+ *
+ * This file has been put into the public domain.
+ * You can do whatever you want with this file.
+ */
+
+package org.tukaani.xz;
+
+/**
+ * Compression options not supported by this implementation were detected.
+ * Some other implementation might support those options.
+ */
+public class UnsupportedOptionsException extends java.io.IOException {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Creates a new UnsupportedOptionsException with null
+     * as its error detail message.
+     */
+    public UnsupportedOptionsException() {}
+
+    /**
+     * Creates a new UnsupportedOptionsException with the given
+     * error detail message.
+     *
+     * @param       s           error detail message
+     */
+    public UnsupportedOptionsException(String s) {
+        super(s);
+    }
+}

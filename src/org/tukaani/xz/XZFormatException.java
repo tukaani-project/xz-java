@@ -1,0 +1,24 @@
+/*
+ * XZFormatException
+ *
+ * Author: Lasse Collin <lasse.collin@tukaani.org>
+ *
+ * This file has been put into the public domain.
+ * You can do whatever you want with this file.
+ */
+
+package org.tukaani.xz;
+
+/**
+ * Input data is not in the XZ format.
+ */
+public class XZFormatException extends java.io.IOException {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Creates a new exception with the default error detail message.
+     */
+    public XZFormatException() {
+        super("Input is not in the XZ format");
+    }
+}

@@ -1,0 +1,7 @@
+class
+jar
+bin
+extdoc
+doc
+*.class
+*.jar

@@ -1,0 +1,31 @@
+
+XZ in Java
+==========
+
+Introduction
+
+    In the (very) long term, this aims to be a complete implementation
+    of XZ data compression in Java. Currently only streamed decompression
+    is supported. For the latest source code, see the project home page:
+
+        http://tukaani.org/xz/java.html
+
+    The source code is currently compatible with Java 1.4.
+
+Building
+
+    The package is easy to build without any makefiles by simply
+    passing all the .java files to a Java compiler. For convenience,
+    a quick & dirty GNUmakefile is included which builds the .class
+    and .jar files and documentation.
+
+    You can test decompression with XZDecDemo, which decompresses to
+    standard output:
+
+        java -jar jar/XZDecDemo.jar foo.txt.xz
+
+Reporting bugs
+
+    Report bugs to <lasse.collin@tukaani.org> or visit the IRC channel
+    #tukaani on Freenode and talk to Larhzu.
+
