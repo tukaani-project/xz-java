@@ -53,7 +53,7 @@ SOURCE_VERSION = 1.4
 TARGET_VERSION = 1.6
 DOC_URL = http://download.oracle.com/javase/6/docs/api
 
-.PHONY: all class jar doc gcj clean real-clean dist
+.PHONY: all class jar doc gcj clean distclean dist
 
 all: class jar doc
 
