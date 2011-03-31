@@ -10,7 +10,9 @@
 package org.tukaani.xz;
 
 /**
- * Compressed input data is corrupt.
+ * Thrown when the compressed input data is corrupt.
+ * However, it is possible that some or all of the data
+ * already read from the input stream was corrupt too.
  */
 public class CorruptedInputException extends java.io.IOException {
     private static final long serialVersionUID = 1L;

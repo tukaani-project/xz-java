@@ -10,8 +10,8 @@
 package org.tukaani.xz;
 
 /**
- * Compression options not supported by this implementation were detected.
- * Some other implementation might support those options.
+ * Thrown when compression options not supported by this implementation
+ * are detected. Some other implementation might support those options.
  */
 public class UnsupportedOptionsException extends java.io.IOException {
     private static final long serialVersionUID = 1L;

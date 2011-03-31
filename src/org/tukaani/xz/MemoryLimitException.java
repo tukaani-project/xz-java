@@ -10,7 +10,8 @@
 package org.tukaani.xz;
 
 /**
- * The memory usage limit given to the XZ decompressor would be exceeded.
+ * Thrown when the memory usage limit given to the XZ decompressor
+ * would be exceeded.
  * <p>
  * The amount of memory required and the memory usage limit are
  * included in the error detail message in human readable format.

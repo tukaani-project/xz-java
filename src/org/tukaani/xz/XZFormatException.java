@@ -10,7 +10,7 @@
 package org.tukaani.xz;
 
 /**
- * Input data is not in the XZ format.
+ * Thrown when the input data is not in the XZ format.
  */
 public class XZFormatException extends java.io.IOException {
     private static final long serialVersionUID = 1L;

@@ -10,7 +10,7 @@
 package org.tukaani.xz;
 
 /**
- * XZ constans.
+ * XZ constants.
  */
 public class XZ {
     /**
