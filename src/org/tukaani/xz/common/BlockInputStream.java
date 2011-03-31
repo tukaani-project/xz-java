@@ -177,7 +177,7 @@ public class BlockInputStream extends InputStream {
     }
 
     public int available() throws IOException {
-        return filterChain == null ? 0 : filterChain.available();
+        return filterChain.available();
     }
 
     public long getUnpaddedSize() {
