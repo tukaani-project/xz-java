@@ -13,7 +13,7 @@ package org.tukaani.xz;
  * Thrown when compression options not supported by this implementation
  * are detected. Some other implementation might support those options.
  */
-public class UnsupportedOptionsException extends java.io.IOException {
+public class UnsupportedOptionsException extends XZIOException {
     private static final long serialVersionUID = 1L;
 
     /**

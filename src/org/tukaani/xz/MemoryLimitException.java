@@ -16,7 +16,7 @@ package org.tukaani.xz;
  * The amount of memory required and the memory usage limit are
  * included in the error detail message in human readable format.
  */
-public class MemoryLimitException extends java.io.IOException {
+public class MemoryLimitException extends XZIOException {
     private static final long serialVersionUID = 1L;
 
     private int memoryNeeded;

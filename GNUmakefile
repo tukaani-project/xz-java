@@ -45,6 +45,7 @@ xz_SOURCES = \
 	src/org/tukaani/xz/UnsupportedOptionsException.java \
 	src/org/tukaani/xz/XZFormatException.java \
 	src/org/tukaani/xz/XZInputStream.java \
+	src/org/tukaani/xz/XZIOException.java \
 	src/org/tukaani/xz/XZ.java
 XZDecDemo_SOURCES = src/XZDecDemo.java
 ALL_SOURCES = $(xz_SOURCES) $(XZDecDemo_SOURCES)
