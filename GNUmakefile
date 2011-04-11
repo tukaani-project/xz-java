@@ -60,7 +60,7 @@ all: class jar doc
 class:
 	mkdir -p class
 	javac -source $(SOURCE_VERSION) -target $(TARGET_VERSION) \
-		-sourcepath src -d class $(ALL_SOURCES)
+		-sourcepath src -d class -Xlint $(ALL_SOURCES)
 
 jar: class
 	mkdir -p jar
