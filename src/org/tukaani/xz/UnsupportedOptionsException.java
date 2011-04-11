@@ -14,7 +14,7 @@ package org.tukaani.xz;
  * are detected. Some other implementation might support those options.
  */
 public class UnsupportedOptionsException extends XZIOException {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * Creates a new UnsupportedOptionsException with null
