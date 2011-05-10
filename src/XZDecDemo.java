@@ -24,8 +24,9 @@ class XZDecDemo {
                 name = "standard input";
                 InputStream in = new XZInputStream(System.in);
 
-                while (in.read(buf) != -1)
-                    System.out.write(buf);
+                int size;
+                while ((size = in.read(buf)) != -1)
+                    System.out.write(buf, 0, size);
 
             } else {
                 // Read from files given on the command line.
@@ -39,8 +40,9 @@ class XZDecDemo {
                     // in = new BufferedInputStream(in);
                     in = new XZInputStream(in);
 
-                    while (in.read(buf) != -1)
-                        System.out.write(buf);
+                    int size;
+                    while ((size = in.read(buf)) != -1)
+                        System.out.write(buf, 0, size);
                 }
             }
         } catch (FileNotFoundException e) {
