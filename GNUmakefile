@@ -93,4 +93,4 @@ distclean: clean
 
 dist:
 	rm -f xz-java.zip
-	zip -9 -X xz-java.zip README COPYING GNUmakefile $(ALL_SOURCES)
+	zip -9 -X xz-java.zip README COPYING THANKS GNUmakefile $(ALL_SOURCES)
