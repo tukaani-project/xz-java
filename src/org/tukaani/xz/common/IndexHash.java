@@ -36,7 +36,7 @@ public class IndexHash {
     public void update(long unpaddedSize, long uncompressedSize)
             throws IOException {
         blocksSizeSum += (unpaddedSize + 3) & ~3;
-        uncompressedSizeSum += uncompressedSizeSum;
+        uncompressedSizeSum += uncompressedSize;
         indexListSize += Util.getVLISize(unpaddedSize)
                          + Util.getVLISize(uncompressedSize);
         ++recordCount;
