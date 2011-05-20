@@ -8,46 +8,45 @@
 #
 
 xz_SOURCES = \
-	src/org/tukaani/xz/check/Check.java \
+	src/org/tukaani/xz/BlockInputStream.java \
+	src/org/tukaani/xz/CorruptedInputException.java \
+	src/org/tukaani/xz/CountingInputStream.java \
+	src/org/tukaani/xz/DeltaCoder.java \
+	src/org/tukaani/xz/DeltaDecoder.java \
+	src/org/tukaani/xz/DeltaInputStream.java \
+	src/org/tukaani/xz/FilterCoder.java \
+	src/org/tukaani/xz/FilterDecoder.java \
+	src/org/tukaani/xz/IndexIndicatorException.java \
+	src/org/tukaani/xz/LZMA2Coder.java \
+	src/org/tukaani/xz/LZMA2Decoder.java \
+	src/org/tukaani/xz/LZMA2InputStream.java \
+	src/org/tukaani/xz/MemoryLimitException.java \
+	src/org/tukaani/xz/RawCoder.java \
+	src/org/tukaani/xz/SingleXZInputStream.java \
+	src/org/tukaani/xz/UnsupportedOptionsException.java \
+	src/org/tukaani/xz/XZ.java \
+	src/org/tukaani/xz/XZFormatException.java \
+	src/org/tukaani/xz/XZIOException.java \
+	src/org/tukaani/xz/XZInputStream.java \
 	src/org/tukaani/xz/check/CRC32.java \
 	src/org/tukaani/xz/check/CRC64.java \
+	src/org/tukaani/xz/check/Check.java \
 	src/org/tukaani/xz/check/None.java \
 	src/org/tukaani/xz/check/SHA256.java \
-	src/org/tukaani/xz/common/BlockInputStream.java \
-	src/org/tukaani/xz/common/CountingInputStream.java \
 	src/org/tukaani/xz/common/DecoderUtil.java \
-	src/org/tukaani/xz/common/IndexIndicatorException.java \
 	src/org/tukaani/xz/common/StreamFlags.java \
 	src/org/tukaani/xz/common/Util.java \
-	src/org/tukaani/xz/CorruptedInputException.java \
 	src/org/tukaani/xz/delta/DeltaCoder.java \
 	src/org/tukaani/xz/delta/DeltaDecoder.java \
-	src/org/tukaani/xz/DeltaInputStream.java \
 	src/org/tukaani/xz/index/IndexBase.java \
 	src/org/tukaani/xz/index/IndexHash.java \
 	src/org/tukaani/xz/lz/LZDecoder.java \
-	src/org/tukaani/xz/LZMA2InputStream.java \
 	src/org/tukaani/xz/lzma/LZMACoder.java \
 	src/org/tukaani/xz/lzma/LZMADecoder.java \
 	src/org/tukaani/xz/lzma/State.java \
-	src/org/tukaani/xz/MemoryLimitException.java \
 	src/org/tukaani/xz/package-info.java \
 	src/org/tukaani/xz/rangecoder/RangeCoder.java \
-	src/org/tukaani/xz/rangecoder/RangeDecoder.java \
-	src/org/tukaani/xz/raw/DeltaCoder.java \
-	src/org/tukaani/xz/raw/DeltaDecoder.java \
-	src/org/tukaani/xz/raw/FilterCoder.java \
-	src/org/tukaani/xz/raw/FilterDecoder.java \
-	src/org/tukaani/xz/raw/LZMA2Coder.java \
-	src/org/tukaani/xz/raw/LZMA2Decoder.java \
-	src/org/tukaani/xz/raw/RawCoder.java \
-	src/org/tukaani/xz/raw/RawDecoder.java \
-	src/org/tukaani/xz/SingleXZInputStream.java \
-	src/org/tukaani/xz/UnsupportedOptionsException.java \
-	src/org/tukaani/xz/XZFormatException.java \
-	src/org/tukaani/xz/XZInputStream.java \
-	src/org/tukaani/xz/XZIOException.java \
-	src/org/tukaani/xz/XZ.java
+	src/org/tukaani/xz/rangecoder/RangeDecoder.java
 XZDecDemo_SOURCES = src/XZDecDemo.java
 ALL_SOURCES = $(xz_SOURCES) $(XZDecDemo_SOURCES)
 

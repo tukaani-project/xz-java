@@ -7,11 +7,9 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.raw;
+package org.tukaani.xz;
 
-import org.tukaani.xz.UnsupportedOptionsException;
-
-abstract class RawCoder {
+class RawCoder {
     static void validate(FilterCoder[] filters)
             throws UnsupportedOptionsException {
         for (int i = 0; i < filters.length - 1; ++i)

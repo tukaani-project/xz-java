@@ -16,8 +16,6 @@ import java.io.IOException;
 import org.tukaani.xz.lz.LZDecoder;
 import org.tukaani.xz.rangecoder.RangeDecoder;
 import org.tukaani.xz.lzma.LZMADecoder;
-import org.tukaani.xz.CorruptedInputException;
-import org.tukaani.xz.UnsupportedOptionsException;
 
 /**
  * Decompresses a raw LZMA2 stream.

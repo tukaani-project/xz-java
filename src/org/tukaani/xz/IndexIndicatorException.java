@@ -7,8 +7,8 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.common;
+package org.tukaani.xz;
 
-public class IndexIndicatorException extends Exception {
+class IndexIndicatorException extends Exception {
     private static final long serialVersionUID = 1L;
 }

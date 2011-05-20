@@ -7,7 +7,7 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.common;
+package org.tukaani.xz;
 
 import java.io.FilterInputStream;
 import java.io.InputStream;

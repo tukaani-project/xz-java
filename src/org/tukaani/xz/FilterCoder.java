@@ -7,7 +7,7 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.raw;
+package org.tukaani.xz;
 
 interface FilterCoder {
     boolean changesSize();

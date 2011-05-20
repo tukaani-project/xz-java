@@ -7,11 +7,9 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.raw;
+package org.tukaani.xz;
 
 import java.io.InputStream;
-import org.tukaani.xz.LZMA2InputStream;
-import org.tukaani.xz.UnsupportedOptionsException;
 
 class LZMA2Decoder extends LZMA2Coder implements FilterDecoder {
     private int dictSize;

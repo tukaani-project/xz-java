@@ -7,11 +7,9 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.raw;
+package org.tukaani.xz;
 
 import java.io.InputStream;
-import org.tukaani.xz.DeltaInputStream;
-import org.tukaani.xz.UnsupportedOptionsException;
 
 class DeltaDecoder extends DeltaCoder implements FilterDecoder {
     private int distance;

@@ -7,7 +7,7 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.common;
+package org.tukaani.xz;
 
 import java.io.InputStream;
 import java.io.DataInputStream;
@@ -15,17 +15,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.EOFException;
 import java.util.Arrays;
-import org.tukaani.xz.raw.RawDecoder;
+import org.tukaani.xz.common.DecoderUtil;
 import org.tukaani.xz.check.Check;
-import org.tukaani.xz.CorruptedInputException;
-import org.tukaani.xz.UnsupportedOptionsException;
-import org.tukaani.xz.MemoryLimitException;
 
-public class BlockInputStream extends InputStream {
+class BlockInputStream extends InputStream {
     private final InputStream in;
     private final DataInputStream inData;
     private final CountingInputStream inCounted;
-    private final InputStream filterChain;
+    private InputStream filterChain;
     private final Check check;
 
     private long uncompressedSizeInHeader = -1;
@@ -40,7 +37,7 @@ public class BlockInputStream extends InputStream {
         this.check = check;
         inData = new DataInputStream(in);
 
-        byte[] buf = new byte[Util.BLOCK_HEADER_SIZE_MAX];
+        byte[] buf = new byte[DecoderUtil.BLOCK_HEADER_SIZE_MAX];
 
         // Block Header Size or Index Indicator
         inData.readFully(buf, 0, 1);
@@ -79,7 +76,7 @@ public class BlockInputStream extends InputStream {
                 compressedSizeInHeader = DecoderUtil.decodeVLI(bufStream);
                 compressedSizeLimit = compressedSizeInHeader;
             } else {
-                compressedSizeLimit = (Util.VLI_MAX & ~3)
+                compressedSizeLimit = (DecoderUtil.VLI_MAX & ~3)
                                       - headerSize - check.getSize();
             }
 
@@ -113,11 +110,28 @@ public class BlockInputStream extends InputStream {
         // Check if the Filter IDs are supported, decode
         // the Filter Properties, and check that they are
         // supported by this decoder implementation.
-        RawDecoder rawDecoder = new RawDecoder(filterIDs, filterProps);
+        FilterDecoder[] filters = new FilterDecoder[filterIDs.length];
+
+        for (int i = 0; i < filters.length; ++i) {
+            if (filterIDs[i] == LZMA2Coder.FILTER_ID)
+                filters[i] = new LZMA2Decoder(filterProps[i]);
+
+            else if (filterIDs[i] == DeltaCoder.FILTER_ID)
+                filters[i] = new DeltaDecoder(filterProps[i]);
+
+            else
+                throw new UnsupportedOptionsException(
+                        "Unknown Filter ID " + filterIDs[i]);
+        }
+
+        RawCoder.validate(filters);
 
         // Check the memory usage limit.
         if (memoryLimit >= 0) {
-            int memoryNeeded = rawDecoder.getMemoryUsage();
+            int memoryNeeded = 0;
+            for (int i = 0; i < filters.length; ++i)
+                memoryNeeded += filters[i].getMemoryUsage();
+
             if (memoryNeeded > memoryLimit)
                 throw new MemoryLimitException(memoryNeeded, memoryLimit);
         }
@@ -127,7 +141,9 @@ public class BlockInputStream extends InputStream {
         inCounted = new CountingInputStream(in);
 
         // Initialize the filter chain.
-        filterChain = rawDecoder.getFilterChain(inCounted);
+        filterChain = inCounted;
+        for (int i = filters.length - 1; i >= 0; --i)
+            filterChain = filters[i].getInputStream(filterChain);
     }
 
     public int read() throws IOException {

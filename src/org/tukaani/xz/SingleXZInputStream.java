@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.io.EOFException;
 import org.tukaani.xz.common.DecoderUtil;
 import org.tukaani.xz.common.StreamFlags;
-import org.tukaani.xz.common.BlockInputStream;
-import org.tukaani.xz.common.IndexIndicatorException;
 import org.tukaani.xz.index.IndexHash;
 import org.tukaani.xz.check.Check;
 
