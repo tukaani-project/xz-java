@@ -109,6 +109,9 @@ public final class LZDecoder {
         int copySize = Math.min(buf.length - pos, len);
         inData.readFully(buf, pos, copySize);
         pos += copySize;
+
+        if (full < pos)
+            full = pos;
     }
 
     public int flush(byte[] out, int outOff) {
