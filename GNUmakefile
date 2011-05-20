@@ -16,7 +16,6 @@ xz_SOURCES = \
 	src/org/tukaani/xz/common/BlockInputStream.java \
 	src/org/tukaani/xz/common/CountingInputStream.java \
 	src/org/tukaani/xz/common/DecoderUtil.java \
-	src/org/tukaani/xz/common/IndexHash.java \
 	src/org/tukaani/xz/common/IndexIndicatorException.java \
 	src/org/tukaani/xz/common/StreamFlags.java \
 	src/org/tukaani/xz/common/Util.java \
@@ -24,6 +23,8 @@ xz_SOURCES = \
 	src/org/tukaani/xz/delta/DeltaCoder.java \
 	src/org/tukaani/xz/delta/DeltaDecoder.java \
 	src/org/tukaani/xz/DeltaInputStream.java \
+	src/org/tukaani/xz/index/IndexBase.java \
+	src/org/tukaani/xz/index/IndexHash.java \
 	src/org/tukaani/xz/lz/LZDecoder.java \
 	src/org/tukaani/xz/LZMA2InputStream.java \
 	src/org/tukaani/xz/lzma/LZMACoder.java \

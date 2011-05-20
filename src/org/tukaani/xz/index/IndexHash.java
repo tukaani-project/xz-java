@@ -7,25 +7,24 @@
  * You can do whatever you want with this file.
  */
 
-package org.tukaani.xz.common;
+package org.tukaani.xz.index;
 
 import java.io.InputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.EOFException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.zip.CheckedInputStream;
+import org.tukaani.xz.common.DecoderUtil;
+import org.tukaani.xz.XZIOException;
 import org.tukaani.xz.CorruptedInputException;
 
-public class IndexHash {
-    private long blocksSizeSum = 0;
-    private long uncompressedSizeSum = 0;
-    private long indexListSize = 0;
-    private long recordCount = 0;
+public class IndexHash extends IndexBase {
     private org.tukaani.xz.check.Check hash;
 
     public IndexHash() {
+        super(new CorruptedInputException());
+
         try {
             hash = new org.tukaani.xz.check.SHA256();
         } catch (java.security.NoSuchAlgorithmException e) {
@@ -33,20 +32,9 @@ public class IndexHash {
         }
     }
 
-    public void update(long unpaddedSize, long uncompressedSize)
-            throws IOException {
-        blocksSizeSum += (unpaddedSize + 3) & ~3;
-        uncompressedSizeSum += uncompressedSize;
-        indexListSize += Util.getVLISize(unpaddedSize)
-                         + Util.getVLISize(uncompressedSize);
-        ++recordCount;
-
-        if (blocksSizeSum < 0 || uncompressedSizeSum < 0
-                || Util.getIndexSize(recordCount, indexListSize)
-                    > Util.BACKWARD_SIZE_MAX
-                || Util.getStreamSizeFromIndex(blocksSizeSum,
-                    recordCount, indexListSize) < 0)
-            throw new CorruptedInputException();
+    public void add(long unpaddedSize, long uncompressedSize)
+            throws XZIOException {
+        super.add(unpaddedSize, uncompressedSize);
 
         ByteBuffer buf = ByteBuffer.allocate(2 * 8);
         buf.putLong(unpaddedSize);
@@ -71,30 +59,29 @@ public class IndexHash {
         IndexHash stored = new IndexHash();
         for (long i = 0; i < recordCount; ++i) {
             long unpaddedSize = DecoderUtil.decodeVLI(inChecked);
-            long totalSize = DecoderUtil.decodeVLI(inChecked);
+            long uncompressedSize = DecoderUtil.decodeVLI(inChecked);
 
             try {
-                stored.update(unpaddedSize, totalSize);
-            } catch (CorruptedInputException e) {
+                stored.add(unpaddedSize, uncompressedSize);
+            } catch (XZIOException e) {
                 throw new CorruptedInputException("XZ Index is corrupt");
             }
 
-            if (stored.blocksSizeSum > blocksSizeSum
-                    || stored.uncompressedSizeSum > uncompressedSizeSum
+            if (stored.blocksSum > blocksSum
+                    || stored.uncompressedSum > uncompressedSum
                     || stored.indexListSize > indexListSize)
                 throw new CorruptedInputException("XZ Index is corrupt");
         }
 
-        if (stored.blocksSizeSum != blocksSizeSum
-                || stored.uncompressedSizeSum != uncompressedSizeSum
+        if (stored.blocksSum != blocksSum
+                || stored.uncompressedSum != uncompressedSum
                 || stored.indexListSize != indexListSize
                 || !Arrays.equals(stored.hash.finish(), hash.finish()))
             throw new CorruptedInputException("XZ Index is corrupt");
 
         // Index Padding
         DataInputStream inData = new DataInputStream(inChecked);
-        for (int i = Util.getIndexPaddingSize(recordCount, indexListSize);
-                i > 0; --i)
+        for (int i = getIndexPaddingSize(); i > 0; --i)
             if (inData.readUnsignedByte() != 0x00)
                 throw new CorruptedInputException("XZ Index is corrupt");
 
@@ -103,9 +90,5 @@ public class IndexHash {
         for (int i = 0; i < 4; ++i)
             if (((value >>> (i * 8)) & 0xFF) != inData.readUnsignedByte())
                 throw new CorruptedInputException("XZ Index is corrupt");
-    }
-
-    public long getBackwardSize() {
-        return Util.getIndexSize(recordCount, indexListSize);
     }
 }

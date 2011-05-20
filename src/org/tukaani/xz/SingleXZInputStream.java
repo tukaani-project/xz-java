@@ -17,7 +17,7 @@ import org.tukaani.xz.common.DecoderUtil;
 import org.tukaani.xz.common.StreamFlags;
 import org.tukaani.xz.common.BlockInputStream;
 import org.tukaani.xz.common.IndexIndicatorException;
-import org.tukaani.xz.common.IndexHash;
+import org.tukaani.xz.index.IndexHash;
 import org.tukaani.xz.check.Check;
 
 /**
@@ -237,8 +237,8 @@ public class SingleXZInputStream extends InputStream {
                     off += ret;
                     len -= ret;
                 } else if (ret == -1) {
-                    indexHash.update(blockDecoder.getUnpaddedSize(),
-                                     blockDecoder.getUncompressedSize());
+                    indexHash.add(blockDecoder.getUnpaddedSize(),
+                                  blockDecoder.getUncompressedSize());
                     blockDecoder = null;
                 }
             }
@@ -258,8 +258,7 @@ public class SingleXZInputStream extends InputStream {
 
         if (!DecoderUtil.areStreamFlagsEqual(streamHeaderFlags,
                                              streamFooterFlags)
-                || indexHash.getBackwardSize()
-                    != streamFooterFlags.backwardSize)
+                || indexHash.getIndexSize() != streamFooterFlags.backwardSize)
             throw new CorruptedInputException(
                     "XZ Stream Footer does not match Stream Header");
     }

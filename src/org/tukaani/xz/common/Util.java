@@ -25,26 +25,4 @@ public class Util {
 
         return size;
     }
-
-    public static long getUnpaddedIndexSize(long recordCount,
-                                            long indexListSize) {
-        return 1 + getVLISize(recordCount) + indexListSize + 4;
-    }
-
-    public static long getIndexSize(long recordCount, long indexListSize) {
-        return (getUnpaddedIndexSize(recordCount, indexListSize) + 3) & ~3;
-    }
-
-    public static long getStreamSizeFromIndex(
-            long blocksSizeSum, long recordCount, long indexListSize) {
-        return STREAM_HEADER_SIZE + blocksSizeSum
-                + getIndexSize(recordCount, indexListSize)
-                + STREAM_HEADER_SIZE;
-    }
-
-    public static int getIndexPaddingSize(long recordCount,
-                                          long indexListSize) {
-        return (int)(
-                (4 - getUnpaddedIndexSize(recordCount, indexListSize)) & 3);
-    }
 }
