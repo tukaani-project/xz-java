@@ -10,6 +10,8 @@
 package org.tukaani.xz.raw;
 
 abstract class LZMA2Coder implements FilterCoder {
+    public static final long FILTER_ID = 0x21;
+
     public boolean changesSize() {
         return true;
     }

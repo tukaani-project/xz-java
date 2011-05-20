@@ -10,6 +10,8 @@
 package org.tukaani.xz.raw;
 
 abstract class DeltaCoder implements FilterCoder {
+    public static final long FILTER_ID = 0x03;
+
     public boolean changesSize() {
         return false;
     }

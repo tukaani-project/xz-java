@@ -12,9 +12,6 @@ package org.tukaani.xz.raw;
 import org.tukaani.xz.UnsupportedOptionsException;
 
 abstract class RawCoder {
-    static final long FILTER_LZMA2 = 0x21;
-    static final long FILTER_DELTA = 0x03;
-
     static void validate(FilterCoder[] filters)
             throws UnsupportedOptionsException {
         for (int i = 0; i < filters.length - 1; ++i)

@@ -20,10 +20,10 @@ public class RawDecoder extends RawCoder {
         filters = new FilterDecoder[filterIDs.length];
 
         for (int i = 0; i < filterIDs.length; ++i) {
-            if (filterIDs[i] == FILTER_LZMA2)
+            if (filterIDs[i] == LZMA2Coder.FILTER_ID)
                 filters[i] = new LZMA2Decoder(filterProps[i]);
 
-            else if (filterIDs[i] == FILTER_DELTA)
+            else if (filterIDs[i] == DeltaCoder.FILTER_ID)
                 filters[i] = new DeltaDecoder(filterProps[i]);
 
             else
