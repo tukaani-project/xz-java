@@ -32,17 +32,24 @@ class XZDecDemo {
                 // Read from files given on the command line.
                 for (int i = 0; i < args.length; ++i) {
                     name = args[i];
-
-                    // Since XZInputStream does some buffering internally
-                    // anyway, BufferedInputStream doesn't seem to be
-                    // needed here to improve performance.
                     InputStream in = new FileInputStream(name);
-                    // in = new BufferedInputStream(in);
-                    in = new XZInputStream(in);
 
-                    int size;
-                    while ((size = in.read(buf)) != -1)
-                        System.out.write(buf, 0, size);
+                    try {
+                        // Since XZInputStream does some buffering internally
+                        // anyway, BufferedInputStream doesn't seem to be
+                        // needed here to improve performance.
+                        // in = new BufferedInputStream(in);
+                        in = new XZInputStream(in);
+
+                        int size;
+                        while ((size = in.read(buf)) != -1)
+                            System.out.write(buf, 0, size);
+
+                    } finally {
+                        // Close FileInputStream (directly or indirectly
+                        // via XZInputStream, it doesn't matter).
+                        in.close();
+                    }
                 }
             }
         } catch (FileNotFoundException e) {
