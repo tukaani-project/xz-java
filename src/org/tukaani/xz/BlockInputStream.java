@@ -70,14 +70,21 @@ class BlockInputStream extends InputStream {
                 buf, 2, headerSize - 6);
 
         try {
-            // Decode Compressed Size if the relevant flag is set
-            // in Block Flags.
+            // Set the maximum valid compressed size. This is overriden
+            // by the value from the Compressed Size field if it is present.
+            compressedSizeLimit = (DecoderUtil.VLI_MAX & ~3)
+                                  - headerSize - check.getSize();
+
+            // Decode and validate Compressed Size if the relevant flag
+            // is set in Block Flags.
             if ((buf[1] & 0x40) != 0x00) {
                 compressedSizeInHeader = DecoderUtil.decodeVLI(bufStream);
+
+                if (compressedSizeInHeader == 0
+                        || compressedSizeInHeader > compressedSizeLimit)
+                    throw new CorruptedInputException();
+
                 compressedSizeLimit = compressedSizeInHeader;
-            } else {
-                compressedSizeLimit = (DecoderUtil.VLI_MAX & ~3)
-                                      - headerSize - check.getSize();
             }
 
             // Decode Uncompressed Size if the relevant flag is set
