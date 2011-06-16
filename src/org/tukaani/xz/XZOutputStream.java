@@ -92,6 +92,14 @@ public class XZOutputStream extends FinishableOutputStream {
         encodeStreamHeader();
     }
 
+    /**
+     * Updates the filter chain.
+     * <p>
+     * Currently this cannot be used to update e.g. LZMA2 options in the
+     * middle of a XZ Block. Use <code>flush()</code> to finish the current
+     * XZ Block before calling this function. The new filter chain will then
+     * be used for the next XZ Block.
+     */
     public void updateFilters(FilterOptions[] filterOptions)
             throws XZIOException {
         if (blockEncoder != null)
