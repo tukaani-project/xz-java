@@ -10,11 +10,12 @@
 package org.tukaani.xz;
 
 /**
+ * Generic IOException specific to this package.
  * All IOExceptions thrown by this package are extended from XZIOException.
  * This way it is easier to distinguish exceptions thrown by the XZ code
  * from other IOExceptions.
  */
-public abstract class XZIOException extends java.io.IOException {
+public class XZIOException extends java.io.IOException {
     public XZIOException() {
         super();
     }
