@@ -24,6 +24,7 @@ abstract class IndexBase {
     }
 
     private long getUnpaddedIndexSize() {
+        // Index Indicator + Number of Records + List of Records + CRC32
         return 1 + Util.getVLISize(recordCount) + indexListSize + 4;
     }
 

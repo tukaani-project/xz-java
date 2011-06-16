@@ -9,17 +9,25 @@
 
 xz_SOURCES = \
 	src/org/tukaani/xz/BlockInputStream.java \
+	src/org/tukaani/xz/BlockOutputStream.java \
 	src/org/tukaani/xz/CorruptedInputException.java \
 	src/org/tukaani/xz/CountingInputStream.java \
+	src/org/tukaani/xz/CountingOutputStream.java \
 	src/org/tukaani/xz/DeltaCoder.java \
 	src/org/tukaani/xz/DeltaDecoder.java \
 	src/org/tukaani/xz/DeltaInputStream.java \
 	src/org/tukaani/xz/FilterCoder.java \
 	src/org/tukaani/xz/FilterDecoder.java \
+	src/org/tukaani/xz/FilterEncoder.java \
+	src/org/tukaani/xz/FilterOptions.java \
+	src/org/tukaani/xz/FinishableOutputStream.java \
 	src/org/tukaani/xz/IndexIndicatorException.java \
 	src/org/tukaani/xz/LZMA2Coder.java \
 	src/org/tukaani/xz/LZMA2Decoder.java \
+	src/org/tukaani/xz/LZMA2Encoder.java \
 	src/org/tukaani/xz/LZMA2InputStream.java \
+	src/org/tukaani/xz/LZMA2Options.java \
+	src/org/tukaani/xz/LZMA2OutputStream.java \
 	src/org/tukaani/xz/MemoryLimitException.java \
 	src/org/tukaani/xz/RawCoder.java \
 	src/org/tukaani/xz/SingleXZInputStream.java \
@@ -28,18 +36,22 @@ xz_SOURCES = \
 	src/org/tukaani/xz/XZFormatException.java \
 	src/org/tukaani/xz/XZIOException.java \
 	src/org/tukaani/xz/XZInputStream.java \
+	src/org/tukaani/xz/XZOutputStream.java \
 	src/org/tukaani/xz/check/CRC32.java \
 	src/org/tukaani/xz/check/CRC64.java \
 	src/org/tukaani/xz/check/Check.java \
 	src/org/tukaani/xz/check/None.java \
 	src/org/tukaani/xz/check/SHA256.java \
 	src/org/tukaani/xz/common/DecoderUtil.java \
+	src/org/tukaani/xz/common/EncoderUtil.java \
 	src/org/tukaani/xz/common/StreamFlags.java \
 	src/org/tukaani/xz/common/Util.java \
 	src/org/tukaani/xz/delta/DeltaCoder.java \
 	src/org/tukaani/xz/delta/DeltaDecoder.java \
 	src/org/tukaani/xz/index/IndexBase.java \
+	src/org/tukaani/xz/index/IndexEncoder.java \
 	src/org/tukaani/xz/index/IndexHash.java \
+	src/org/tukaani/xz/index/IndexRecord.java \
 	src/org/tukaani/xz/lz/LZDecoder.java \
 	src/org/tukaani/xz/lzma/LZMACoder.java \
 	src/org/tukaani/xz/lzma/LZMADecoder.java \
@@ -47,8 +59,9 @@ xz_SOURCES = \
 	src/org/tukaani/xz/package-info.java \
 	src/org/tukaani/xz/rangecoder/RangeCoder.java \
 	src/org/tukaani/xz/rangecoder/RangeDecoder.java
+XZEncDemo_SOURCES = src/XZEncDemo.java
 XZDecDemo_SOURCES = src/XZDecDemo.java
-ALL_SOURCES = $(xz_SOURCES) $(XZDecDemo_SOURCES)
+ALL_SOURCES = $(xz_SOURCES) $(XZEncDemo_SOURCES) $(XZDecDemo_SOURCES)
 
 SOURCE_VERSION = 1.4
 TARGET_VERSION = 1.6
@@ -66,6 +79,8 @@ class:
 jar: class
 	mkdir -p jar
 	jar cf jar/xz.jar -C class org/tukaani/xz
+	jar cfe jar/XZEncDemo.jar XZEncDemo \
+		-C class XZEncDemo.class -C class org/tukaani/xz
 	jar cfe jar/XZDecDemo.jar XZDecDemo \
 		-C class XZDecDemo.class -C class org/tukaani/xz
 
@@ -82,6 +97,8 @@ doc: extdoc
 
 gcj:
 	mkdir -p bin
+	gcj -Wall -O2 -I src $(xz_SOURCES) $(XZEncDemo_SOURCES) \
+		--main=XZEncDemo -o bin/XZEncDemo
 	gcj -Wall -O2 -I src $(xz_SOURCES) $(XZDecDemo_SOURCES) \
 		--main=XZDecDemo -o bin/XZDecDemo
 
