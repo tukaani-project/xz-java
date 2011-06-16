@@ -119,6 +119,7 @@ public final class LZMADecoder extends LZMACoder {
         return repLenDecoder.decode(posState);
     }
 
+
     private class LiteralDecoder extends LiteralCoder {
         LiteralSubdecoder[] subdecoders;
 
