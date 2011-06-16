@@ -17,7 +17,7 @@ package org.tukaani.xz;
  * included in the error detail message in human readable format.
  */
 public class MemoryLimitException extends XZIOException {
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     private int memoryNeeded;
     private int memoryLimit;

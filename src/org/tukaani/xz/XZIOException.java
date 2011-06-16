@@ -16,6 +16,8 @@ package org.tukaani.xz;
  * from other IOExceptions.
  */
 public class XZIOException extends java.io.IOException {
+    private static final long serialVersionUID = 3L;
+
     public XZIOException() {
         super();
     }

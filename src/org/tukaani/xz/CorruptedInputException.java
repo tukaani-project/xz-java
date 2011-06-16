@@ -15,7 +15,7 @@ package org.tukaani.xz;
  * already read from the input stream was corrupt too.
  */
 public class CorruptedInputException extends XZIOException {
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     /**
      * Creates a new CorruptedInputException with
