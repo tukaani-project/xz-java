@@ -16,14 +16,12 @@ import java.util.Iterator;
 import java.util.zip.CheckedOutputStream;
 import org.tukaani.xz.common.EncoderUtil;
 import org.tukaani.xz.XZIOException;
-import org.tukaani.xz.UnsupportedOptionsException;
 
 public class IndexEncoder extends IndexBase {
     private ArrayList records = new ArrayList();
 
     public IndexEncoder() {
-        super(new UnsupportedOptionsException(
-                "XZ Stream or its Index has grown too big"));
+        super(new XZIOException("XZ Stream or its Index has grown too big"));
     }
 
     public void add(long unpaddedSize, long uncompressedSize)

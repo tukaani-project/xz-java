@@ -121,7 +121,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Writes one byte to be compressed.
      *
-     * @throws      UnsupportedOptionsException
+     * @throws      XZIOException
      *                          XZ stream has grown too big
      * @throws      IOException may be thrown by the underlying output stream
      */
@@ -142,8 +142,11 @@ public class XZOutputStream extends FinishableOutputStream {
      * @param       off         start offset in <code>buf</code>
      * @param       len         number of bytes to write
      *
-     * @throws      UnsupportedOptionsException
+     * @throws      XZIOException
      *                          XZ stream has grown too big
+     * @throws      XZIOException
+     *                          <code>finish()</code> or <code>close()</code>
+     *                          was already called
      * @throws      IOException may be thrown by the underlying output stream
      */
     public void write(byte[] buf, int off, int len) throws IOException {
@@ -154,8 +157,8 @@ public class XZOutputStream extends FinishableOutputStream {
             return;
 
         if (finished)
-            exception = new IOException(
-                    "XZOutputStream.write() was called on a finished stream");
+            exception = new XZIOException(
+                    "XZOutputStream.write was called on a finished stream");
 
         if (exception != null)
             throw exception;
