@@ -177,12 +177,11 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Flushes the encoder and calls <code>out.flush()</code>.
      * <p>
+     * FIXME: I haven't decided yet how this will work in the final version.
      * In the current implementation, flushing finishes the current .xz Block.
      * This is equivalent to LZMA_FULL_FLUSH in liblzma (XZ Utils).
-     * <p>
      * Equivalent of liblzma's LZMA_SYNC_FLUSH might be implemented in
-     * the future. If it is implemented, the default behavior of
-     * <code>flush()</code> will naturally stay as it is now.
+     * the future, and perhaps should be what <code>flush()</code> should do.
      */
     public void flush() throws IOException {
         if (exception != null)
