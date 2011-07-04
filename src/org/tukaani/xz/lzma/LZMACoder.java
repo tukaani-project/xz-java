@@ -33,7 +33,7 @@ abstract class LZMACoder {
 
     final int posMask;
 
-    final int[] rep = new int[4];
+    final int[] reps = new int[REPS];
     final State state = new State();
 
     final short[][] isMatch = new short[State.STATES][POS_STATES_MAX];
@@ -61,10 +61,10 @@ abstract class LZMACoder {
     }
 
     void reset() {
-        rep[0] = 0;
-        rep[1] = 0;
-        rep[2] = 0;
-        rep[3] = 0;
+        reps[0] = 0;
+        reps[1] = 0;
+        reps[2] = 0;
+        reps[3] = 0;
         state.reset();
 
         for (int i = 0; i < isMatch.length; ++i)

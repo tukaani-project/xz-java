@@ -49,7 +49,7 @@ public final class LZMADecoder extends LZMACoder {
                 int len = rc.decodeBit(isRep, state.get()) == 0
                           ? decodeMatch(posState)
                           : decodeRepMatch(posState);
-                lz.repeat(rep[0], len);
+                lz.repeat(reps[0], len);
             }
         }
 
@@ -62,26 +62,26 @@ public final class LZMADecoder extends LZMACoder {
     private int decodeMatch(int posState) throws IOException {
         state.updateMatch();
 
-        rep[3] = rep[2];
-        rep[2] = rep[1];
-        rep[1] = rep[0];
+        reps[3] = reps[2];
+        reps[2] = reps[1];
+        reps[1] = reps[0];
 
         int len = matchLenDecoder.decode(posState);
         int distSlot = rc.decodeBitTree(distSlots[getDistState(len)]);
 
         if (distSlot < DIST_MODEL_START) {
-            rep[0] = distSlot;
+            reps[0] = distSlot;
         } else {
             int limit = (distSlot >> 1) - 1;
-            rep[0] = (2 | (distSlot & 1)) << limit;
+            reps[0] = (2 | (distSlot & 1)) << limit;
 
             if (distSlot < DIST_MODEL_END) {
-                rep[0] |= rc.decodeReverseBitTree(
+                reps[0] |= rc.decodeReverseBitTree(
                         distSpecial[distSlot - DIST_MODEL_START]);
             } else {
-                rep[0] |= rc.decodeDirectBits(limit - ALIGN_BITS)
-                          << ALIGN_BITS;
-                rep[0] |= rc.decodeReverseBitTree(distAlign);
+                reps[0] |= rc.decodeDirectBits(limit - ALIGN_BITS)
+                           << ALIGN_BITS;
+                reps[0] |= rc.decodeReverseBitTree(distAlign);
             }
         }
 
@@ -98,20 +98,20 @@ public final class LZMADecoder extends LZMACoder {
             int tmp;
 
             if (rc.decodeBit(isRep1, state.get()) == 0) {
-                tmp = rep[1];
+                tmp = reps[1];
             } else {
                 if (rc.decodeBit(isRep2, state.get()) == 0) {
-                    tmp = rep[2];
+                    tmp = reps[2];
                 } else {
-                    tmp = rep[3];
-                    rep[3] = rep[2];
+                    tmp = reps[3];
+                    reps[3] = reps[2];
                 }
 
-                rep[2] = rep[1];
+                reps[2] = reps[1];
             }
 
-            rep[1] = rep[0];
-            rep[0] = tmp;
+            reps[1] = reps[0];
+            reps[0] = tmp;
         }
 
         state.updateLongRep();
@@ -152,7 +152,7 @@ public final class LZMADecoder extends LZMACoder {
                     } while (symbol < 0x100);
 
                 } else {
-                    int matchByte = lz.getByte(rep[0]);
+                    int matchByte = lz.getByte(reps[0]);
                     int offset = 0x100;
                     int matchBit;
                     int bit;
