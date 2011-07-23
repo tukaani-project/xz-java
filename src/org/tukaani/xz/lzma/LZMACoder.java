@@ -24,6 +24,7 @@ abstract class LZMACoder {
     static final int DIST_SLOTS = 1 << 6;
     static final int DIST_MODEL_START = 4;
     static final int DIST_MODEL_END = 14;
+    static final int FULL_DISTANCES = 1 << (DIST_MODEL_END / 2);
 
     static final int ALIGN_BITS = 4;
     static final int ALIGN_SIZE = 1 << ALIGN_BITS;

@@ -30,12 +30,22 @@ final class State {
 
     private int state;
 
+    State() {}
+
+    State(State other) {
+        state = other.state;
+    }
+
     void reset() {
         state = LIT_LIT;
     }
 
     int get() {
         return state;
+    }
+
+    void set(State other) {
+        state = other.state;
     }
 
     void updateLiteral() {

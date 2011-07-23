@@ -183,7 +183,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * Equivalent of liblzma's LZMA_SYNC_FLUSH might be implemented in
      * the future, and perhaps should be what <code>flush()</code> should do.
      */
-    public void flush() throws IOException {
+    public void flushBlock() throws IOException {
         if (exception != null)
             throw exception;
 
@@ -200,6 +200,13 @@ public class XZOutputStream extends FinishableOutputStream {
         }
 
         out.flush();
+    }
+
+    public void flush() throws IOException {
+        if (blockEncoder != null)
+            blockEncoder.flush();
+        else
+            out.flush();
     }
 
     /**
@@ -219,7 +226,7 @@ public class XZOutputStream extends FinishableOutputStream {
         if (!finished) {
             // flush() checks for pending exceptions so we don't need to
             // worry about it here.
-            flush();
+            flushBlock();
 
             try {
                 index.encode(out);
