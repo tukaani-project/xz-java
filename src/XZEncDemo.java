@@ -17,6 +17,12 @@ import org.tukaani.xz.*;
 class XZEncDemo {
     public static void main(String[] args) throws Exception {
         LZMA2Options options = new LZMA2Options();
+
+        System.err.println("Encoder memory usage: "
+                           + options.getEncoderMemoryUsage() + " KiB");
+        System.err.println("Decoder memory usage: "
+                           + options.getDecoderMemoryUsage() + " KiB");
+
         XZOutputStream out = new XZOutputStream(System.out, options,
                                                 XZ.CHECK_CRC64);
 
