@@ -31,6 +31,7 @@ xz_SOURCES = \
 	src/org/tukaani/xz/MemoryLimitException.java \
 	src/org/tukaani/xz/RawCoder.java \
 	src/org/tukaani/xz/SingleXZInputStream.java \
+	src/org/tukaani/xz/UncompressedLZMA2OutputStream.java \
 	src/org/tukaani/xz/UnsupportedOptionsException.java \
 	src/org/tukaani/xz/XZ.java \
 	src/org/tukaani/xz/XZFormatException.java \
@@ -52,13 +53,24 @@ xz_SOURCES = \
 	src/org/tukaani/xz/index/IndexEncoder.java \
 	src/org/tukaani/xz/index/IndexHash.java \
 	src/org/tukaani/xz/index/IndexRecord.java \
+	src/org/tukaani/xz/lz/BT4.java \
+	src/org/tukaani/xz/lz/CRC32Hash.java \
+	src/org/tukaani/xz/lz/HC4.java \
+	src/org/tukaani/xz/lz/Hash234.java \
 	src/org/tukaani/xz/lz/LZDecoder.java \
+	src/org/tukaani/xz/lz/LZEncoder.java \
+	src/org/tukaani/xz/lz/Matches.java \
 	src/org/tukaani/xz/lzma/LZMACoder.java \
 	src/org/tukaani/xz/lzma/LZMADecoder.java \
+	src/org/tukaani/xz/lzma/LZMAEncoder.java \
+	src/org/tukaani/xz/lzma/LZMAEncoderFast.java \
+	src/org/tukaani/xz/lzma/LZMAEncoderNormal.java \
+	src/org/tukaani/xz/lzma/Optimum.java \
 	src/org/tukaani/xz/lzma/State.java \
 	src/org/tukaani/xz/package-info.java \
 	src/org/tukaani/xz/rangecoder/RangeCoder.java \
-	src/org/tukaani/xz/rangecoder/RangeDecoder.java
+	src/org/tukaani/xz/rangecoder/RangeDecoder.java \
+	src/org/tukaani/xz/rangecoder/RangeEncoder.java
 XZEncDemo_SOURCES = src/XZEncDemo.java
 XZDecDemo_SOURCES = src/XZDecDemo.java
 ALL_SOURCES = $(xz_SOURCES) $(XZEncDemo_SOURCES) $(XZDecDemo_SOURCES)
