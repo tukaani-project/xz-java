@@ -10,6 +10,8 @@
 
 package org.tukaani.xz.rangecoder;
 
+import java.util.Arrays;
+
 public abstract class RangeCoder {
     static final int SHIFT_BITS = 8;
     static final int TOP_MASK = 0xFF000000;
@@ -19,7 +21,6 @@ public abstract class RangeCoder {
     static final int MOVE_BITS = 5;
 
     public static final void initProbs(short[] probs) {
-        for (int i = 0; i < probs.length; ++i)
-            probs[i] = PROB_INIT;
+        Arrays.fill(probs, PROB_INIT);
     }
 }
