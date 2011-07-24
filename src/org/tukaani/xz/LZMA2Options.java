@@ -417,18 +417,12 @@ public class LZMA2Options extends FilterOptions {
         return depthLimit;
     }
 
-    /**
-     * Gets how much memory the encoder will need with these options.
-     */
     public int getEncoderMemoryUsage() {
         return (mode == MODE_UNCOMPRESSED)
                ? UncompressedLZMA2OutputStream.getMemoryUsage()
                : LZMA2OutputStream.getMemoryUsage(this);
     }
 
-    /**
-     * Gets a raw LZMA2 encoder output stream using these options.
-     */
     public FinishableOutputStream getOutputStream(FinishableOutputStream out) {
         if (mode == MODE_UNCOMPRESSED)
             return new UncompressedLZMA2OutputStream(out);
@@ -436,17 +430,10 @@ public class LZMA2Options extends FilterOptions {
         return new LZMA2OutputStream(out, this);
     }
 
-    /**
-     * Gets how much memory the decoder will need to decompress data
-     * that was encoded with these options.
-     */
     public int getDecoderMemoryUsage() {
         return LZMA2InputStream.getMemoryUsage(dictSize);
     }
 
-    /**
-     * Gets a raw LZMA2 decoder output stream using these options.
-     */
     public InputStream getInputStream(InputStream in) throws IOException {
         return new LZMA2InputStream(in, dictSize);
     }
