@@ -40,6 +40,10 @@ class LZMA2Encoder extends LZMA2Coder implements FilterEncoder {
         return props;
     }
 
+    public boolean supportsFlushing() {
+        return true;
+    }
+
     public FinishableOutputStream getOutputStream(FinishableOutputStream out) {
         return options.getOutputStream(out);
     }

@@ -95,6 +95,11 @@ class BlockOutputStream extends FinishableOutputStream {
         validate();
     }
 
+    public void flush() throws IOException {
+        filterChain.flush();
+        validate();
+    }
+
     public void finish() throws IOException {
         // Finish the Compressed Data field.
         filterChain.finish();

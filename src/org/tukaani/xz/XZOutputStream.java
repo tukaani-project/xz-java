@@ -25,8 +25,23 @@ public class XZOutputStream extends FinishableOutputStream {
     private StreamFlags streamFlags = new StreamFlags();
     private Check check;
     private IndexEncoder index = new IndexEncoder();
-    private FilterEncoder[] filters;
+
     private BlockOutputStream blockEncoder = null;
+    private FilterEncoder[] filters;
+
+    /**
+     * True if the current filter chain supports flushing.
+     * If it doesn't support flushing, <code>flush()</code>
+     * will use <code>flushBlock()</code> as a fallback.
+     */
+    private boolean filtersSupportFlushing;
+
+    /**
+     * True if <code>flush()</code> should use <code>flushBlock()</code>
+     * even if the filter chain does support flushing.
+     */
+    private boolean alwaysFlushBlock = false;
+
     private IOException exception = null;
     private boolean finished = false;
 
@@ -96,9 +111,9 @@ public class XZOutputStream extends FinishableOutputStream {
      * Updates the filter chain.
      * <p>
      * Currently this cannot be used to update e.g. LZMA2 options in the
-     * middle of a XZ Block. Use <code>flush()</code> to finish the current
-     * XZ Block before calling this function. The new filter chain will then
-     * be used for the next XZ Block.
+     * middle of a XZ Block. Use <code>flushBlock()</code> to finish the
+     * current XZ Block before calling this function. The new filter chain
+     * will then be used for the next XZ Block.
      */
     public void updateFilters(FilterOptions[] filterOptions)
             throws XZIOException {
@@ -110,9 +125,12 @@ public class XZOutputStream extends FinishableOutputStream {
             throw new UnsupportedOptionsException(
                         "XZ filter chain must be 1-4 filters");
 
+        filtersSupportFlushing = true;
         FilterEncoder[] newFilters = new FilterEncoder[filterOptions.length];
-        for (int i = 0; i < filterOptions.length; ++i)
+        for (int i = 0; i < filterOptions.length; ++i) {
             newFilters[i] = filterOptions[i].getFilterEncoder();
+            filtersSupportFlushing &= newFilters[i].supportsFlushing();
+        }
 
         RawCoder.validate(newFilters);
         filters = newFilters;
@@ -175,13 +193,16 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
-     * Flushes the encoder and calls <code>out.flush()</code>.
+     * Finishes the current XZ Block (but not the whole XZ Stream) and
+     * calls <code>out.flush()</code>.
+     * All buffered pending data will then be decompressible from
+     * the output stream.
      * <p>
-     * FIXME: I haven't decided yet how this will work in the final version.
-     * In the current implementation, flushing finishes the current .xz Block.
-     * This is equivalent to LZMA_FULL_FLUSH in liblzma (XZ Utils).
-     * Equivalent of liblzma's LZMA_SYNC_FLUSH might be implemented in
-     * the future, and perhaps should be what <code>flush()</code> should do.
+     * <code>flushBlock()</code> resets the encoder state so there will be
+     * a bigger penalty in compressed file size than with <code>flush()</code>.
+     * <p>
+     * <code>flushBlock()</code> can be useful, for example, to create
+     * random-accessible .xz files.
      */
     public void flushBlock() throws IOException {
         if (exception != null)
@@ -202,11 +223,51 @@ public class XZOutputStream extends FinishableOutputStream {
         out.flush();
     }
 
+    /**
+     * Flushes the encoder and calls <code>out.flush()</code>.
+     * All buffered pending data will then be decompressible from
+     * the output stream.
+     * <p>
+     * Calling this function very often may increase the compressed
+     * file size a lot. The filter chain options may affect the size
+     * increase too. For example, with LZMA2 the HC4 match finder has
+     * smaller penalty with flushing than BT4.
+     * <p>
+     * Some filters don't support flushing. If the filter chain has
+     * such a filter, <code>flush()</code> is equivalent to
+     * <code>flushBlock()</code>.
+     * <p>
+     * If <code>setBlockFlushing(true)</code> has been used,
+     * <code>flush()</code> is equivalent to <code>flushBlock()</code>
+     * even if the filter chain does support flushing.
+     */
     public void flush() throws IOException {
-        if (blockEncoder != null)
-            blockEncoder.flush();
+        if (exception != null)
+            throw exception;
+
+        if (!filtersSupportFlushing || alwaysFlushBlock)
+            flushBlock();
+        else if (blockEncoder != null)
+            blockEncoder.flush(); // This also calls out.flush().
         else
             out.flush();
+    }
+
+    /**
+     * Sets the default flushing mode for <code>flush()</code>.
+     * <p>
+     * Calling <code>setBlockFlushing(true)</code> will make
+     * <code>flush()</code> equivalent to <code>flushBlock()</code>
+     * even with filter chains that support flushing. Calling
+     * <code>setBlockFlushing(false)</code> will restore the default
+     * behavior.
+     * <p>
+     * This function is rarely useful. Normally you should use
+     * <code>flushBlock()</code> directly if you want to start
+     * a new XZ Block.
+     */
+    public void setBlockFlushing(boolean flushFlushesBlock) {
+        alwaysFlushBlock = flushFlushesBlock;
     }
 
     /**
