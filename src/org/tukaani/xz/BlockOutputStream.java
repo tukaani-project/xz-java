@@ -33,7 +33,7 @@ class BlockOutputStream extends FinishableOutputStream {
         // Initialize the filter chain.
         outCounted = new CountingOutputStream(out);
         filterChain = outCounted;
-        for (int i = 0; i < filters.length; ++i)
+        for (int i = filters.length - 1; i >= 0; --i)
             filterChain = filters[i].getOutputStream(filterChain);
 
         // Prepare to encode the Block Header field.
