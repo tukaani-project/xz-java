@@ -18,7 +18,7 @@ abstract class DeltaCoder {
     final byte[] history = new byte[DISTANCE_MAX];
     int pos = 0;
 
-    public DeltaCoder(int distance) {
+    DeltaCoder(int distance) {
         if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
             throw new IllegalArgumentException();
 
