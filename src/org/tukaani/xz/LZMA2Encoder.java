@@ -13,8 +13,8 @@ import java.io.OutputStream;
 import org.tukaani.xz.lzma.LZMAEncoder;
 
 class LZMA2Encoder extends LZMA2Coder implements FilterEncoder {
-    private LZMA2Options options;
-    private byte[] props = new byte[1];
+    private final LZMA2Options options;
+    private final byte[] props = new byte[1];
 
     LZMA2Encoder(LZMA2Options options) {
         if (options.getPresetDict() != null)
