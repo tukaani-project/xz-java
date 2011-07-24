@@ -15,7 +15,10 @@ xz_SOURCES = \
 	src/org/tukaani/xz/CountingOutputStream.java \
 	src/org/tukaani/xz/DeltaCoder.java \
 	src/org/tukaani/xz/DeltaDecoder.java \
+	src/org/tukaani/xz/DeltaEncoder.java \
 	src/org/tukaani/xz/DeltaInputStream.java \
+	src/org/tukaani/xz/DeltaOptions.java \
+	src/org/tukaani/xz/DeltaOutputStream.java \
 	src/org/tukaani/xz/FilterCoder.java \
 	src/org/tukaani/xz/FilterDecoder.java \
 	src/org/tukaani/xz/FilterEncoder.java \
@@ -49,6 +52,7 @@ xz_SOURCES = \
 	src/org/tukaani/xz/common/Util.java \
 	src/org/tukaani/xz/delta/DeltaCoder.java \
 	src/org/tukaani/xz/delta/DeltaDecoder.java \
+	src/org/tukaani/xz/delta/DeltaEncoder.java \
 	src/org/tukaani/xz/index/IndexBase.java \
 	src/org/tukaani/xz/index/IndexEncoder.java \
 	src/org/tukaani/xz/index/IndexHash.java \
