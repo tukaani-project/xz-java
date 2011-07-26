@@ -23,8 +23,7 @@ class XZEncDemo {
         System.err.println("Decoder memory usage: "
                            + options.getDecoderMemoryUsage() + " KiB");
 
-        XZOutputStream out = new XZOutputStream(System.out, options,
-                                                XZ.CHECK_CRC64);
+        XZOutputStream out = new XZOutputStream(System.out, options);
 
         byte[] buf = new byte[8192];
         int size;
