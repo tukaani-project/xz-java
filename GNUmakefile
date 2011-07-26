@@ -8,6 +8,12 @@
 #
 
 xz_SOURCES = \
+	src/org/tukaani/xz/ARMOptions.java \
+	src/org/tukaani/xz/ARMThumbOptions.java \
+	src/org/tukaani/xz/BCJCoder.java \
+	src/org/tukaani/xz/BCJDecoder.java \
+	src/org/tukaani/xz/BCJEncoder.java \
+	src/org/tukaani/xz/BCJOptions.java \
 	src/org/tukaani/xz/BlockInputStream.java \
 	src/org/tukaani/xz/BlockOutputStream.java \
 	src/org/tukaani/xz/CorruptedInputException.java \
@@ -24,6 +30,7 @@ xz_SOURCES = \
 	src/org/tukaani/xz/FilterEncoder.java \
 	src/org/tukaani/xz/FilterOptions.java \
 	src/org/tukaani/xz/FinishableOutputStream.java \
+	src/org/tukaani/xz/IA64Options.java \
 	src/org/tukaani/xz/IndexIndicatorException.java \
 	src/org/tukaani/xz/LZMA2Coder.java \
 	src/org/tukaani/xz/LZMA2Decoder.java \
@@ -32,10 +39,15 @@ xz_SOURCES = \
 	src/org/tukaani/xz/LZMA2Options.java \
 	src/org/tukaani/xz/LZMA2OutputStream.java \
 	src/org/tukaani/xz/MemoryLimitException.java \
+	src/org/tukaani/xz/PowerPCOptions.java \
 	src/org/tukaani/xz/RawCoder.java \
+	src/org/tukaani/xz/SPARCOptions.java \
+	src/org/tukaani/xz/SimpleInputStream.java \
+	src/org/tukaani/xz/SimpleOutputStream.java \
 	src/org/tukaani/xz/SingleXZInputStream.java \
 	src/org/tukaani/xz/UncompressedLZMA2OutputStream.java \
 	src/org/tukaani/xz/UnsupportedOptionsException.java \
+	src/org/tukaani/xz/X86Options.java \
 	src/org/tukaani/xz/XZ.java \
 	src/org/tukaani/xz/XZFormatException.java \
 	src/org/tukaani/xz/XZIOException.java \
@@ -74,7 +86,14 @@ xz_SOURCES = \
 	src/org/tukaani/xz/package-info.java \
 	src/org/tukaani/xz/rangecoder/RangeCoder.java \
 	src/org/tukaani/xz/rangecoder/RangeDecoder.java \
-	src/org/tukaani/xz/rangecoder/RangeEncoder.java
+	src/org/tukaani/xz/rangecoder/RangeEncoder.java \
+	src/org/tukaani/xz/simple/ARM.java \
+	src/org/tukaani/xz/simple/ARMThumb.java \
+	src/org/tukaani/xz/simple/IA64.java \
+	src/org/tukaani/xz/simple/PowerPC.java \
+	src/org/tukaani/xz/simple/SPARC.java \
+	src/org/tukaani/xz/simple/SimpleFilter.java \
+	src/org/tukaani/xz/simple/X86.java
 XZEncDemo_SOURCES = src/XZEncDemo.java
 XZDecDemo_SOURCES = src/XZDecDemo.java
 ALL_SOURCES = $(xz_SOURCES) $(XZEncDemo_SOURCES) $(XZDecDemo_SOURCES)
