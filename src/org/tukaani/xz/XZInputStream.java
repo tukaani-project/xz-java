@@ -23,6 +23,41 @@ import org.tukaani.xz.common.DecoderUtil;
  * its input stream until the end of the input or until an error occurs.
  * This supports decompressing concatenated .xz files.
  *
+ * <h4>Typical use cases</h4>
+ * <p>
+ * Getting an input stream to decompress a .xz file:
+ * <p><blockquote><pre>
+ * InputStream infile = new FileInputStream("foo.xz");
+ * XZInputStream inxz = new XZInputStream(infile);
+ * </pre></blockquote>
+ * <p>
+ * It's important to keep in mind that decompressor memory usage depends
+ * on the settings used to compress the file. The worst-case memory usage
+ * of XZInputStream is currently 1.5&nbsp;GiB. Still, very few files will
+ * require more than about 65&nbsp;MiB because that's how much decompressing
+ * a file created with the highest preset level will need, and only a few
+ * people use settings other than the predefined presets.
+ * <p>
+ * It is possible to specify a memory usage limit for
+ * <code>XZInputStream</code>. If decompression requires more memory than
+ * the specified limit, MemoryLimitException will be thrown when reading
+ * from the stream. For example, the following sets the memory usage limit
+ * to 100&nbsp;MiB:
+ * <p><blockquote><pre>
+ * InputStream infile = new FileInputStream("foo.xz");
+ * XZInputStream inxz = new XZInputStream(infile, 100 * 1024);
+ * </pre></blockquote>
+ *
+ * <h4>When uncompressed size is known beforehand</h4>
+ * <p>
+ * If you are decompressing complete files and your application knows
+ * exactly how much uncompressed data there should be, it is good to try
+ * reading one more byte by calling <code>read()</code> and checking
+ * that it returns <code>-1</code>. This way the decompressor will parse the
+ * file footers and verify the integrity checks, giving the caller more
+ * confidence that the uncompressed data is valid. (This advice seems to
+ * apply to <code>java.util.zip.GZIPInputStream</code> too.)
+ *
  * @see SingleXZInputStream
  */
 public class XZInputStream extends InputStream {
@@ -33,8 +68,7 @@ public class XZInputStream extends InputStream {
     private IOException exception = null;
 
     /**
-     * Creates a new input stream that decompresses XZ-compressed data
-     * from <code>in</code>.
+     * Creates a new XZ decompressor without a memory usage limit.
      * <p>
      * This constructor reads and parses the XZ Stream Header (12 bytes)
      * from <code>in</code>. The header of the first Block is not read
@@ -66,8 +100,7 @@ public class XZInputStream extends InputStream {
     }
 
     /**
-     * Creates a new input stream that decompresses XZ-compressed data
-     * from <code>in</code>.
+     * Creates a new XZ decompressor with an optional memory usage limit.
      * <p>
      * This is identical to <code>XZInputStream(InputStream)</code> except
      * that this takes also the <code>memoryLimit</code> argument.

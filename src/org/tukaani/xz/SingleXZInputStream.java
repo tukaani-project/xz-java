@@ -28,6 +28,15 @@ import org.tukaani.xz.check.Check;
  * Unless you know what you are doing, don't use this class to decompress
  * standalone .xz files. For that purpose, use <code>XZInputStream</code>.
  *
+ * <h4>When uncompressed size is known beforehand</h4>
+ * <p>
+ * If you are decompressing complete XZ streams and your application knows
+ * exactly how much uncompressed data there should be, it is good to try
+ * reading one more byte by calling <code>read()</code> and checking
+ * that it returns <code>-1</code>. This way the decompressor will parse the
+ * file footers and verify the integrity checks, giving the caller more
+ * confidence that the uncompressed data is valid.
+ *
  * @see XZInputStream
  */
 public class SingleXZInputStream extends InputStream {
@@ -41,8 +50,8 @@ public class SingleXZInputStream extends InputStream {
     private IOException exception = null;
 
     /**
-     * Creates a new input stream that decompresses exactly one XZ Stream
-     * from <code>in</code>.
+     * Creates a new XZ decompressor that decompresses exactly one
+     * XZ Stream from <code>in</code> without a memory usage limit.
      * <p>
      * This constructor reads and parses the XZ Stream Header (12 bytes)
      * from <code>in</code>. The header of the first Block is not read
@@ -72,8 +81,8 @@ public class SingleXZInputStream extends InputStream {
     }
 
     /**
-     * Creates a new single-stream XZ decompressor with optional
-     * memory usage limit.
+     * Creates a new XZ decompressor that decompresses exactly one
+     * XZ Stream from <code>in</code> with an optional memory usage limit.
      * <p>
      * This is identical to <code>SingleXZInputStream(InputStream)</code>
      * except that this takes also the <code>memoryLimit</code> argument.
