@@ -54,7 +54,11 @@ public abstract class FilterOptions implements Cloneable {
     public abstract int getEncoderMemoryUsage();
 
     /**
-     * Gets a raw encoder output stream using these options.
+     * Gets a raw (no XZ headers) encoder output stream using these options.
+     * Raw streams are an advanced feature. In most cases you want to store
+     * the compressed data in the .xz container format instead of using
+     * a raw stream. To use this filter in a .xz file, pass this object
+     * to XZOutputStream.
      */
     public abstract FinishableOutputStream getOutputStream(
             FinishableOutputStream out);
@@ -66,7 +70,7 @@ public abstract class FilterOptions implements Cloneable {
     public abstract int getDecoderMemoryUsage();
 
     /**
-     * Gets a raw decoder input stream using these options.
+     * Gets a raw (no XZ headers) decoder input stream using these options.
      */
     public abstract InputStream getInputStream(InputStream in)
             throws IOException;

@@ -18,7 +18,7 @@ import org.tukaani.xz.rangecoder.RangeDecoder;
 import org.tukaani.xz.lzma.LZMADecoder;
 
 /**
- * Decompresses a raw LZMA2 stream.
+ * Decompresses a raw LZMA2 stream (no XZ headers).
  */
 public class LZMA2InputStream extends InputStream {
     /**

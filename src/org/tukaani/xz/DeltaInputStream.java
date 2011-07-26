@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.tukaani.xz.delta.DeltaDecoder;
 
 /**
- * Decodes Delta-filtered data.
+ * Decodes raw Delta-filtered data (no XZ headers).
  * <p>
  * The delta filter doesn't change the size of the data and thus it
  * cannot have an end-of-payload marker. It will simply decode until
