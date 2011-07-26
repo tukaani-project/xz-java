@@ -1,0 +1,8 @@
+README
+COPYING
+THANKS
+build.xml
+build.properties
+fileset-src.txt
+fileset-misc.txt
+.gitignore

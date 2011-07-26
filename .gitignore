@@ -1,7 +1,3 @@
-class
-jar
-bin
+build
 extdoc
-doc
 *.class
-*.jar
