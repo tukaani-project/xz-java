@@ -1,0 +1,85 @@
+/*
+ * SimpleOutputStream
+ *
+ * Author: Lasse Collin <lasse.collin@tukaani.org>
+ *
+ * This file has been put into the public domain.
+ * You can do whatever you want with this file.
+ */
+
+package org.tukaani.xz;
+
+import java.io.IOException;
+import org.tukaani.xz.simple.SimpleFilter;
+
+class SimpleOutputStream extends FinishableOutputStream {
+    private static final int TMPBUF_SIZE = 4096;
+
+    private final FinishableOutputStream out;
+    private final SimpleFilter simpleFilter;
+
+    private final byte[] tmpbuf = new byte[TMPBUF_SIZE];
+    private int pos = 0;
+    private int unfiltered = 0;
+
+    static int getMemoryUsage() {
+        return 1 + TMPBUF_SIZE / 1024;
+    }
+
+    SimpleOutputStream(FinishableOutputStream out,
+                       SimpleFilter simpleFilter) {
+        this.out = out;
+        this.simpleFilter = simpleFilter;
+    }
+
+    public void write(int b) throws IOException {
+        byte[] buf = new byte[1];
+        buf[0] = (byte)b;
+        write(buf, 0, 1);
+    }
+
+    public void write(byte[] buf, int off, int len) throws IOException {
+        if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
+            throw new IllegalArgumentException();
+
+        while (len > 0) {
+            // Copy more unfiltered data into tmpbuf.
+            int copySize = Math.min(len, TMPBUF_SIZE - (pos + unfiltered));
+            System.arraycopy(buf, off, tmpbuf, pos + unfiltered, copySize);
+            off += copySize;
+            len -= copySize;
+            unfiltered += copySize;
+
+            // Filter the data in tmpbuf.
+            int filtered = simpleFilter.code(tmpbuf, pos, unfiltered);
+            assert filtered <= unfiltered;
+            unfiltered -= filtered;
+
+            // Write out the filtered data.
+            out.write(tmpbuf, pos, filtered);
+            pos += filtered;
+
+            // If end of tmpbuf was reached, move the pending unfiltered
+            // data to the beginning of the buffer so that more data can
+            // be copied into tmpbuf on the next loop iteration.
+            if (pos + unfiltered == TMPBUF_SIZE) {
+                System.arraycopy(tmpbuf, pos, tmpbuf, 0, unfiltered);
+                pos = 0;
+            }
+        }
+    }
+
+    public void flush() throws IOException {
+        throw new UnsupportedOptionsException("Flushing is not supported");
+    }
+
+    public void finish() throws IOException {
+        out.write(tmpbuf, pos, unfiltered);
+        out.finish();
+    }
+
+    public void close() throws IOException {
+        out.write(tmpbuf, pos, unfiltered);
+        out.close();
+    }
+}

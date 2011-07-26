@@ -126,6 +126,9 @@ class BlockInputStream extends InputStream {
             else if (filterIDs[i] == DeltaCoder.FILTER_ID)
                 filters[i] = new DeltaDecoder(filterProps[i]);
 
+            else if (BCJDecoder.isBCJFilterID(filterIDs[i]))
+                filters[i] = new BCJDecoder(filterIDs[i], filterProps[i]);
+
             else
                 throw new UnsupportedOptionsException(
                         "Unknown Filter ID " + filterIDs[i]);
