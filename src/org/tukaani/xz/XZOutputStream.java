@@ -19,6 +19,38 @@ import org.tukaani.xz.index.IndexEncoder;
 
 /**
  * Compresses into the .xz file format.
+ *
+ * <h4>Examples</h4>
+ * <p>
+ * Getting an output stream to compress with LZMA2 using the default
+ * settings and the default integrity check type (CRC64):
+ * <p><blockquote><pre>
+ * FileOutputStream outfile = new FileOutputStream("foo.xz");
+ * XZOutputStream outxz = new XZOutputStream(outfile, new LZMA2Options());
+ * </pre></blockquote>
+ * <p>
+ * Using the preset level <code>8</code> for LZMA2 (the default
+ * is <code>6</code>) and SHA-256 instead of CRC64 for integrity checking:
+ * <p><blockquote><pre>
+ * XZOutputStream outxz = new XZOutputStream(outfile, new LZMA2Options(8),
+ *                                           XZ.CHECK_SHA256);
+ * </pre></blockquote>
+ * <p>
+ * Using the x86 BCJ filter together with LZMA2 to compress x86 executables
+ * and printing the memory usage information before creating the
+ * XZOutputStream:
+ * <p><blockquote><pre>
+ * X86Options x86 = new X86Options();
+ * LZMA2Options lzma2 = new LZMA2Options();
+ * FilterOptions options = { x86, lzma2 };
+ * System.out.println("Encoder memory usage: "
+ *                    + FilterOptions.getEncoderMemoryUsage(options)
+ *                    + " KiB");
+ * System.out.println("Decoder memory usage: "
+ *                    + FilterOptions.getDecoderMemoryUsage(options)
+ *                    + " KiB");
+ * XZOutputStream outxz = new XZOutputStream(outfile, options);
+ * </pre></blockquote>
  */
 public class XZOutputStream extends FinishableOutputStream {
     private OutputStream out;
@@ -46,10 +78,32 @@ public class XZOutputStream extends FinishableOutputStream {
     private boolean finished = false;
 
     /**
-     * Creates a new output stream that compressed data into the .xz format.
-     * This is takes options for one filter as an argument. This constructor
-     * is equivalent to passing a single-member filterOptions array to the
-     * other constructor.
+     * Creates a new XZ compressor using one filter and CRC64 as
+     * the integrity check. This constructor is equivalent to passing
+     * a single-member FilterOptions array to
+     * <code>XZOutputStream(OutputStream, FilterOptions[])</code>.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       filterOptions
+     *                          filter options to use
+     *
+     * @throws      UnsupportedOptionsException
+     *                          invalid filter chain
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     */
+    public XZOutputStream(OutputStream out, FilterOptions filterOptions)
+            throws IOException {
+        this(out, filterOptions, XZ.CHECK_CRC64);
+    }
+
+    /**
+     * Creates a new XZ compressor using one filter and the specified
+     * integrity check type. This constructor is equivalent to
+     * passing a single-member FilterOptions array to
+     * <code>XZOutputStream(OutputStream, FilterOptions[], int)</code>.
      *
      * @param       out         output stream to which the compressed data
      *                          will be written
@@ -58,7 +112,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *                          filter options to use
      *
      * @param       checkType   type of the integrity check,
-     *                          for example XZ.CHECK_CRC64
+     *                          for example XZ.CHECK_CRC32
      *
      * @throws      UnsupportedOptionsException
      *                          invalid filter chain
@@ -67,15 +121,35 @@ public class XZOutputStream extends FinishableOutputStream {
      */
     public XZOutputStream(OutputStream out, FilterOptions filterOptions,
                           int checkType) throws IOException {
-        FilterOptions[] ops = new FilterOptions[1];
-        ops[0] = filterOptions;
-        initialize(out, ops, checkType);
+        FilterOptions[] opts = new FilterOptions[1];
+        opts[0] = filterOptions;
+        initialize(out, opts, checkType);
     }
 
     /**
-     * Creates a new output stream that compressed data into the .xz format.
-     * This takes an array of filter options, allowing the caller to specify
-     * a filter chain with 1-4 filters.
+     * Creates a new XZ compressor using 1-4 filters and CRC64 as
+     * the integrity check. This constructor is equivalent
+     * <code>XZOutputStream(out, filterOptions, XZ.CHECK_CRC64)</code>.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       filterOptions
+     *                          array of filter options to use
+     *
+     * @throws      UnsupportedOptionsException
+     *                          invalid filter chain
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     */
+    public XZOutputStream(OutputStream out, FilterOptions[] filterOptions)
+            throws IOException {
+        initialize(out, filterOptions, XZ.CHECK_CRC64);
+    }
+
+    /**
+     * Creates a new XZ compressor using 1-4 filters and the specified
+     * integrity check type.
      *
      * @param       out         output stream to which the compressed data
      *                          will be written
@@ -84,7 +158,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *                          array of filter options to use
      *
      * @param       checkType   type of the integrity check,
-     *                          for example XZ.CHECK_CRC64
+     *                          for example XZ.CHECK_CRC32
      *
      * @throws      UnsupportedOptionsException
      *                          invalid filter chain
@@ -108,7 +182,19 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
-     * Updates the filter chain.
+     * Updates the filter chain with a single filter.
+     * This is equivalent to passing a single-member FilterOptions array
+     * to <code>updateFilters(FilterOptions[])</code>.
+     */
+    public void updateFilters(FilterOptions filterOptions)
+            throws XZIOException {
+        FilterOptions[] opts = new FilterOptions[1];
+        opts[0] = filterOptions;
+        updateFilters(opts);
+    }
+
+    /**
+     * Updates the filter chain with 1-4 filters.
      * <p>
      * Currently this cannot be used to update e.g. LZMA2 options in the
      * middle of a XZ Block. Use <code>flushBlock()</code> to finish the
@@ -161,7 +247,9 @@ public class XZOutputStream extends FinishableOutputStream {
      * @param       len         number of bytes to write
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big
+     *                          XZ stream has grown too big: total file size
+     *                          about 8 EiB or the Index field exceeds 16 GiB;
+     *                          you shouldn't reach these sizes in practice
      * @throws      XZIOException
      *                          <code>finish()</code> or <code>close()</code>
      *                          was already called
@@ -196,7 +284,8 @@ public class XZOutputStream extends FinishableOutputStream {
      * Finishes the current XZ Block (but not the whole XZ Stream) and
      * calls <code>out.flush()</code>.
      * All buffered pending data will then be decompressible from
-     * the output stream.
+     * the output stream. If there is no unfinished Block open,
+     * no empty Block will be created.
      * <p>
      * <code>flushBlock()</code> resets the encoder state so there will be
      * a bigger penalty in compressed file size than with <code>flush()</code>.
