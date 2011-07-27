@@ -48,6 +48,12 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             opts[i] = new Optimum();
     }
 
+    public void reset() {
+        optCur = 0;
+        optEnd = 0;
+        super.reset();
+    }
+
     /**
      * Converts the opts array from backward indexes to forward indexes.
      * Then it will be simple to get the next symbol from the array
@@ -95,6 +101,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             return len;
         }
 
+        assert optCur == optEnd;
         optCur = 0;
         optEnd = 0;
         back = -1;

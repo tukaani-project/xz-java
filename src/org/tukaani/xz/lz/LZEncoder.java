@@ -257,7 +257,7 @@ public abstract class LZEncoder {
 
     public void copyUncompressed(OutputStream out, int backward, int len)
             throws IOException {
-        out.write(buf, readPos + 1 - backward - len, len);
+        out.write(buf, readPos + 1 - backward, len);
     }
 
     /**

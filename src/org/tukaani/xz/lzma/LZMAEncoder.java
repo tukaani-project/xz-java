@@ -193,6 +193,9 @@ public abstract class LZMAEncoder extends LZMACoder {
         repLenEncoder.reset();
         distPriceCount = 0;
         alignPriceCount = 0;
+
+        uncompressedSize += readAhead + 1;
+        readAhead = -1;
     }
 
     public int getUncompressedSize() {
@@ -201,10 +204,6 @@ public abstract class LZMAEncoder extends LZMACoder {
 
     public void resetUncompressedSize() {
         uncompressedSize = 0;
-    }
-
-    public void copyUncompressed(OutputStream out) throws IOException {
-        lz.copyUncompressed(out, readAhead + 1, uncompressedSize);
     }
 
     /**

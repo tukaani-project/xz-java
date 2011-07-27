@@ -93,10 +93,13 @@ class LZMA2OutputStream extends FinishableOutputStream {
 
         // +2 because the header of a compressed chunk is 2 bytes
         // bigger than the header of an uncompressed chunk.
-        if (compressedSize + 2 < uncompressedSize)
+        if (compressedSize + 2 < uncompressedSize) {
             writeLZMA(uncompressedSize, compressedSize);
-        else
+        } else {
+            lzma.reset();
+            uncompressedSize = lzma.getUncompressedSize();
             writeUncompressed(uncompressedSize);
+        }
 
         pendingSize -= uncompressedSize;
         lzma.resetUncompressedSize();
@@ -136,13 +139,16 @@ class LZMA2OutputStream extends FinishableOutputStream {
     }
 
     private void writeUncompressed(int uncompressedSize) throws IOException {
-        outData.writeByte(dictResetNeeded ? 0x01 : 0x02);
-        outData.writeShort(uncompressedSize - 1);
-        lzma.copyUncompressed(out);
+        while (uncompressedSize > 0) {
+            int chunkSize = Math.min(uncompressedSize, COMPRESSED_SIZE_MAX);
+            outData.writeByte(dictResetNeeded ? 0x01 : 0x02);
+            outData.writeShort(chunkSize - 1);
+            lz.copyUncompressed(out, uncompressedSize, chunkSize);
+            uncompressedSize -= chunkSize;
+            dictResetNeeded = false;
+        }
 
-        lzma.reset();
         stateResetNeeded = true;
-        dictResetNeeded = false;
     }
 
     private void writeEndMarker() throws IOException {
