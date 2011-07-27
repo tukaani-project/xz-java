@@ -46,7 +46,7 @@
     <target name="compile" description="Compiles the classes">
         <mkdir dir="${classes_dir}"/>
         <javac srcdir="." sourcepath="${src_dir}" destdir="${classes_dir}"
-               includeAntRuntime="false"
+               includeAntRuntime="false" debug="${debug}"
                source="${sourcever}" includesfile="fileset-src.txt"
                excludes="**/package-info.java"/>
     </target>
