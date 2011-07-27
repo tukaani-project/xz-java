@@ -57,6 +57,7 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
         outData.writeShort(uncompPos - 1);
         outData.write(uncompBuf, 0, uncompPos);
         uncompPos = 0;
+        dictResetNeeded = false;
     }
 
     public void flush() throws IOException {

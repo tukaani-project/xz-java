@@ -329,7 +329,7 @@ public class LZMA2Options extends FilterOptions {
      *                          <code>mode</code> is not supported
      */
     public void setMode(int mode) throws UnsupportedOptionsException {
-        if (mode != MODE_FAST && mode != MODE_NORMAL)
+        if (mode < MODE_UNCOMPRESSED || mode > MODE_NORMAL)
             throw new UnsupportedOptionsException(
                     "Unsupported compression mode: " + mode);
 
