@@ -22,6 +22,9 @@ class SimpleOutputStream extends FinishableOutputStream {
     private int pos = 0;
     private int unfiltered = 0;
 
+    private IOException exception = null;
+    private boolean finished = false;
+
     static int getMemoryUsage() {
         return 1 + TMPBUF_SIZE / 1024;
     }
@@ -41,6 +44,12 @@ class SimpleOutputStream extends FinishableOutputStream {
     public void write(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IllegalArgumentException();
+
+        if (exception != null)
+            throw exception;
+
+        if (finished)
+            throw new XZIOException("Cannot write to a finished stream");
 
         while (len > 0) {
             // Copy more unfiltered data into tmpbuf.
@@ -69,17 +78,27 @@ class SimpleOutputStream extends FinishableOutputStream {
         }
     }
 
+    private void writePending() throws IOException {
+        if (exception != null)
+            throw exception;
+
+        if (!finished) {
+            out.write(tmpbuf, pos, unfiltered);
+            finished = true;
+        }
+    }
+
     public void flush() throws IOException {
         throw new UnsupportedOptionsException("Flushing is not supported");
     }
 
     public void finish() throws IOException {
-        out.write(tmpbuf, pos, unfiltered);
+        writePending();
         out.finish();
     }
 
     public void close() throws IOException {
-        out.write(tmpbuf, pos, unfiltered);
+        writePending();
         out.close();
     }
 }

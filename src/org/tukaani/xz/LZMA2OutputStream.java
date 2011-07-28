@@ -32,6 +32,8 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private boolean propsNeeded = true;
 
     private int pendingSize = 0;
+    private boolean finished = false;
+    private IOException exception = null;
 
     private static int getExtraSizeBefore(int dictSize) {
         return COMPRESSED_SIZE_MAX > dictSize
@@ -76,14 +78,26 @@ class LZMA2OutputStream extends FinishableOutputStream {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IllegalArgumentException();
 
-        while (len > 0) {
-            int used = lz.fillWindow(buf, off, len);
-            off += used;
-            len -= used;
-            pendingSize += used;
 
-            if (lzma.encodeForLZMA2())
-                writeChunk();
+        if (exception != null)
+            throw exception;
+
+        if (finished)
+            throw new XZIOException("Cannot write to a finished stream");
+
+        try {
+            while (len > 0) {
+                int used = lz.fillWindow(buf, off, len);
+                off += used;
+                len -= used;
+                pendingSize += used;
+
+                if (lzma.encodeForLZMA2())
+                    writeChunk();
+            }
+        } catch (IOException e) {
+            exception = e;
+            throw e;
         }
     }
 
@@ -152,22 +166,33 @@ class LZMA2OutputStream extends FinishableOutputStream {
     }
 
     private void writeEndMarker() throws IOException {
-        lz.setFinishing();
+        if (exception != null)
+            throw exception;
 
-        while (pendingSize > 0) {
-            lzma.encodeForLZMA2();
-            writeChunk();
+        if (!finished) {
+            lz.setFinishing();
+
+            while (pendingSize > 0) {
+                lzma.encodeForLZMA2();
+                writeChunk();
+            }
+
+            out.write(0x00);
+            finished = true;
         }
-
-        out.write(0x00);
     }
 
     public void flush() throws IOException {
-        lz.setFlushing();
+        if (exception != null)
+            throw exception;
 
-        while (pendingSize > 0) {
-            lzma.encodeForLZMA2();
-            writeChunk();
+        if (!finished) {
+            lz.setFlushing();
+
+            while (pendingSize > 0) {
+                lzma.encodeForLZMA2();
+                writeChunk();
+            }
         }
 
         out.flush();

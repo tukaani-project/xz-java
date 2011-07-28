@@ -262,12 +262,11 @@ public class XZOutputStream extends FinishableOutputStream {
         if (len == 0)
             return;
 
-        if (finished)
-            exception = new XZIOException(
-                    "XZOutputStream.write was called on a finished stream");
-
         if (exception != null)
             throw exception;
+
+        if (finished)
+            throw new XZIOException("Cannot write to a finished stream");
 
         if (blockEncoder == null)
             blockEncoder = new BlockOutputStream(out, filters, check);
