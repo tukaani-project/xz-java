@@ -4,25 +4,39 @@ XZ in Java
 
 Introduction
 
-    In the (very) long term, this aims to be a complete implementation
-    of XZ data compression in Java. Currently only streamed decompression
-    is supported. For the latest source code, see the project home page:
+    This aims to be a complete implementation of XZ data compression
+    in pure Java. Single-threaded streamed compression and decompression
+    have been fully implemented. Threading and random access reading
+    are in the plans but it is unknown when they will be implemented.
+
+    For the latest source code, see the project home page:
 
         http://tukaani.org/xz/java.html
 
-    The source code is currently compatible with Java 1.4.
+    The source code is compatible with Java 1.4 and later.
 
 Building
 
-    The package is easy to build without any makefiles by simply
-    passing all the .java files to a Java compiler. For convenience,
-    a quick & dirty GNUmakefile is included which builds the .class
-    and .jar files and documentation.
+    It is recommended to use Apache Ant. Type "ant" to compile the
+    classes and create the .jar files. Type "ant doc" to build the
+    javadoc HTML documentation. Note that building the documentation
+    will download a small file named "package-list" from Oracle to
+    enable linking to the documentation of the standard Java classes.
+
+    If you cannot or don't want to use Ant, just compile all .java
+    files under the "src" directory.
+
+Demo programs
+
+    You can test compression with XZEncDemo, which compresses from
+    standard input to standard output:
+
+        java -jar build/jar/XZEncDemo.jar < foo.txt > foo.txt.xz
 
     You can test decompression with XZDecDemo, which decompresses to
     standard output:
 
-        java -jar jar/XZDecDemo.jar foo.txt.xz
+        java -jar build/jar/XZDecDemo.jar foo.txt.xz
 
 Reporting bugs
 
