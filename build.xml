@@ -48,7 +48,9 @@
         <javac srcdir="." sourcepath="${src_dir}" destdir="${classes_dir}"
                includeAntRuntime="false" debug="${debug}"
                source="${sourcever}" includesfile="fileset-src.txt"
-               excludes="**/package-info.java"/>
+               excludes="**/package-info.java">
+            <compilerarg compiler="modern" value="-Xlint"/>
+        </javac>
     </target>
 
     <target name="jar" depends="compile"
