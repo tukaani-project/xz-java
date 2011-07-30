@@ -13,6 +13,9 @@ import java.io.FilterInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
+/**
+ * Counts the number of bytes read from an input stream.
+ */
 class CountingInputStream extends FilterInputStream {
     private long size = 0;
 

@@ -228,7 +228,7 @@ public class LZMA2Options extends FilterOptions {
     }
 
     /**
-     * Sets the preset dictionary. Use null to disable the use of
+     * Sets a preset dictionary. Use null to disable the use of
      * a preset dictionary. By default there is no preset dictionary.
      * <p>
      * <b>The .xz format doesn't support a preset dictionary for now.

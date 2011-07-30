@@ -12,6 +12,14 @@ package org.tukaani.xz;
 import java.io.OutputStream;
 import java.io.IOException;
 
+/**
+ * Counts the number of bytes written to an output stream.
+ * <p>
+ * The <code>finish</code> method does nothing.
+ * This is <code>FinishableOutputStream</code> instead
+ * of <code>OutputStream</code> solely because it allows
+ * using this as the output stream for a chain of raw filters.
+ */
 class CountingOutputStream extends FinishableOutputStream {
     private OutputStream out;
     private long size = 0;

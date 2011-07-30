@@ -185,6 +185,13 @@ public class XZOutputStream extends FinishableOutputStream {
      * Updates the filter chain with a single filter.
      * This is equivalent to passing a single-member FilterOptions array
      * to <code>updateFilters(FilterOptions[])</code>.
+     *
+     * @param       filterOptions
+     *                          new filter to use
+     *
+     * @throws      UnsupportedOptionsException
+     *                          unsupported filter chain, or trying to change
+     *                          the filter chain in the middle of a Block
      */
     public void updateFilters(FilterOptions filterOptions)
             throws XZIOException {
@@ -200,6 +207,13 @@ public class XZOutputStream extends FinishableOutputStream {
      * middle of a XZ Block. Use <code>flushBlock()</code> to finish the
      * current XZ Block before calling this function. The new filter chain
      * will then be used for the next XZ Block.
+     *
+     * @param       filterOptions
+     *                          new filter chain to use
+     *
+     * @throws      UnsupportedOptionsException
+     *                          unsupported filter chain, or trying to change
+     *                          the filter chain in the middle of a Block
      */
     public void updateFilters(FilterOptions[] filterOptions)
             throws XZIOException {
@@ -227,6 +241,11 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      XZIOException
      *                          XZ stream has grown too big
+     *
+     * @throws      XZIOException
+     *                          <code>finish()</code> or <code>close()</code>
+     *                          was already called
+     *
      * @throws      IOException may be thrown by the underlying output stream
      */
     public void write(int b) throws IOException {
@@ -250,9 +269,11 @@ public class XZOutputStream extends FinishableOutputStream {
      *                          XZ stream has grown too big: total file size
      *                          about 8 EiB or the Index field exceeds 16 GiB;
      *                          you shouldn't reach these sizes in practice
+     *
      * @throws      XZIOException
      *                          <code>finish()</code> or <code>close()</code>
-     *                          was already called
+     *                          was already called and len &gt; 0
+     *
      * @throws      IOException may be thrown by the underlying output stream
      */
     public void write(byte[] buf, int off, int len) throws IOException {
@@ -291,6 +312,11 @@ public class XZOutputStream extends FinishableOutputStream {
      * <p>
      * <code>flushBlock()</code> can be useful, for example, to create
      * random-accessible .xz files.
+     *
+     * @throws      XZIOException
+     *                          XZ stream has grown too big
+     *
+     * @throws      IOException may be thrown by the underlying output stream
      */
     public void flushBlock() throws IOException {
         if (exception != null)
@@ -328,6 +354,11 @@ public class XZOutputStream extends FinishableOutputStream {
      * If <code>setBlockFlushing(true)</code> has been used,
      * <code>flush()</code> is equivalent to <code>flushBlock()</code>
      * even if the filter chain does support flushing.
+     *
+     * @throws      XZIOException
+     *                          XZ stream has grown too big
+     *
+     * @throws      IOException may be thrown by the underlying output stream
      */
     public void flush() throws IOException {
         if (exception != null)
@@ -370,6 +401,11 @@ public class XZOutputStream extends FinishableOutputStream {
      * After finishing, the stream may be closed normally with
      * <code>close()</code>. If the stream will be closed anyway, there
      * usually is no need to call <code>finish()</code> separately.
+     *
+     * @throws      XZIOException
+     *                          XZ stream has grown too big
+     *
+     * @throws      IOException may be thrown by the underlying output stream
      */
     public void finish() throws IOException {
         if (!finished) {
@@ -394,6 +430,11 @@ public class XZOutputStream extends FinishableOutputStream {
      * fails. If both finishing and closing fail, the exception thrown
      * by <code>finish()</code> is thrown and the exception from the failed
      * <code>out.close()</code> is lost.
+     *
+     * @throws      XZIOException
+     *                          XZ stream has grown too big
+     *
+     * @throws      IOException may be thrown by the underlying output stream
      */
     public void close() throws IOException {
         // If finish() throws an exception, it stores the exception to
