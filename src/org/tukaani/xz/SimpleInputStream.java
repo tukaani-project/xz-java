@@ -43,7 +43,7 @@ class SimpleInputStream extends InputStream {
 
     public int read(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
-            throw new IllegalArgumentException();
+            throw new IndexOutOfBoundsException();
 
         if (len == 0)
             return 0;

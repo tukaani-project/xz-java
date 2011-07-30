@@ -43,7 +43,7 @@ class SimpleOutputStream extends FinishableOutputStream {
 
     public void write(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
-            throw new IllegalArgumentException();
+            throw new IndexOutOfBoundsException();
 
         if (exception != null)
             throw exception;
