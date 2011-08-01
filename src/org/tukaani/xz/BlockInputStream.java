@@ -47,7 +47,7 @@ class BlockInputStream extends InputStream {
             throw new IndexIndicatorException();
 
         // Read the rest of the Block Header.
-        headerSize = 4 * (buf[0] + 1);
+        headerSize = 4 * ((buf[0] & 0xFF) + 1);
         inData.readFully(buf, 1, headerSize - 1);
 
         // Validate the CRC32.
