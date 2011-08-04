@@ -240,7 +240,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * Writes one byte to be compressed.
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big
+     *                          XZ Stream has grown too big
      *
      * @throws      XZIOException
      *                          <code>finish()</code> or <code>close()</code>
@@ -266,9 +266,10 @@ public class XZOutputStream extends FinishableOutputStream {
      * @param       len         number of bytes to write
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big: total file size
-     *                          about 8 EiB or the Index field exceeds 16 GiB;
-     *                          you shouldn't reach these sizes in practice
+     *                          XZ Stream has grown too big: total file size
+     *                          about 8&nbsp;EiB or the Index field exceeds
+     *                          16&nbsp;GiB; you shouldn't reach these sizes
+     *                          in practice
      *
      * @throws      XZIOException
      *                          <code>finish()</code> or <code>close()</code>
@@ -314,7 +315,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * random-accessible .xz files.
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big
+     *                          XZ Stream has grown too big
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
@@ -356,7 +357,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * even if the filter chain does support flushing.
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big
+     *                          XZ Stream has grown too big
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
@@ -403,7 +404,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * usually is no need to call <code>finish()</code> separately.
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big
+     *                          XZ Stream has grown too big
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
@@ -432,7 +433,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * <code>out.close()</code> is lost.
      *
      * @throws      XZIOException
-     *                          XZ stream has grown too big
+     *                          XZ Stream has grown too big
      *
      * @throws      IOException may be thrown by the underlying output stream
      */

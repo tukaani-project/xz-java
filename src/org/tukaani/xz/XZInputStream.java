@@ -108,8 +108,9 @@ public class XZInputStream extends InputStream {
      * @param       in          input stream from which XZ-compressed
      *                          data is read
      *
-     * @param       memoryLimit memory usage limit as kibibytes (KiB)
-     *                          or -1 to impose no memory usage limit
+     * @param       memoryLimit memory usage limit in kibibytes (KiB)
+     *                          or <code>-1</code> to impose no
+     *                          memory usage limit
      *
      * @throws      XZFormatException
      *                          input is not in the XZ format
@@ -137,7 +138,7 @@ public class XZInputStream extends InputStream {
      * Decompresses the next byte from this input stream.
      * <p>
      * Reading lots of data with <code>read()</code> from this input stream
-     * may be inefficient. Wrap it in <code>java.io.BufferedInputStream</code>
+     * may be inefficient. Wrap it in {@link java.io.BufferedInputStream}
      * if you need to read lots of data one byte at a time.
      *
      * @return      the next decompressed byte, or <code>-1</code>
