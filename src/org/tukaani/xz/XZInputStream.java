@@ -11,7 +11,6 @@ package org.tukaani.xz;
 
 import java.io.InputStream;
 import java.io.DataInputStream;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.EOFException;
 import org.tukaani.xz.common.DecoderUtil;
