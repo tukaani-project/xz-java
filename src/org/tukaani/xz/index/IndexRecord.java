@@ -9,9 +9,9 @@
 
 package org.tukaani.xz.index;
 
-public class IndexRecord {
-    public final long unpadded;
-    public final long uncompressed;
+class IndexRecord {
+    final long unpadded;
+    final long uncompressed;
 
     IndexRecord(long unpadded, long uncompressed) {
         this.unpadded = unpadded;
