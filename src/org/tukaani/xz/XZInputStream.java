@@ -93,9 +93,7 @@ public class XZInputStream extends InputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public XZInputStream(InputStream in) throws IOException {
-        this.in = in;
-        this.memoryLimit = -1;
-        this.xzIn = new SingleXZInputStream(in, -1);
+        this(in, -1);
     }
 
     /**
