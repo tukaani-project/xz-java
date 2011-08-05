@@ -302,6 +302,27 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
+     * Finishes the current XZ Block. This is a helper for flushBlock()
+     * and finish().
+     */
+    private void endBlock() throws IOException {
+        if (exception != null)
+            throw exception;
+
+        if (blockEncoder != null) {
+            try {
+                blockEncoder.finish();
+                index.add(blockEncoder.getUnpaddedSize(),
+                          blockEncoder.getUncompressedSize());
+                blockEncoder = null;
+            } catch (IOException e) {
+                exception = e;
+                throw e;
+            }
+        }
+    }
+
+    /**
      * Finishes the current XZ Block (but not the whole XZ Stream) and
      * calls <code>out.flush()</code>.
      * All buffered pending data will then be decompressible from
@@ -320,21 +341,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * @throws      IOException may be thrown by the underlying output stream
      */
     public void flushBlock() throws IOException {
-        if (exception != null)
-            throw exception;
-
-        if (blockEncoder != null) {
-            try {
-                blockEncoder.finish();
-                index.add(blockEncoder.getUnpaddedSize(),
-                          blockEncoder.getUncompressedSize());
-                blockEncoder = null;
-            } catch (IOException e) {
-                exception = e;
-                throw e;
-            }
-        }
-
+        endBlock();
         out.flush();
     }
 
@@ -410,9 +417,9 @@ public class XZOutputStream extends FinishableOutputStream {
      */
     public void finish() throws IOException {
         if (!finished) {
-            // flush() checks for pending exceptions so we don't need to
+            // This checks for pending exceptions so we don't need to
             // worry about it here.
-            flushBlock();
+            endBlock();
 
             try {
                 index.encode(out);
