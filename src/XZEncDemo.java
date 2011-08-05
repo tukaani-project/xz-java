@@ -13,10 +13,16 @@ import org.tukaani.xz.*;
 /**
  * Compresses a single file from standard input to standard ouput into
  * the .xz file format.
+ * <p>
+ * One optional argument is supported: LZMA2 preset level which is an integer
+ * in the range [0, 9]. The default is 6.
  */
 class XZEncDemo {
     public static void main(String[] args) throws Exception {
         LZMA2Options options = new LZMA2Options();
+
+        if (args.length >= 1)
+            options.setPreset(Integer.parseInt(args[0]));
 
         System.err.println("Encoder memory usage: "
                            + options.getEncoderMemoryUsage() + " KiB");
