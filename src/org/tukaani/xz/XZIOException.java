@@ -10,10 +10,9 @@
 package org.tukaani.xz;
 
 /**
- * Generic IOException specific to this package.
- * All IOExceptions thrown by this package are extended from XZIOException.
- * This way it is easier to distinguish exceptions thrown by the XZ code
- * from other IOExceptions.
+ * Generic {@link java.io.IOException IOException} specific to this package.
+ * The other IOExceptions in this package extend
+ * from <code>XZIOException</code>.
  */
 public class XZIOException extends java.io.IOException {
     private static final long serialVersionUID = 3L;
