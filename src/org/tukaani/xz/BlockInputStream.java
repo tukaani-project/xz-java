@@ -195,8 +195,8 @@ class BlockInputStream extends InputStream {
             byte[] storedCheck = new byte[check.getSize()];
             inData.readFully(storedCheck);
             if (!Arrays.equals(check.finish(), storedCheck))
-                throw new CorruptedInputException("Integrity ("
-                        + check.getName() + ") check does not match");
+                throw new CorruptedInputException("Integrity check ("
+                        + check.getName() + ") does not match");
         }
 
         return ret;
