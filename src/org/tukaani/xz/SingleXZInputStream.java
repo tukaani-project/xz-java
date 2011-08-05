@@ -228,8 +228,8 @@ public class SingleXZInputStream extends InputStream {
             while (len > 0) {
                 if (blockDecoder == null) {
                     try {
-                        blockDecoder = new BlockInputStream(in, check,
-                                                            memoryLimit);
+                        blockDecoder = new BlockInputStream(
+                                in, check, memoryLimit, -1, -1);
                     } catch (IndexIndicatorException e) {
                         indexHash.validate(in);
                         validateStreamFooter();

@@ -34,6 +34,9 @@ src/org/tukaani/xz/MemoryLimitException.java
 src/org/tukaani/xz/PowerPCOptions.java
 src/org/tukaani/xz/RawCoder.java
 src/org/tukaani/xz/SPARCOptions.java
+src/org/tukaani/xz/SeekableFileInputStream.java
+src/org/tukaani/xz/SeekableInputStream.java
+src/org/tukaani/xz/SeekableXZInputStream.java
 src/org/tukaani/xz/SimpleInputStream.java
 src/org/tukaani/xz/SimpleOutputStream.java
 src/org/tukaani/xz/SingleXZInputStream.java
@@ -57,7 +60,9 @@ src/org/tukaani/xz/common/Util.java
 src/org/tukaani/xz/delta/DeltaCoder.java
 src/org/tukaani/xz/delta/DeltaDecoder.java
 src/org/tukaani/xz/delta/DeltaEncoder.java
+src/org/tukaani/xz/index/BlockInfo.java
 src/org/tukaani/xz/index/IndexBase.java
+src/org/tukaani/xz/index/IndexDecoder.java
 src/org/tukaani/xz/index/IndexEncoder.java
 src/org/tukaani/xz/index/IndexHash.java
 src/org/tukaani/xz/index/IndexRecord.java

@@ -32,7 +32,7 @@ abstract class IndexBase {
         return (getUnpaddedIndexSize() + 3) & ~3;
     }
 
-    long getStreamSize() {
+    public long getStreamSize() {
         return Util.STREAM_HEADER_SIZE + blocksSum + getIndexSize()
                 + Util.STREAM_HEADER_SIZE;
     }

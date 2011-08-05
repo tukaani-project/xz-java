@@ -32,7 +32,9 @@ class BlockInputStream extends InputStream {
     private long uncompressedSize = 0;
     private boolean endReached = false;
 
-    public BlockInputStream(InputStream in, Check check, int memoryLimit)
+    public BlockInputStream(InputStream in, Check check, int memoryLimit,
+                            long unpaddedSizeInIndex,
+                            long uncompressedSizeInIndex)
             throws IOException, IndexIndicatorException {
         this.in = in;
         this.check = check;
@@ -114,6 +116,43 @@ class BlockInputStream extends InputStream {
             if (bufStream.read() != 0x00)
                 throw new UnsupportedOptionsException(
                         "Unsupported options in XZ Block Header");
+
+        // Validate the Blcok Header against the Index when doing
+        // random access reading.
+        if (unpaddedSizeInIndex != -1) {
+            // Compressed Data must be at least one byte, so if Block Header
+            // and Check alone take as much or more space than the size
+            // stored in the Index, the file is corrupt.
+            int headerAndCheckSize = headerSize + check.getSize();
+            if (headerAndCheckSize >= unpaddedSizeInIndex)
+                throw new CorruptedInputException(
+                        "XZ Index does not match a Block Header");
+
+            // The compressed size calculated from Unpadded Size must
+            // match the value stored in the Compressed Size field in
+            // the Block Header.
+            long compressedSizeFromIndex
+                    = unpaddedSizeInIndex - headerAndCheckSize;
+            if (compressedSizeFromIndex > compressedSizeLimit
+                    || (compressedSizeInHeader != -1
+                        && compressedSizeInHeader != compressedSizeFromIndex))
+                throw new CorruptedInputException(
+                        "XZ Index does not match a Block Header");
+
+            // The uncompressed size stored in the Index must match
+            // the value stored in the Uncompressed Size field in
+            // the Block Header.
+            if (uncompressedSizeInHeader != -1
+                    && uncompressedSizeInHeader != uncompressedSizeInIndex)
+                throw new CorruptedInputException(
+                        "XZ Index does not match a Block Header");
+
+            // For further validation, pretend that the values from the Index
+            // were stored in the Block Header.
+            compressedSizeLimit = compressedSizeFromIndex;
+            compressedSizeInHeader = compressedSizeFromIndex;
+            uncompressedSizeInHeader = uncompressedSizeInIndex;
+        }
 
         // Check if the Filter IDs are supported, decode
         // the Filter Properties, and check that they are
