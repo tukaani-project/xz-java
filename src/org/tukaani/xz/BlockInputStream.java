@@ -30,6 +30,7 @@ class BlockInputStream extends InputStream {
     private long compressedSizeLimit;
     private final int headerSize;
     private long uncompressedSize = 0;
+    private boolean endReached = false;
 
     public BlockInputStream(InputStream in, Check check, int memoryLimit)
             throws IOException, IndexIndicatorException {
@@ -162,14 +163,17 @@ class BlockInputStream extends InputStream {
     }
 
     public int read(byte[] buf, int off, int len) throws IOException {
+        if (endReached)
+            return -1;
+
         int ret = filterChain.read(buf, off, len);
-        long compressedSize = inCounted.getSize();
 
         if (ret > 0) {
             check.update(buf, off, ret);
             uncompressedSize += ret;
 
             // Catch invalid values.
+            long compressedSize = inCounted.getSize();
             if (compressedSize < 0
                     || compressedSize > compressedSizeLimit
                     || uncompressedSize < 0
@@ -177,29 +181,50 @@ class BlockInputStream extends InputStream {
                         && uncompressedSize > uncompressedSizeInHeader))
                 throw new CorruptedInputException();
 
-        } else if (ret == -1) {
-            // Validate Compressed Size and Uncompressed Size if they were
-            // present in Block Header.
-            if ((compressedSizeInHeader != -1
-                        && compressedSizeInHeader != compressedSize)
-                    || (uncompressedSizeInHeader != -1
-                        && uncompressedSizeInHeader != uncompressedSize))
-                throw new CorruptedInputException();
-
-            // Block Padding bytes must be zeros.
-            for (long i = compressedSize; (i & 3) != 0; ++i)
-                if (inData.readUnsignedByte() != 0x00)
+            // Check the Block integrity as soon as possible:
+            //   - The filter chain shouldn't return less than requested
+            //     unless it hit the end of the input.
+            //   - If the uncompressed size is known, we know when there
+            //     shouldn't be more data coming. We still need to read
+            //     one byte to let the filter chain catch errors and to
+            //     let it read end of payload marker(s).
+            if (ret < len || uncompressedSize == uncompressedSizeInHeader) {
+                if (filterChain.read() != -1)
                     throw new CorruptedInputException();
 
-            // Validate the integrity check.
-            byte[] storedCheck = new byte[check.getSize()];
-            inData.readFully(storedCheck);
-            if (!Arrays.equals(check.finish(), storedCheck))
-                throw new CorruptedInputException("Integrity check ("
-                        + check.getName() + ") does not match");
+                validate();
+                endReached = true;
+            }
+        } else if (ret == -1) {
+            validate();
+            endReached = true;
         }
 
         return ret;
+    }
+
+    private void validate() throws IOException {
+        long compressedSize = inCounted.getSize();
+
+        // Validate Compressed Size and Uncompressed Size if they were
+        // present in Block Header.
+        if ((compressedSizeInHeader != -1
+                    && compressedSizeInHeader != compressedSize)
+                || (uncompressedSizeInHeader != -1
+                    && uncompressedSizeInHeader != uncompressedSize))
+            throw new CorruptedInputException();
+
+        // Block Padding bytes must be zeros.
+        while ((compressedSize++ & 3) != 0)
+            if (inData.readUnsignedByte() != 0x00)
+                throw new CorruptedInputException();
+
+        // Validate the integrity check.
+        byte[] storedCheck = new byte[check.getSize()];
+        inData.readFully(storedCheck);
+        if (!Arrays.equals(check.finish(), storedCheck))
+            throw new CorruptedInputException("Integrity check ("
+                    + check.getName() + ") does not match");
     }
 
     public int available() throws IOException {
