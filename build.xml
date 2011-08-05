@@ -82,6 +82,22 @@
                 <attribute name="Class-Path" value="xz.jar"/>
             </manifest>
         </jar>
+
+        <jar destfile="${jar_dir}/XZSeekEncDemo.jar" basedir="${classes_dir}"
+             includes="XZSeekEncDemo.class">
+            <manifest>
+                <attribute name="Main-Class" value="XZSeekEncDemo"/>
+                <attribute name="Class-Path" value="xz.jar"/>
+            </manifest>
+        </jar>
+
+        <jar destfile="${jar_dir}/XZSeekDecDemo.jar" basedir="${classes_dir}"
+             includes="XZSeekDecDemo.class">
+            <manifest>
+                <attribute name="Main-Class" value="XZSeekDecDemo"/>
+                <attribute name="Class-Path" value="xz.jar"/>
+            </manifest>
+        </jar>
     </target>
 
 </project>

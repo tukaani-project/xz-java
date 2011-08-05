@@ -1,5 +1,7 @@
 src/XZDecDemo.java
 src/XZEncDemo.java
+src/XZSeekDecDemo.java
+src/XZSeekEncDemo.java
 src/org/tukaani/xz/ARMOptions.java
 src/org/tukaani/xz/ARMThumbOptions.java
 src/org/tukaani/xz/BCJCoder.java
