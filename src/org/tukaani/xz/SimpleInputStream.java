@@ -101,4 +101,8 @@ class SimpleInputStream extends InputStream {
             throw e;
         }
     }
+
+    public void close() throws IOException {
+        in.close();
+    }
 }
