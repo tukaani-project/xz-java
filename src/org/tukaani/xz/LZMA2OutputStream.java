@@ -78,7 +78,6 @@ class LZMA2OutputStream extends FinishableOutputStream {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
 
-
         if (exception != null)
             throw exception;
 
