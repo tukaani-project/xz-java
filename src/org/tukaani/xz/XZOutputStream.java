@@ -290,10 +290,10 @@ public class XZOutputStream extends FinishableOutputStream {
         if (finished)
             throw new XZIOException("Cannot write to a finished stream");
 
-        if (blockEncoder == null)
-            blockEncoder = new BlockOutputStream(out, filters, check);
-
         try {
+            if (blockEncoder == null)
+                blockEncoder = new BlockOutputStream(out, filters, check);
+
             blockEncoder.write(buf, off, len);
         } catch (IOException e) {
             exception = e;
