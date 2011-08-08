@@ -16,7 +16,7 @@ import org.tukaani.xz.simple.SimpleFilter;
 class SimpleInputStream extends InputStream {
     private static final int TMPBUF_SIZE = 4096;
 
-    private final InputStream in;
+    private InputStream in;
     private final SimpleFilter simpleFilter;
 
     private final byte[] tmpbuf = new byte[TMPBUF_SIZE];
@@ -32,6 +32,15 @@ class SimpleInputStream extends InputStream {
     }
 
     SimpleInputStream(InputStream in, SimpleFilter simpleFilter) {
+        // Check for null because otherwise null isn't detect
+        // in this constructor.
+        if (in == null)
+            throw new NullPointerException();
+
+        // The simpleFilter argument comes from this package
+        // so it is known to be non-null already.
+        assert simpleFilter == null;
+
         this.in = in;
         this.simpleFilter = simpleFilter;
     }
@@ -47,6 +56,9 @@ class SimpleInputStream extends InputStream {
 
         if (len == 0)
             return 0;
+
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
 
         if (exception != null)
             throw exception;
@@ -102,7 +114,23 @@ class SimpleInputStream extends InputStream {
         }
     }
 
+    public int available() throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
+        if (exception != null)
+            throw exception;
+
+        return filtered;
+    }
+
     public void close() throws IOException {
-        in.close();
+        if (in != null) {
+            try {
+                in.close();
+            } finally {
+                in = null;
+            }
+        }
     }
 }

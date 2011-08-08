@@ -61,7 +61,7 @@ import org.tukaani.xz.common.DecoderUtil;
  */
 public class XZInputStream extends InputStream {
     private final int memoryLimit;
-    private final InputStream in;
+    private InputStream in;
     private SingleXZInputStream xzIn;
     private boolean endReached = false;
     private IOException exception = null;
@@ -145,6 +145,8 @@ public class XZInputStream extends InputStream {
      * @throws      UnsupportedOptionsException
      * @throws      MemoryLimitException
      *
+     * @throws      XZIOException if the stream has been closed
+     *
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
@@ -182,6 +184,8 @@ public class XZInputStream extends InputStream {
      * @throws      UnsupportedOptionsException
      * @throws      MemoryLimitException
      *
+     * @throws      XZIOException if the stream has been closed
+     *
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
@@ -193,6 +197,9 @@ public class XZInputStream extends InputStream {
 
         if (len == 0)
             return 0;
+
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
 
         if (exception != null)
             throw exception;
@@ -277,13 +284,28 @@ public class XZInputStream extends InputStream {
      *              without blocking
      */
     public int available() throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
+        if (exception != null)
+            throw exception;
+
         return xzIn == null ? 0 : xzIn.available();
     }
 
     /**
-     * Calls <code>in.close()</code>.
+     * Closes the stream and calls <code>in.close()</code>.
+     * If the stream was already closed, this does nothing.
+     *
+     * @throws  IOException if thrown by <code>in.close()</code>
      */
     public void close() throws IOException {
-        in.close();
+        if (in != null) {
+            try {
+                in.close();
+            } finally {
+                in = null;
+            }
+        }
     }
 }

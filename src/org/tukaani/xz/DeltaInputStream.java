@@ -31,7 +31,7 @@ public class DeltaInputStream extends InputStream {
      */
     public static final int DISTANCE_MAX = 256;
 
-    private final InputStream in;
+    private InputStream in;
     private final DeltaDecoder delta;
 
     /**
@@ -45,6 +45,11 @@ public class DeltaInputStream extends InputStream {
      *                          <code>DISTANCE_MAX</code>]
      */
     public DeltaInputStream(InputStream in, int distance) {
+        // Check for null because otherwise null isn't detect
+        // in this constructor.
+        if (in == null)
+            throw new NullPointerException();
+
         this.in = in;
         this.delta = new DeltaDecoder(distance);
     }
@@ -75,10 +80,18 @@ public class DeltaInputStream extends InputStream {
      * @return      number of bytes read, or <code>-1</code> to indicate
      *              the end of the input stream <code>in</code>
      *
+     * @throws      XZIOException if the stream has been closed
+     *
      * @throws      IOException may be thrown by underlaying input
      *                          stream <code>in</code>
      */
     public int read(byte[] buf, int off, int len) throws IOException {
+        if (len == 0)
+            return 0;
+
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
         int size = in.read(buf, off, len);
         if (size == -1)
             return -1;
@@ -93,13 +106,25 @@ public class DeltaInputStream extends InputStream {
      * @return      the value returned by <code>in.available()</code>
      */
     public int available() throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
         return in.available();
     }
 
     /**
-     * Calls <code>in.close()</code>.
+     * Closes the stream and calls <code>in.close()</code>.
+     * If the stream was already closed, this does nothing.
+     *
+     * @throws  IOException if thrown by <code>in.close()</code>
      */
     public void close() throws IOException {
-        in.close();
+        if (in != null) {
+            try {
+                in.close();
+            } finally {
+                in = null;
+            }
+        }
     }
 }

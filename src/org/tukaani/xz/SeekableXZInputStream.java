@@ -75,7 +75,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
     /**
      * The input stream containing XZ compressed data.
      */
-    private final SeekableInputStream in;
+    private SeekableInputStream in;
 
     /**
      * Memory usage limit after the memory usage of the IndexDecoders have
@@ -388,6 +388,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * @throws      UnsupportedOptionsException
      * @throws      MemoryLimitException
      *
+     * @throws      XZIOException if the stream has been closed
+     *
      * @throws      IOException may be thrown by <code>in</code>
      */
     public int read() throws IOException {
@@ -422,6 +424,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * @throws      UnsupportedOptionsException
      * @throws      MemoryLimitException
      *
+     * @throws      XZIOException if the stream has been closed
+     *
      * @throws      IOException may be thrown by <code>in</code>
      */
     public int read(byte[] buf, int off, int len) throws IOException {
@@ -430,6 +434,9 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
         if (len == 0)
             return 0;
+
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
 
         if (exception != null)
             throw exception;
@@ -477,10 +484,43 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
-     * Calls <code>in.close()</code>.
+     * Returns the number of uncompressed bytes that can be read
+     * without blocking. The value is returned with an assumption
+     * that the compressed input data will be valid. If the compressed
+     * data is corrupt, <code>CorruptedInputException</code> may get
+     * thrown before the number of bytes claimed to be available have
+     * been read from this input stream.
+     *
+     * @return      the number of uncompressed bytes that can be read
+     *              without blocking
+     */
+    public int available() throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
+        if (exception != null)
+            throw exception;
+
+        if (endReached || seekNeeded || blockDecoder == null)
+            return 0;
+
+        return blockDecoder.available();
+    }
+
+    /**
+     * Closes the stream and calls <code>in.close()</code>.
+     * If the stream was already closed, this does nothing.
+     *
+     * @throws  IOException if thrown by <code>in.close()</code>
      */
     public void close() throws IOException {
-        in.close();
+        if (in != null) {
+            try {
+                in.close();
+            } finally {
+                in = null;
+            }
+        }
     }
 
     /**
@@ -493,8 +533,13 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * Gets the uncompressed position in this input stream.
+     *
+     * @throws      XZIOException if the stream has been closed
      */
-    public long position() {
+    public long position() throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
         return seekNeeded ? seekPos : curPos;
     }
 
@@ -510,11 +555,16 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @param       pos         new uncompressed read position
      *
-     * @throws      IOException if <code>pos</code> is negative
+     * @throws      XZIOException
+     *                          if <code>pos</code> is negative, or
+     *                          if stream has been closed
      */
     public void seek(long pos) throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
         if (pos < 0)
-            throw new IOException("Negative seek position: " + pos);
+            throw new XZIOException("Negative seek position: " + pos);
 
         seekPos = pos;
         seekNeeded = true;

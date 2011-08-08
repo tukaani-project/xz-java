@@ -43,7 +43,7 @@ public class LZMA2InputStream extends InputStream {
 
     private static final int COMPRESSED_SIZE_MAX = 1 << 16;
 
-    private final DataInputStream in;
+    private DataInputStream in;
 
     private final LZDecoder lz;
     private final RangeDecoder rc = new RangeDecoder(COMPRESSED_SIZE_MAX);
@@ -111,15 +111,14 @@ public class LZMA2InputStream extends InputStream {
      *                          <code>DICT_SIZE_MAX</code>]
      */
     public LZMA2InputStream(InputStream in, int dictSize) {
-        this.in = new DataInputStream(in);
-        this.lz = new LZDecoder(getDictSize(dictSize), null);
+        this(in, dictSize, null);
     }
 
     /**
      * Creates a new LZMA2 decompressor using a preset dictionary.
      * <p>
-     * This is like <code>LZMAInputStream()</code> except that the
-     * dictionary may be initialized using a preset dictionary.
+     * This is like <code>LZMAInputStream(InputStream, int)</code> except
+     * that the dictionary may be initialized using a preset dictionary.
      * If a preset dictionary was used when compressing the data, the
      * same preset dictionary must be provided when decompressing.
      *
@@ -133,12 +132,16 @@ public class LZMA2InputStream extends InputStream {
      * @param       presetDict  preset dictionary or <code>null</code>
      *                          to use no preset dictionary
      */
-    public LZMA2InputStream(InputStream in, int dictSize, byte[] presetDict)
-            throws IOException {
+    public LZMA2InputStream(InputStream in, int dictSize, byte[] presetDict) {
+        // Check for null because otherwise null isn't detect
+        // in this constructor.
+        if (in == null)
+            throw new NullPointerException();
+
         this.in = new DataInputStream(in);
         this.lz = new LZDecoder(getDictSize(dictSize), presetDict);
 
-        if (presetDict.length > 0)
+        if (presetDict != null && presetDict.length > 0)
             needDictReset = false;
     }
 
@@ -153,6 +156,8 @@ public class LZMA2InputStream extends InputStream {
      *              to indicate the end of the compressed stream
      *
      * @throws      CorruptedInputException
+     *
+     * @throws      XZIOException if the stream has been closed
      *
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
@@ -181,6 +186,8 @@ public class LZMA2InputStream extends InputStream {
      *
      * @throws      CorruptedInputException
      *
+     * @throws      XZIOException if the stream has been closed
+     *
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
@@ -192,6 +199,9 @@ public class LZMA2InputStream extends InputStream {
 
         if (len == 0)
             return 0;
+
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
 
         if (exception != null)
             throw exception;
@@ -316,14 +326,29 @@ public class LZMA2InputStream extends InputStream {
      * @return      the number of uncompressed bytes that can be read
      *              without blocking
      */
-    public int available() {
+    public int available() throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream has been closed");
+
+        if (exception != null)
+            throw exception;
+
         return uncompressedSize;
     }
 
     /**
-     * Calls <code>in.close()</code>.
+     * Closes the stream and calls <code>in.close()</code>.
+     * If the stream was already closed, this does nothing.
+     *
+     * @throws  IOException if thrown by <code>in.close()</code>
      */
     public void close() throws IOException {
-        in.close();
+        if (in != null) {
+            try {
+                in.close();
+            } finally {
+                in = null;
+            }
+        }
     }
 }
