@@ -121,9 +121,7 @@ public class XZOutputStream extends FinishableOutputStream {
      */
     public XZOutputStream(OutputStream out, FilterOptions filterOptions,
                           int checkType) throws IOException {
-        FilterOptions[] opts = new FilterOptions[1];
-        opts[0] = filterOptions;
-        initialize(out, opts, checkType);
+        this(out, new FilterOptions[] { filterOptions }, checkType);
     }
 
     /**
@@ -144,7 +142,7 @@ public class XZOutputStream extends FinishableOutputStream {
      */
     public XZOutputStream(OutputStream out, FilterOptions[] filterOptions)
             throws IOException {
-        initialize(out, filterOptions, XZ.CHECK_CRC64);
+        this(out, filterOptions, XZ.CHECK_CRC64);
     }
 
     /**
@@ -167,11 +165,6 @@ public class XZOutputStream extends FinishableOutputStream {
      */
     public XZOutputStream(OutputStream out, FilterOptions[] filterOptions,
                           int checkType) throws IOException {
-        initialize(out, filterOptions, checkType);
-    }
-
-    private void initialize(OutputStream out, FilterOptions[] filterOptions,
-                            int checkType) throws IOException {
         this.out = out;
         updateFilters(filterOptions);
 
