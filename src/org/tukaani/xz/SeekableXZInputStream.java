@@ -436,7 +436,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
             return 0;
 
         if (in == null)
-            throw new XZIOException("Stream has been closed");
+            throw new XZIOException("Stream closed");
 
         if (exception != null)
             throw exception;
@@ -496,7 +496,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      */
     public int available() throws IOException {
         if (in == null)
-            throw new XZIOException("Stream has been closed");
+            throw new XZIOException("Stream closed");
 
         if (exception != null)
             throw exception;
@@ -538,7 +538,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      */
     public long position() throws IOException {
         if (in == null)
-            throw new XZIOException("Stream has been closed");
+            throw new XZIOException("Stream closed");
 
         return seekNeeded ? seekPos : curPos;
     }
@@ -561,7 +561,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      */
     public void seek(long pos) throws IOException {
         if (in == null)
-            throw new XZIOException("Stream has been closed");
+            throw new XZIOException("Stream closed");
 
         if (pos < 0)
             throw new XZIOException("Negative seek position: " + pos);

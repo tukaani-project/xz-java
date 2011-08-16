@@ -90,7 +90,7 @@ public class DeltaInputStream extends InputStream {
             return 0;
 
         if (in == null)
-            throw new XZIOException("Stream has been closed");
+            throw new XZIOException("Stream closed");
 
         int size = in.read(buf, off, len);
         if (size == -1)
@@ -107,7 +107,7 @@ public class DeltaInputStream extends InputStream {
      */
     public int available() throws IOException {
         if (in == null)
-            throw new XZIOException("Stream has been closed");
+            throw new XZIOException("Stream closed");
 
         return in.available();
     }
