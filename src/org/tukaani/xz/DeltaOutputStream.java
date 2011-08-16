@@ -15,9 +15,12 @@ import org.tukaani.xz.delta.DeltaEncoder;
 class DeltaOutputStream extends FinishableOutputStream {
     private static final int TMPBUF_SIZE = 4096;
 
-    private final FinishableOutputStream out;
+    private FinishableOutputStream out;
     private final DeltaEncoder delta;
     private final byte[] tmpbuf = new byte[TMPBUF_SIZE];
+
+    private boolean finished = false;
+    private IOException exception = null;
 
     static int getMemoryUsage() {
         return 1 + TMPBUF_SIZE / 1024;
@@ -38,26 +41,72 @@ class DeltaOutputStream extends FinishableOutputStream {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
 
-        while (len > TMPBUF_SIZE) {
-            delta.encode(buf, off, TMPBUF_SIZE, tmpbuf);
-            out.write(tmpbuf);
-            off += TMPBUF_SIZE;
-            len -= TMPBUF_SIZE;
-        }
+        if (exception != null)
+            throw exception;
 
-        delta.encode(buf, off, len, tmpbuf);
-        out.write(tmpbuf, 0, len);
+        if (finished)
+            throw new XZIOException("Stream finished");
+
+        try {
+            while (len > TMPBUF_SIZE) {
+                delta.encode(buf, off, TMPBUF_SIZE, tmpbuf);
+                out.write(tmpbuf);
+                off += TMPBUF_SIZE;
+                len -= TMPBUF_SIZE;
+            }
+
+            delta.encode(buf, off, len, tmpbuf);
+            out.write(tmpbuf, 0, len);
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
     }
 
     public void flush() throws IOException {
-        out.flush();
+        if (exception != null)
+            throw exception;
+
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
+
+        try {
+            out.flush();
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
     }
 
     public void finish() throws IOException {
-        out.finish();
+        if (!finished) {
+            if (exception != null)
+                throw exception;
+
+            try {
+                out.finish();
+            } catch (IOException e) {
+                exception = e;
+                throw e;
+            }
+
+            finished = true;
+        }
     }
 
     public void close() throws IOException {
-        out.close();
+        if (out != null) {
+            try {
+                out.close();
+            } catch (IOException e) {
+                if (exception == null)
+                    exception = e;
+            }
+
+            out = null;
+        }
+
+        if (exception != null)
+            throw exception;
     }
 }

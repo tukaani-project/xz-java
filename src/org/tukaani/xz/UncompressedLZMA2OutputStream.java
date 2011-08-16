@@ -13,7 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 class UncompressedLZMA2OutputStream extends FinishableOutputStream {
-    private final FinishableOutputStream out;
+    private FinishableOutputStream out;
     private final DataOutputStream outData;
 
     private final byte[] uncompBuf
@@ -21,12 +21,18 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
     private int uncompPos = 0;
     private boolean dictResetNeeded = true;
 
+    private boolean finished = false;
+    private IOException exception = null;
+
     static int getMemoryUsage() {
         // uncompBuf + a little extra
         return 70;
     }
 
     UncompressedLZMA2OutputStream(FinishableOutputStream out) {
+        if (out == null)
+            throw new NullPointerException();
+
         this.out = out;
         outData = new DataOutputStream(out);
     }
@@ -41,14 +47,25 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
 
-        while (len > 0) {
-            int copySize = Math.min(uncompBuf.length - uncompPos, len);
-            System.arraycopy(buf, off, uncompBuf, uncompPos, copySize);
-            len -= copySize;
-            uncompPos += copySize;
+        if (exception != null)
+            throw exception;
 
-            if (uncompPos == uncompBuf.length)
-                writeChunk();
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
+
+        try {
+            while (len > 0) {
+                int copySize = Math.min(uncompBuf.length - uncompPos, len);
+                System.arraycopy(buf, off, uncompBuf, uncompPos, copySize);
+                len -= copySize;
+                uncompPos += copySize;
+
+                if (uncompPos == uncompBuf.length)
+                    writeChunk();
+            }
+        } catch (IOException e) {
+            exception = e;
+            throw e;
         }
     }
 
@@ -60,26 +77,76 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
         dictResetNeeded = false;
     }
 
-    public void flush() throws IOException {
-        if (uncompPos > 0)
-            writeChunk();
+    private void writeEndMarker() throws IOException {
+        if (exception != null)
+            throw exception;
 
-        out.flush();
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
+
+        try {
+            if (uncompPos > 0)
+                writeChunk();
+
+            out.write(0x00);
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
+    }
+
+    public void flush() throws IOException {
+        if (exception != null)
+            throw exception;
+
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
+
+        try {
+            if (uncompPos > 0)
+                writeChunk();
+
+            out.flush();
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
     }
 
     public void finish() throws IOException {
-        if (uncompPos > 0)
-            writeChunk();
+        if (!finished) {
+            writeEndMarker();
 
-        out.write(0x00);
-        out.finish();
+            try {
+                out.finish();
+            } catch (IOException e) {
+                exception = e;
+                throw e;
+            }
+
+            finished = true;
+        }
     }
 
     public void close() throws IOException {
-        if (uncompPos > 0)
-            writeChunk();
+        if (out != null) {
+            if (!finished) {
+                try {
+                    writeEndMarker();
+                } catch (IOException e) {}
+            }
 
-        out.write(0x00);
-        out.close();
+            try {
+                out.close();
+            } catch (IOException e) {
+                if (exception == null)
+                    exception = e;
+            }
+
+            out = null;
+        }
+
+        if (exception != null)
+            throw exception;
     }
 }

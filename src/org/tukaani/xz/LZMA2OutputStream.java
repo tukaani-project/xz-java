@@ -19,7 +19,7 @@ import org.tukaani.xz.lzma.LZMAEncoder;
 class LZMA2OutputStream extends FinishableOutputStream {
     static final int COMPRESSED_SIZE_MAX = 64 << 10;
 
-    private final FinishableOutputStream out;
+    private FinishableOutputStream out;
     private final DataOutputStream outData;
 
     private final LZEncoder lz;
@@ -50,6 +50,9 @@ class LZMA2OutputStream extends FinishableOutputStream {
     }
 
     LZMA2OutputStream(FinishableOutputStream out, LZMA2Options options) {
+        if (out == null)
+            throw new NullPointerException();
+
         this.out = out;
         outData = new DataOutputStream(out);
         rc = new RangeEncoder(COMPRESSED_SIZE_MAX);
@@ -82,7 +85,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
             throw exception;
 
         if (finished)
-            throw new XZIOException("Cannot write to a finished stream");
+            throw new XZIOException("Stream finished or closed");
 
         try {
             while (len > 0) {
@@ -165,45 +168,84 @@ class LZMA2OutputStream extends FinishableOutputStream {
     }
 
     private void writeEndMarker() throws IOException {
+        assert !finished;
+
         if (exception != null)
             throw exception;
 
-        if (!finished) {
-            lz.setFinishing();
+        lz.setFinishing();
 
+        try {
             while (pendingSize > 0) {
                 lzma.encodeForLZMA2();
                 writeChunk();
             }
 
             out.write(0x00);
-            finished = true;
+        } catch (IOException e) {
+            exception = e;
+            throw e;
         }
+
+        finished = true;
     }
 
     public void flush() throws IOException {
         if (exception != null)
             throw exception;
 
-        if (!finished) {
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
+
+        try {
             lz.setFlushing();
 
             while (pendingSize > 0) {
                 lzma.encodeForLZMA2();
                 writeChunk();
             }
-        }
 
-        out.flush();
+            out.flush();
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
     }
 
     public void finish() throws IOException {
-        writeEndMarker();
-        out.finish();
+        if (!finished) {
+            writeEndMarker();
+
+            try {
+                out.finish();
+            } catch (IOException e) {
+                exception = e;
+                throw e;
+            }
+
+            finished = true;
+        }
     }
 
     public void close() throws IOException {
-        writeEndMarker();
-        out.close();
+        if (out != null) {
+            if (!finished) {
+                try {
+                    writeEndMarker();
+                } catch (IOException e) {}
+            }
+
+            try {
+                out.close();
+            } catch (IOException e) {
+                if (exception == null)
+                    exception = e;
+            }
+
+            out = null;
+        }
+
+        if (exception != null)
+            throw exception;
     }
 }

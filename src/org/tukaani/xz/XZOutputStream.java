@@ -54,9 +54,9 @@ import org.tukaani.xz.index.IndexEncoder;
  */
 public class XZOutputStream extends FinishableOutputStream {
     private OutputStream out;
-    private StreamFlags streamFlags = new StreamFlags();
-    private Check check;
-    private IndexEncoder index = new IndexEncoder();
+    private final StreamFlags streamFlags = new StreamFlags();
+    private final Check check;
+    private final IndexEncoder index = new IndexEncoder();
 
     private BlockOutputStream blockEncoder = null;
     private FilterEncoder[] filters;
@@ -67,12 +67,6 @@ public class XZOutputStream extends FinishableOutputStream {
      * will use <code>flushBlock()</code> as a fallback.
      */
     private boolean filtersSupportFlushing;
-
-    /**
-     * True if <code>flush()</code> should use <code>flushBlock()</code>
-     * even if the filter chain does support flushing.
-     */
-    private boolean alwaysFlushBlock = false;
 
     private IOException exception = null;
     private boolean finished = false;
@@ -274,14 +268,11 @@ public class XZOutputStream extends FinishableOutputStream {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
 
-        if (len == 0)
-            return;
-
         if (exception != null)
             throw exception;
 
         if (finished)
-            throw new XZIOException("Cannot write to a finished stream");
+            throw new XZIOException("Stream finished or closed");
 
         try {
             if (blockEncoder == null)
@@ -295,13 +286,40 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
-     * Finishes the current XZ Block. This is a helper for flushBlock()
-     * and finish().
+     * Finishes the current XZ Block (but not the whole XZ Stream).
+     * This doesn't flush the stream so it's possible that not all data will
+     * be decompressible from the output stream when this function returns.
+     * Call also <code>flush()</code> if flushing is wanted in addition to
+     * finishing the current XZ Block.
+     * <p>
+     * If there is no unfinished Block open, this function will do nothing.
+     * (No empty XZ Block will be created.)
+     * <p>
+     * This function can be useful, for example, to create
+     * random-accessible .xz files.
+     * <p>
+     * Starting a new XZ Block means that the encoder state is reset.
+     * Doing this very often will increase the size of the compressed
+     * file a lot (more than plain <code>flush()</code> would do).
+     *
+     * @throws      XZIOException
+     *                          XZ Stream has grown too big
+     *
+     * @throws      XZIOException
+     *                          stream finished or closed
+     *
+     * @throws      IOException may be thrown by the underlying output stream
      */
-    private void endBlock() throws IOException {
+    public void endBlock() throws IOException {
         if (exception != null)
             throw exception;
 
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
+
+        // NOTE: Once there is threading with multiple Blocks, it's possible
+        // that this function will be more like a barrier that returns
+        // before the last Block has been finished.
         if (blockEncoder != null) {
             try {
                 blockEncoder.finish();
@@ -316,29 +334,6 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
-     * Finishes the current XZ Block (but not the whole XZ Stream) and
-     * calls <code>out.flush()</code>.
-     * All buffered pending data will then be decompressible from
-     * the output stream. If there is no unfinished Block open,
-     * no empty Block will be created.
-     * <p>
-     * <code>flushBlock()</code> resets the encoder state so there will be
-     * a bigger penalty in compressed file size than with <code>flush()</code>.
-     * <p>
-     * <code>flushBlock()</code> can be useful, for example, to create
-     * random-accessible .xz files.
-     *
-     * @throws      XZIOException
-     *                          XZ Stream has grown too big
-     *
-     * @throws      IOException may be thrown by the underlying output stream
-     */
-    public void flushBlock() throws IOException {
-        endBlock();
-        out.flush();
-    }
-
-    /**
      * Flushes the encoder and calls <code>out.flush()</code>.
      * All buffered pending data will then be decompressible from
      * the output stream.
@@ -349,15 +344,14 @@ public class XZOutputStream extends FinishableOutputStream {
      * smaller penalty with flushing than BT4.
      * <p>
      * Some filters don't support flushing. If the filter chain has
-     * such a filter, <code>flush()</code> is equivalent to
-     * <code>flushBlock()</code>.
-     * <p>
-     * If <code>setBlockFlushing(true)</code> has been used,
-     * <code>flush()</code> is equivalent to <code>flushBlock()</code>
-     * even if the filter chain does support flushing.
+     * such a filter, <code>flush()</code> will call <code>endBlock()</code>
+     * before flushing.
      *
      * @throws      XZIOException
      *                          XZ Stream has grown too big
+     *
+     * @throws      XZIOException
+     *                          stream finished or closed
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
@@ -365,29 +359,26 @@ public class XZOutputStream extends FinishableOutputStream {
         if (exception != null)
             throw exception;
 
-        if (!filtersSupportFlushing || alwaysFlushBlock)
-            flushBlock();
-        else if (blockEncoder != null)
-            blockEncoder.flush(); // This also calls out.flush().
-        else
-            out.flush();
-    }
+        if (finished)
+            throw new XZIOException("Stream finished or closed");
 
-    /**
-     * Sets the default flushing mode for <code>flush()</code>.
-     * <p>
-     * Calling <code>setBlockFlushing(true)</code> will make
-     * <code>flush()</code> equivalent to <code>flushBlock()</code>
-     * even with filter chains that support flushing. Calling
-     * <code>setBlockFlushing(false)</code> will restore the default
-     * behavior.
-     * <p>
-     * This function is rarely useful. Normally you should use
-     * <code>flushBlock()</code> directly if you want to start
-     * a new XZ Block.
-     */
-    public void setBlockFlushing(boolean flushFlushesBlock) {
-        alwaysFlushBlock = flushFlushesBlock;
+        try {
+            if (blockEncoder != null) {
+                if (filtersSupportFlushing) {
+                    // This will eventually call out.flush() so
+                    // no need to do it here again.
+                    blockEncoder.flush();
+                } else {
+                    endBlock();
+                    out.flush();
+                }
+            } else {
+                out.flush();
+            }
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
     }
 
     /**
@@ -417,11 +408,15 @@ public class XZOutputStream extends FinishableOutputStream {
             try {
                 index.encode(out);
                 encodeStreamFooter();
-                finished = true;
             } catch (IOException e) {
                 exception = e;
                 throw e;
             }
+
+            // Set it to true only if everything goes fine. Setting it earlier
+            // would cause repeated calls to finish() do nothing instead of
+            // throwing an exception to indicate an earlier error.
+            finished = true;
         }
     }
 
@@ -438,20 +433,24 @@ public class XZOutputStream extends FinishableOutputStream {
      * @throws      IOException may be thrown by the underlying output stream
      */
     public void close() throws IOException {
-        // If finish() throws an exception, it stores the exception to
-        // the variable "exception". So we can ignore the possible
-        // exception here.
-        try {
-            finish();
-        } catch (IOException e) {}
+        if (out != null) {
+            // If finish() throws an exception, it stores the exception to
+            // the variable "exception". So we can ignore the possible
+            // exception here.
+            try {
+                finish();
+            } catch (IOException e) {}
 
-        try {
-            out.close();
-        } catch (IOException e) {
-            // Remember the exception but only if there is no previous
-            // pending exception.
-            if (exception == null)
-                exception = e;
+            try {
+                out.close();
+            } catch (IOException e) {
+                // Remember the exception but only if there is no previous
+                // pending exception.
+                if (exception == null)
+                    exception = e;
+            }
+
+            out = null;
         }
 
         if (exception != null)

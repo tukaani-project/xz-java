@@ -58,7 +58,7 @@ class XZSeekEncDemo {
             left -= size;
 
             if (left == 0) {
-                out.flushBlock();
+                out.endBlock();
                 left = blockSize;
             }
         }
