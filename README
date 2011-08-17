@@ -1,13 +1,18 @@
 
-XZ in Java
-==========
+XZ for Java
+===========
 
 Introduction
 
     This aims to be a complete implementation of XZ data compression
-    in pure Java. Single-threaded streamed compression and decompression
-    have been fully implemented. Threading and random access reading
-    are in the plans but it is unknown when they will be implemented.
+    in pure Java. Features:
+      - Full support for the .xz file format specification version 1.0.4
+      - Single-threaded streamed compression and decompression
+      - Single-threaded decompression with limited random access support
+      - Raw streams (no .xz headers) for advanced users, including LZMA2
+        with preset dictionary
+
+    Threading is planned but it is unknown when it will be implemented.
 
     For the latest source code, see the project home page:
 
