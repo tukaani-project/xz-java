@@ -45,9 +45,13 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Maximum dictionary size for compression.
      * <p>
-     * FIXME? Decompressor supports bigger dictionaries. With HC4
-     * the encoder would too. With the current implementation of BT4
-     * we would hit the limits of signed ints in array indexing.
+     * The decompressor supports bigger dictionaries, up to almost 2 GiB.
+     * With HC4 the encoder would support dictionaries bigger than 768 MiB.
+     * The 768 MiB limit comes from the current implementation of BT4 where
+     * we would otherwise hit the limits of signed ints in array indexing.
+     * <p>
+     * If you really need bigger dictionary for decompression,
+     * use {@link LZMA2InputStream} directly.
      */
     public static final int DICT_SIZE_MAX = 768 << 20;
 
@@ -202,6 +206,9 @@ public class LZMA2Options extends FilterOptions {
 
     /**
      * Sets the dictionary size in bytes.
+     * Any value in the range [DICT_SIZE_MIN, DICT_SIZE_MAX] is valid,
+     * but sizes of 2^n and 2^n&nbsp;+&nbsp;2^(n-1) bytes are somewhat
+     * recommended.
      *
      * @throws      UnsupportedOptionsException
      *                          <code>dictSize</code> is not supported
@@ -430,8 +437,30 @@ public class LZMA2Options extends FilterOptions {
         return new LZMA2OutputStream(out, this);
     }
 
+    /**
+     * Gets how much memory the LZMA2 decoder will need to decompress the data
+     * that was encoded with these options and stored in a .xz file.
+     * <p>
+     * The returned value may bigger than the value returned by a direct call
+     * to {@link LZMA2OutputStream#getMemoryUsage(int)} if the dictionary size
+     * is not 2^n or 2^n&nbsp;+&nbsp;2^(n-1) bytes. This is because the .xz
+     * headers store the dictionary size in such a format and other values
+     * are rounded up to the next such value. Such rounding is harmess except
+     * it might waste some memory if an unsual dictionary size is used.
+     * <p>
+     * If you use raw LZMA2 streams and unusual dictioanary size, call
+     * {@link LZMA2InputStream#getMemoryUsage} directly to get raw decoder
+     * memory requirements.
+     */
     public int getDecoderMemoryUsage() {
-        return LZMA2InputStream.getMemoryUsage(dictSize);
+        // Round the dictionary size up to the next 2^n or 2^n + 2^(n-1).
+        int d = dictSize - 1;
+        d |= d >>> 2;
+        d |= d >>> 3;
+        d |= d >>> 4;
+        d |= d >>> 8;
+        d |= d >>> 16;
+        return LZMA2InputStream.getMemoryUsage(d + 1);
     }
 
     public InputStream getInputStream(InputStream in) throws IOException {
