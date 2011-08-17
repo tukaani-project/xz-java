@@ -34,6 +34,8 @@ public class DeltaInputStream extends InputStream {
     private InputStream in;
     private final DeltaDecoder delta;
 
+    private IOException exception = null;
+
     /**
      * Creates a new Delta decoder with the given delta calculation distance.
      *
@@ -92,7 +94,17 @@ public class DeltaInputStream extends InputStream {
         if (in == null)
             throw new XZIOException("Stream closed");
 
-        int size = in.read(buf, off, len);
+        if (exception != null)
+            throw exception;
+
+        int size;
+        try {
+            size = in.read(buf, off, len);
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        }
+
         if (size == -1)
             return -1;
 
@@ -108,6 +120,9 @@ public class DeltaInputStream extends InputStream {
     public int available() throws IOException {
         if (in == null)
             throw new XZIOException("Stream closed");
+
+        if (exception != null)
+            throw exception;
 
         return in.available();
     }
