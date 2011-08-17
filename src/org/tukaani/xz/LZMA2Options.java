@@ -43,7 +43,7 @@ public class LZMA2Options extends FilterOptions {
     public static final int DICT_SIZE_MIN = 4096;
 
     /**
-     * Maximum dictionary size for compression.
+     * Maximum dictionary size for compression is 768 MiB.
      * <p>
      * The decompressor supports bigger dictionaries, up to almost 2 GiB.
      * With HC4 the encoder would support dictionaries bigger than 768 MiB.
@@ -442,7 +442,7 @@ public class LZMA2Options extends FilterOptions {
      * that was encoded with these options and stored in a .xz file.
      * <p>
      * The returned value may bigger than the value returned by a direct call
-     * to {@link LZMA2OutputStream#getMemoryUsage(int)} if the dictionary size
+     * to {@link LZMA2InputStream#getMemoryUsage(int)} if the dictionary size
      * is not 2^n or 2^n&nbsp;+&nbsp;2^(n-1) bytes. This is because the .xz
      * headers store the dictionary size in such a format and other values
      * are rounded up to the next such value. Such rounding is harmess except

@@ -64,7 +64,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * True if the current filter chain supports flushing.
      * If it doesn't support flushing, <code>flush()</code>
-     * will use <code>flushBlock()</code> as a fallback.
+     * will use <code>endBlock()</code> as a fallback.
      */
     private boolean filtersSupportFlushing;
 
@@ -191,7 +191,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * Updates the filter chain with 1-4 filters.
      * <p>
      * Currently this cannot be used to update e.g. LZMA2 options in the
-     * middle of a XZ Block. Use <code>flushBlock()</code> to finish the
+     * middle of a XZ Block. Use <code>endBlock()</code> to finish the
      * current XZ Block before calling this function. The new filter chain
      * will then be used for the next XZ Block.
      *

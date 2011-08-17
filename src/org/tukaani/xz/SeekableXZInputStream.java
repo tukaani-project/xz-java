@@ -56,7 +56,7 @@ import org.tukaani.xz.index.BlockInfo;
  * <h4>Creating random-accessible .xz files</h4>
  * <p>
  * When using {@link XZOutputStream}, a new Block can be started by calling
- * its {@link XZOutputStream#flushBlock() flushBlock} method. If you know
+ * its {@link XZOutputStream#endBlock() endBlock} method. If you know
  * that the decompressor will need to seek only to certain offsets, it can
  * be a good idea to start a new Block at (some of) these offsets (and
  * perhaps only at these offsets to get better compression ratio).
