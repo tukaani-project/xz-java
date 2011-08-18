@@ -441,15 +441,15 @@ public class SeekableXZInputStream extends SeekableInputStream {
         if (exception != null)
             throw exception;
 
-        if (seekNeeded)
-            seek();
-
-        if (endReached)
-            return -1;
-
         int size = 0;
 
         try {
+            if (seekNeeded)
+                seek();
+
+            if (endReached)
+                return -1;
+
             while (len > 0) {
                 if (blockDecoder == null) {
                     seek();
