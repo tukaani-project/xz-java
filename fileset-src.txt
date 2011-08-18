@@ -24,6 +24,7 @@ src/org/tukaani/xz/FilterDecoder.java
 src/org/tukaani/xz/FilterEncoder.java
 src/org/tukaani/xz/FilterOptions.java
 src/org/tukaani/xz/FinishableOutputStream.java
+src/org/tukaani/xz/FinishableWrapperOutputStream.java
 src/org/tukaani/xz/IA64Options.java
 src/org/tukaani/xz/IndexIndicatorException.java
 src/org/tukaani/xz/LZMA2Coder.java
