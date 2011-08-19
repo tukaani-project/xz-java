@@ -42,7 +42,7 @@ import org.tukaani.xz.index.IndexEncoder;
  * <p><blockquote><pre>
  * X86Options x86 = new X86Options();
  * LZMA2Options lzma2 = new LZMA2Options();
- * FilterOptions options = { x86, lzma2 };
+ * FilterOptions[] options = { x86, lzma2 };
  * System.out.println("Encoder memory usage: "
  *                    + FilterOptions.getEncoderMemoryUsage(options)
  *                    + " KiB");
