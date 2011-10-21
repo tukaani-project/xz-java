@@ -100,4 +100,31 @@
         </jar>
     </target>
 
+    <!-- It's an ugly quick hack. Maybe some day there will be a cleaner
+         version (e.g. by using Maven). -->
+    <target name="maven" depends="dist, doc, jar"
+            description="Creates the files for a Maven repository">
+        <mkdir dir="${maven_dir}"/>
+
+        <copy file="${pom_template}" tofile="${maven_dir}/xz-${version}.pom"
+              overwrite="true">
+            <filterset>
+                <filter token="VERSION" value="${version}"/>
+                <filter token="TITLE" value="${title}"/>
+                <filter token="HOMEPAGE" value="${homepage}"/>
+            </filterset>
+        </copy>
+
+        <copy file="${jar_dir}/xz.jar" tofile="${maven_dir}/xz-${version}.jar"
+              preservelastmodified="true" overwrite="true"/>
+
+        <jar destfile="${maven_dir}/xz-${version}-javadoc.jar"
+             basedir="${doc_dir}"/>
+
+        <jar destfile="${maven_dir}/xz-${version}-sources.jar">
+            <fileset dir="." includesfile="fileset-misc.txt"/>
+            <fileset dir="." includesfile="fileset-src.txt"/>
+        </jar>
+    </target>
+
 </project>
