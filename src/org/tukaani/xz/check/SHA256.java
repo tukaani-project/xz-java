@@ -9,8 +9,6 @@
 
 package org.tukaani.xz.check;
 
-import org.tukaani.xz.XZ;
-
 public class SHA256 extends Check {
     private java.security.MessageDigest sha256;
 

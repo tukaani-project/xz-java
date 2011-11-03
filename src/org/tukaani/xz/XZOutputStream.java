@@ -11,7 +11,6 @@ package org.tukaani.xz;
 
 import java.io.OutputStream;
 import java.io.IOException;
-import java.util.zip.CheckedOutputStream;
 import org.tukaani.xz.common.EncoderUtil;
 import org.tukaani.xz.common.StreamFlags;
 import org.tukaani.xz.check.Check;

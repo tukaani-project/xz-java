@@ -10,7 +10,6 @@
 package org.tukaani.xz;
 
 import java.io.InputStream;
-import java.io.IOException;
 
 /**
  * Delta filter options. The Delta filter can be used only as a non-last

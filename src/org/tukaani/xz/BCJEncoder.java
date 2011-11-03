@@ -9,9 +9,6 @@
 
 package org.tukaani.xz;
 
-import java.io.OutputStream;
-import org.tukaani.xz.simple.SimpleFilter;
-
 class BCJEncoder extends BCJCoder implements FilterEncoder {
     private final BCJOptions options;
     private final long filterID;

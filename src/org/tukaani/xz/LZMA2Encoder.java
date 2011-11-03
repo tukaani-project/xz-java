@@ -9,7 +9,6 @@
 
 package org.tukaani.xz;
 
-import java.io.OutputStream;
 import org.tukaani.xz.lzma.LZMAEncoder;
 
 class LZMA2Encoder extends LZMA2Coder implements FilterEncoder {

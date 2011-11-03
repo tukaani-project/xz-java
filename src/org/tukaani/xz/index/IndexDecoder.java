@@ -9,7 +9,6 @@
 
 package org.tukaani.xz.index;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.EOFException;
 import java.util.zip.CheckedInputStream;

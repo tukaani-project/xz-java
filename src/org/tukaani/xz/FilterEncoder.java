@@ -9,8 +9,6 @@
 
 package org.tukaani.xz;
 
-import java.io.OutputStream;
-
 interface FilterEncoder extends FilterCoder {
     long getFilterID();
     byte[] getFilterProps();

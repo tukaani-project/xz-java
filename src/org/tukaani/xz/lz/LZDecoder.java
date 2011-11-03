@@ -13,7 +13,6 @@ package org.tukaani.xz.lz;
 import java.io.DataInputStream;
 import java.io.IOException;
 import org.tukaani.xz.CorruptedInputException;
-import org.tukaani.xz.UnsupportedOptionsException;
 
 public final class LZDecoder {
     private byte[] buf;

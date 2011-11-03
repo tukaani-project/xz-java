@@ -10,8 +10,6 @@
 
 package org.tukaani.xz.lzma;
 
-import java.io.OutputStream;
-import java.io.IOException;
 import org.tukaani.xz.lz.LZEncoder;
 import org.tukaani.xz.lz.Matches;
 import org.tukaani.xz.rangecoder.RangeEncoder;

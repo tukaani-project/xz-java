@@ -9,9 +9,6 @@
 
 package org.tukaani.xz;
 
-import java.io.InputStream;
-import java.io.IOException;
-
 abstract class BCJOptions extends FilterOptions {
     private final int alignment;
     int startOffset = 0;
