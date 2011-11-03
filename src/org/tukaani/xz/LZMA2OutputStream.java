@@ -26,7 +26,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private final RangeEncoder rc;
     private final LZMAEncoder lzma;
 
-    private int props;
+    private final int props; // Cannot change props on the fly for now.
     private boolean dictResetNeeded = true;
     private boolean stateResetNeeded = true;
     private boolean propsNeeded = true;

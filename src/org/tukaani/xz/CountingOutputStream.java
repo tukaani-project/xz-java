@@ -21,7 +21,7 @@ import java.io.IOException;
  * using this as the output stream for a chain of raw filters.
  */
 class CountingOutputStream extends FinishableOutputStream {
-    private OutputStream out;
+    private final OutputStream out;
     private long size = 0;
 
     public CountingOutputStream(OutputStream out) {
