@@ -143,8 +143,13 @@ public class LZMA2Options extends FilterOptions {
      * Creates new LZMA2 options and sets them to the default values.
      * This is equivalent to <code>LZMA2Options(PRESET_DEFAULT)</code>.
      */
-    public LZMA2Options() throws UnsupportedOptionsException {
-        setPreset(PRESET_DEFAULT);
+    public LZMA2Options() {
+        try {
+            setPreset(PRESET_DEFAULT);
+        } catch (UnsupportedOptionsException e) {
+            assert false;
+            throw new RuntimeException();
+        }
     }
 
     /**
