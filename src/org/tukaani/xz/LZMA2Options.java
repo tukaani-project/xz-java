@@ -164,7 +164,7 @@ public class LZMA2Options extends FilterOptions {
      *                          unsupported options were specified
      */
     public LZMA2Options(int dictSize, int lc, int lp, int pb, int mode,
-                        int niceLen, int mf, int depth)
+                        int niceLen, int mf, int depthLimit)
             throws UnsupportedOptionsException {
         setDictSize(dictSize);
         setLcLp(lc, lp);
