@@ -107,6 +107,9 @@ class LZMA2OutputStream extends FinishableOutputStream {
         int compressedSize = rc.finish();
         int uncompressedSize = lzma.getUncompressedSize();
 
+        assert compressedSize > 0 : compressedSize;
+        assert uncompressedSize > 0 : uncompressedSize;
+
         // +2 because the header of a compressed chunk is 2 bytes
         // bigger than the header of an uncompressed chunk.
         if (compressedSize + 2 < uncompressedSize) {
@@ -114,6 +117,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
         } else {
             lzma.reset();
             uncompressedSize = lzma.getUncompressedSize();
+            assert uncompressedSize > 0 : uncompressedSize;
             writeUncompressed(uncompressedSize);
         }
 
