@@ -66,7 +66,12 @@ class LZMA2OutputStream extends FinishableOutputStream {
                 options.getMatchFinder(), options.getDepthLimit());
 
         lz = lzma.getLZEncoder();
-        lz.setPresetDict(dictSize, options.getPresetDict());
+
+        byte[] presetDict = options.getPresetDict();
+        if (presetDict != null && presetDict.length > 0) {
+            lz.setPresetDict(dictSize, presetDict);
+            dictResetNeeded = false;
+        }
 
         props = (options.getPb() * 5 + options.getLp()) * 9 + options.getLc();
     }
