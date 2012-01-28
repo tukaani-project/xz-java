@@ -152,6 +152,7 @@ public abstract class LZEncoder {
      */
     public void setPresetDict(int dictSize, byte[] presetDict) {
         assert !isStarted();
+        assert writePos == 0;
 
         if (presetDict != null) {
             // If the preset dictionary buffer is bigger than the dictionary
@@ -159,6 +160,7 @@ public abstract class LZEncoder {
             int copySize = Math.min(presetDict.length, dictSize);
             int offset = presetDict.length - copySize;
             System.arraycopy(presetDict, offset, buf, 0, copySize);
+            writePos += copySize;
             skip(copySize);
         }
     }
