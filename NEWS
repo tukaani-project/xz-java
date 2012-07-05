@@ -1,0 +1,17 @@
+
+XZ for Java release notes
+=========================
+
+1.1 (2012-07-05)
+
+    * The depthLimit argument in the LZMA2Options constructor is
+      no longer ignored.
+
+    * LZMA2Options() can no longer throw UnsupportedOptionsException.
+
+    * Fix bugs in the preset dictionary support in the LZMA2 encoder.
+
+1.0 (2011-10-22)
+
+    * The first stable release
+
