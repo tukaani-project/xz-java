@@ -121,10 +121,8 @@
         <jar destfile="${maven_dir}/xz-${version}-javadoc.jar"
              basedir="${doc_dir}"/>
 
-        <jar destfile="${maven_dir}/xz-${version}-sources.jar">
-            <fileset dir="." includesfile="fileset-misc.txt"/>
-            <fileset dir="." includesfile="fileset-src.txt"/>
-        </jar>
+        <jar destfile="${maven_dir}/xz-${version}-sources.jar"
+             basedir="${src_dir}" includes="org/tukaani/xz/**"/>
     </target>
 
 </project>
