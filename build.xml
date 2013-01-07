@@ -64,6 +64,13 @@
                 <attribute name="Implementation-Version" value="${version}"/>
                 <attribute name="Implementation-URL" value="${homepage}"/>
                 <attribute name="Sealed" value="true"/>
+                <!-- Attributes required for OSGi bundles. -->
+                <attribute name="Bundle-ManifestVersion" value="2"/>
+                <attribute name="Bundle-SymbolicName" value="org.tukaani.xz"/>
+                <attribute name="Bundle-Version" value="${version}"/>
+                <attribute name="Export-Package" value="org.tukaani.xz"/>
+                <attribute name="Bundle-Name" value="${title}"/>
+                <attribute name="Bundle-DocURL" value="${homepage}"/>
             </manifest>
         </jar>
 
