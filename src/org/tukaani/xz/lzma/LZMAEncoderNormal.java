@@ -26,6 +26,11 @@ final class LZMAEncoderNormal extends LZMAEncoder {
 
     private Matches matches;
 
+    // These are fields solely to avoid allocating the objects again and
+    // again on each function call.
+    private final int[] repLens = new int[REPS];
+    private final State nextState = new State();
+
     static int getMemoryUsage(int dictSize, int extraSizeBefore, int mf) {
         return LZEncoder.getMemoryUsage(dictSize,
                    Math.max(extraSizeBefore, EXTRA_SIZE_BEFORE),
@@ -118,7 +123,6 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             return 1;
 
         // Get the lengths of repeated matches.
-        int[] repLens = new int[REPS];
         int repBest = 0;
         for (int rep = 0; rep < REPS; ++rep) {
             repLens[rep] = lz.getMatchLen(reps[rep], avail);
@@ -400,7 +404,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             int len = lz.getMatchLen(1, opts[optCur].reps[0], lenLimit);
 
             if (len >= MATCH_LEN_MIN) {
-                State nextState = new State(opts[optCur].state);
+                nextState.set(opts[optCur].state);
                 nextState.updateLiteral();
                 int nextPosState = (pos + 1) & posMask;
                 int price = literalPrice
@@ -454,7 +458,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
                 // Rep
                 int price = longRepPrice
                             + repLenEncoder.getPrice(len, posState);
-                State nextState = new State(opts[optCur].state);
+                nextState.set(opts[optCur].state);
                 nextState.updateLongRep();
 
                 // Literal
@@ -529,7 +533,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             int len2 = lz.getMatchLen(len + 1, dist, len2Limit);
 
             if (len2 >= MATCH_LEN_MIN) {
-                State nextState = new State(opts[optCur].state);
+                nextState.set(opts[optCur].state);
                 nextState.updateMatch();
 
                 // Literal
