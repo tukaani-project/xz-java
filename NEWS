@@ -2,6 +2,15 @@
 XZ for Java release notes
 =========================
 
+1.2 (2013-01-29)
+
+    * Use fields instead of reallocating frequently-needed temporary
+      objects in the LZMA encoder.
+
+    * Fix the contents of xz-${version}-sources.jar.
+
+    * Add OSGi attributes to xz.jar.
+
 1.1 (2012-07-05)
 
     * The depthLimit argument in the LZMA2Options constructor is
