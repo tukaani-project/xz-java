@@ -27,6 +27,9 @@ class XZSeekDecDemo {
         SeekableFileInputStream file = new SeekableFileInputStream(args[0]);
         SeekableXZInputStream in = new SeekableXZInputStream(file);
 
+        System.err.println("Number of XZ Streams: " + in.getStreamCount());
+        System.err.println("Number of XZ Blocks: " + in.getBlockCount());
+
         System.err.println("Uncompressed size: " + in.length() + " B");
 
         System.err.println("Largest XZ Block size: "
