@@ -92,6 +92,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * List of IndexDecoders, one for each Stream in the file.
+     * The list is in reverse order: The first element is
+     * the last Stream in the file.
      */
     private final ArrayList streams = new ArrayList();
 
@@ -119,7 +121,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
     private BlockInputStream blockDecoder = null;
 
     /**
-     * Compressed size of the file (all Streams).
+     * Uncompressed size of the file (all Streams).
      */
     private long uncompressedSize = 0;
 
@@ -406,10 +408,10 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * be read only in the following situations:
      * <ul>
      *   <li>The end of the compressed data was reached successfully.</li>
-     *   <li>An error is detected after at least one but less <code>len</code>
-     *       bytes have already been successfully decompressed.
-     *       The next call with non-zero <code>len</code> will immediately
-     *       throw the pending exception.</li>
+     *   <li>An error is detected after at least one but less than
+     *       <code>len</code> bytes have already been successfully
+     *       decompressed. The next call with non-zero <code>len</code>
+     *       will immediately throw the pending exception.</li>
      *   <li>An exception is thrown.</li>
      * </ul>
      *
