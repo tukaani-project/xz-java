@@ -126,6 +126,12 @@ public class SeekableXZInputStream extends SeekableInputStream {
     private final BlockInfo curBlockInfo;
 
     /**
+     * Temporary (and cached) information about the Block whose information
+     * is queried via <code>getBlockPos</code> and related functions.
+     */
+    private final BlockInfo queriedBlockInfo;
+
+    /**
      * Integrity Check in the current XZ Stream. The constructor leaves
      * this to point to the Check of the first Stream.
      */
@@ -372,6 +378,10 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // to decompress from the beginning of the file.
         IndexDecoder first = (IndexDecoder)streams.get(streams.size() - 1);
         curBlockInfo = new BlockInfo(first);
+
+        // queriedBlockInfo needs to be allocated too. The Stream used for
+        // initialization doesn't matter though.
+        queriedBlockInfo = new BlockInfo(first);
     }
 
     /**
@@ -426,6 +436,82 @@ public class SeekableXZInputStream extends SeekableInputStream {
      */
     public int getBlockCount() {
         return blockCount;
+    }
+
+    /**
+     * Gets the uncompressed start position of the given Block.
+     *
+     * @throws  IndexOutOfBoundsException if
+     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
+     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *
+     * @since 1.3
+     */
+    public long getBlockPos(int blockNumber) {
+        locateBlockByNumber(queriedBlockInfo, blockNumber);
+        return queriedBlockInfo.uncompressedOffset;
+    }
+
+    /**
+     * Gets the uncompressed size of the given Block.
+     *
+     * @throws  IndexOutOfBoundsException if
+     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
+     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *
+     * @since 1.3
+     */
+    public long getBlockSize(int blockNumber) {
+        locateBlockByNumber(queriedBlockInfo, blockNumber);
+        return queriedBlockInfo.uncompressedSize;
+    }
+
+    /**
+     * Gets the position where the given compressed Block starts in
+     * the underlying .xz file.
+     * This information is rarely useful to the users of this class.
+     *
+     * @throws  IndexOutOfBoundsException if
+     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
+     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *
+     * @since 1.3
+     */
+    public long getBlockCompPos(int blockNumber) {
+        locateBlockByNumber(queriedBlockInfo, blockNumber);
+        return queriedBlockInfo.compressedOffset;
+    }
+
+    /**
+     * Gets the compressed size of the given Block.
+     * This together with the uncompressed size can be used to calculate
+     * the compression ratio of the specific Block.
+     *
+     * @throws  IndexOutOfBoundsException if
+     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
+     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *
+     * @since 1.3
+     */
+    public long getBlockCompSize(int blockNumber) {
+        locateBlockByNumber(queriedBlockInfo, blockNumber);
+        return (queriedBlockInfo.unpaddedSize + 3) & ~3;
+    }
+
+    /**
+     * Gets integrity check type (Check ID) of the given Block.
+     *
+     * @throws  IndexOutOfBoundsException if
+     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
+     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *
+     * @see #getCheckTypes()
+     *
+     * @since 1.3
+     */
+    public int getBlockCheckType(int blockNumber) {
+        locateBlockByNumber(queriedBlockInfo, blockNumber);
+        return queriedBlockInfo.getCheckType();
     }
 
     /**
@@ -701,6 +787,31 @@ public class SeekableXZInputStream extends SeekableInputStream {
                 throw new CorruptedInputException();
 
             curPos = seekPos;
+        }
+    }
+
+    /**
+     * Locates the given Block and stores information about it
+     * to <code>info</code>.
+     */
+    private void locateBlockByNumber(BlockInfo info, int blockNumber) {
+        // Validate.
+        if (blockNumber < 0 || blockNumber >= blockCount)
+            throw new IndexOutOfBoundsException(
+                    "Invalid XZ Block number: " + blockNumber);
+
+        // Skip the search if info already points to the correct Block.
+        if (info.blockNumber == blockNumber)
+            return;
+
+        // Search the Stream that contains the given Block and then
+        // search the Block from that Stream.
+        for (int i = 0; ; ++i) {
+            IndexDecoder index = (IndexDecoder)streams.get(i);
+            if (index.hasRecord(blockNumber)) {
+                index.setBlockInfo(info, blockNumber);
+                return;
+            }
         }
     }
 
