@@ -23,7 +23,8 @@ class LZMA2Encoder extends LZMA2Coder implements FilterEncoder {
         if (options.getMode() == LZMA2Options.MODE_UNCOMPRESSED) {
             props[0] = (byte)0;
         } else {
-            int d = Math.max(options.getDictSize(), options.DICT_SIZE_MIN);
+            int d = Math.max(options.getDictSize(),
+                             LZMA2Options.DICT_SIZE_MIN);
             props[0] = (byte)(LZMAEncoder.getDistSlot(d - 1) - 23);
         }
 
