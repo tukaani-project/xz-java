@@ -32,10 +32,10 @@ import org.tukaani.xz.index.BlockInfo;
  * <p>
  * To make random access possible, the data in a .xz file must be splitted
  * into multiple Blocks of reasonable size. Decompression can only start at
- * a Block boundary. When seeking to an uncompressed offset that is not at
+ * a Block boundary. When seeking to an uncompressed position that is not at
  * a Block boundary, decompression starts at the beginning of the Block and
- * throws away data until the target offset is reached. Thus, smaller Blocks
- * mean faster seeks to arbitrary uncompressed offsets. On the other hand,
+ * throws away data until the target position is reached. Thus, smaller Blocks
+ * mean faster seeks to arbitrary uncompressed positions. On the other hand,
  * smaller Blocks mean worse compression. So one has to make a compromise
  * between random access speed and compression ratio.
  * <p>
@@ -57,15 +57,17 @@ import org.tukaani.xz.index.BlockInfo;
  * <p>
  * When using {@link XZOutputStream}, a new Block can be started by calling
  * its {@link XZOutputStream#endBlock() endBlock} method. If you know
- * that the decompressor will need to seek only to certain offsets, it can
- * be a good idea to start a new Block at (some of) these offsets (and
- * perhaps only at these offsets to get better compression ratio).
+ * that the decompressor will only need to seek to certain uncompressed
+ * positions, it can be a good idea to start a new Block at (some of) these
+ * positions (and only at these positions to get better compression ratio).
  * <p>
  * liblzma in XZ Utils supports starting a new Block with
  * <code>LZMA_FULL_FLUSH</code>. XZ Utils 5.1.1alpha added threaded
  * compression which creates multi-Block .xz files. XZ Utils 5.1.1alpha
  * also added the option <code>--block-size=SIZE</code> to the xz command
- * line tool.
+ * line tool. XZ Utils 5.1.2alpha added a partial implementation of
+ * <code>--block-list=SIZES</code> which allows specifying sizes of
+ * individual Blocks.
  *
  * @see SeekableFileInputStream
  * @see XZInputStream
@@ -580,7 +582,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
-     * Gets the uncompressed position in this input stream.
+     * Gets the current uncompressed position in this input stream.
      *
      * @throws      XZIOException if the stream has been closed
      */
