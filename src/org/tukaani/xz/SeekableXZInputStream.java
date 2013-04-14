@@ -515,6 +515,21 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
+     * Gets the number of the Block that contains the byte at the given
+     * uncompressed position.
+     *
+     * @throws  IndexOutOfBoundsException if
+     *          <code>pos&nbsp;&lt;&nbsp;0</code> or
+     *          <code>pos&nbsp;&gt;=&nbsp;length()</code>.
+     *
+     * @since 1.3
+     */
+    public int getBlockNumber(long pos) {
+        locateBlockByPos(queriedBlockInfo, pos);
+        return queriedBlockInfo.blockNumber;
+    }
+
+    /**
      * Decompresses the next byte from this input stream.
      *
      * @return      the next decompressed byte, or <code>-1</code>
@@ -736,22 +751,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
         endReached = false;
 
-        // Locate the Stream that contains the uncompressed target position.
-        IndexDecoder index;
-        for (int i = 0; ; ++i) {
-            index = (IndexDecoder)streams.get(i);
-            if (index.hasUncompressedOffset(seekPos))
-                break;
-        }
-
         // Locate the Block that contains the uncompressed target position.
-        index.locateBlock(curBlockInfo, seekPos);
-
-        assert (curBlockInfo.compressedOffset & 3) == 0;
-        assert curBlockInfo.uncompressedSize > 0;
-        assert seekPos >= curBlockInfo.uncompressedOffset;
-        assert seekPos < curBlockInfo.uncompressedOffset
-                         + curBlockInfo.uncompressedSize;
+        locateBlockByPos(curBlockInfo, seekPos);
 
         // Seek in the underlying stream and create a new Block decoder
         // only if really needed. We can skip it if the current position
@@ -788,6 +789,31 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
             curPos = seekPos;
         }
+    }
+
+    /**
+     * Locates the Block that contains the given uncompressed position.
+     */
+    private void locateBlockByPos(BlockInfo info, long pos) {
+        if (pos < 0 || pos >= uncompressedSize)
+            throw new IndexOutOfBoundsException(
+                    "Invalid uncompressed position: " + pos);
+
+        // Locate the Stream that contains the target position.
+        IndexDecoder index;
+        for (int i = 0; ; ++i) {
+            index = (IndexDecoder)streams.get(i);
+            if (index.hasUncompressedOffset(pos))
+                break;
+        }
+
+        // Locate the Block from the Stream that contains the target position.
+        index.locateBlock(info, pos);
+
+        assert (info.compressedOffset & 3) == 0;
+        assert info.uncompressedSize > 0;
+        assert pos >= info.uncompressedOffset;
+        assert pos < info.uncompressedOffset + info.uncompressedSize;
     }
 
     /**
