@@ -409,6 +409,24 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
+     * Gets the number of Streams in the .xz file.
+     *
+     * @since 1.3
+     */
+    public int getStreamCount() {
+        return streams.size();
+    }
+
+    /**
+     * Gets the number of Blocks in the .xz file.
+     *
+     * @since 1.3
+     */
+    public int getBlockCount() {
+        return blockCount;
+    }
+
+    /**
      * Decompresses the next byte from this input stream.
      *
      * @return      the next decompressed byte, or <code>-1</code>
