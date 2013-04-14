@@ -12,9 +12,27 @@ package org.tukaani.xz.index;
 import org.tukaani.xz.common.StreamFlags;
 
 public class BlockInfo {
-    public StreamFlags streamFlags;
-    public long compressedOffset;
-    public long uncompressedOffset;
-    public long unpaddedSize;
-    public long uncompressedSize;
+    public int blockNumber = -1;
+    public long compressedOffset = -1;
+    public long uncompressedOffset = -1;
+    public long unpaddedSize = -1;
+    public long uncompressedSize = -1;
+
+    IndexDecoder index;
+
+    public BlockInfo(IndexDecoder indexOfFirstStream) {
+        index = indexOfFirstStream;
+    }
+
+    public int getCheckType() {
+        return index.getStreamFlags().checkType;
+    }
+
+    public boolean hasNext() {
+        return index.hasRecord(blockNumber + 1);
+    }
+
+    public void setNext() {
+        index.setBlockInfo(this, blockNumber + 1);
+    }
 }

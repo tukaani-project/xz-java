@@ -98,16 +98,30 @@ public class SeekableXZInputStream extends SeekableInputStream {
     private final ArrayList streams = new ArrayList();
 
     /**
-     * IndexDecoder from which the current Block is being decoded.
-     * The constructor leaves this to point the IndexDecoder of
-     * the first Stream.
-     */
-    private IndexDecoder index;
-
-    /**
      * Bitmask of all Check IDs seen.
      */
     private int checkTypes = 0;
+
+    /**
+     * Uncompressed size of the file (all Streams).
+     */
+    private long uncompressedSize = 0;
+
+    /**
+     * Uncompressed size of the largest XZ Block in the file.
+     */
+    private long largestBlockSize = 0;
+
+    /**
+     * Number of XZ Blocks in the file.
+     */
+    private int blockCount = 0;
+
+    /**
+     * Size and position information about the current Block.
+     * If there are no Blocks, all values will be <code>-1</code>.
+     */
+    private final BlockInfo curBlockInfo;
 
     /**
      * Integrity Check in the current XZ Stream. The constructor leaves
@@ -119,16 +133,6 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Decoder of the current XZ Block, if any.
      */
     private BlockInputStream blockDecoder = null;
-
-    /**
-     * Uncompressed size of the file (all Streams).
-     */
-    private long uncompressedSize = 0;
-
-    /**
-     * Uncompressed size of the largest XZ Block in the file.
-     */
-    private long largestBlockSize = 0;
 
     /**
      * Current uncompressed position.
@@ -282,6 +286,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
             in.seek(pos - streamFooter.backwardSize);
 
             // Decode the Index field.
+            IndexDecoder index;
             try {
                 index = new IndexDecoder(in, streamFooter, streamPadding,
                                          memoryLimit);
@@ -331,6 +336,12 @@ public class SeekableXZInputStream extends SeekableInputStream {
             if (uncompressedSize < 0)
                 throw new UnsupportedOptionsException("XZ file is too big");
 
+            // Update the Block count and check that it fits into an int.
+            blockCount += index.getRecordCount();
+            if (blockCount < 0)
+                throw new UnsupportedOptionsException(
+                        "XZ file has over " + Integer.MAX_VALUE + " Blocks");
+
             // Add this Stream to the list of Streams.
             streams.add(index);
 
@@ -342,6 +353,23 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
         // Save it now that indexMemoryUsage has been substracted from it.
         this.memoryLimit = memoryLimit;
+
+        // Store the relative offsets of the Streams. This way we don't
+        // need to recalculate them in this class when seeking; the
+        // IndexDecoder instances will handle them.
+        IndexDecoder prev = (IndexDecoder)streams.get(streams.size() - 1);
+        for (int i = streams.size() - 2; i >= 0; --i) {
+            IndexDecoder cur = (IndexDecoder)streams.get(i);
+            cur.setOffsets(prev);
+            prev = cur;
+        }
+
+        // Initialize curBlockInfo to point to the first Stream.
+        // The blockNumber will be left to -1 so that .hasNext()
+        // and .setNext() work to get the first Block when starting
+        // to decompress from the beginning of the file.
+        IndexDecoder first = (IndexDecoder)streams.get(streams.size() - 1);
+        curBlockInfo = new BlockInfo(first);
     }
 
     /**
@@ -581,9 +609,9 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // from the same Stream. If there are no more Blocks in this Stream,
         // then we behave as if seek(long) had been called.
         if (!seekNeeded) {
-            if (index.hasNext()) {
-                BlockInfo info = index.getNext();
-                initBlockDecoder(info);
+            if (curBlockInfo.hasNext()) {
+                curBlockInfo.setNext();
+                initBlockDecoder();
                 return;
             }
 
@@ -603,32 +631,21 @@ public class SeekableXZInputStream extends SeekableInputStream {
         endReached = false;
 
         // Locate the Stream that contains the uncompressed target position.
-        int i = streams.size();
-        assert i >= 1;
-
-        long uncompressedSum = 0;
-        long compressedSum = 0;
-
-        while (true) {
-            index = (IndexDecoder)streams.get(--i);
-            if (uncompressedSum + index.getUncompressedSize() > seekPos)
+        IndexDecoder index;
+        for (int i = 0; ; ++i) {
+            index = (IndexDecoder)streams.get(i);
+            if (index.hasUncompressedOffset(seekPos))
                 break;
-
-            uncompressedSum += index.getUncompressedSize();
-            compressedSum += index.getStreamAndPaddingSize();
-            assert (compressedSum & 3) == 0;
         }
 
-        // Locate the Block from the Stream that contains
-        // the uncompressed target position.
-        BlockInfo info = index.locate(seekPos - uncompressedSum);
-        assert (info.compressedOffset & 3) == 0 : info.compressedOffset;
+        // Locate the Block that contains the uncompressed target position.
+        index.locateBlock(curBlockInfo, seekPos);
 
-        // Adjust the Stream-specific offsets to file offsets.
-        info.compressedOffset += compressedSum;
-        info.uncompressedOffset += uncompressedSum;
-        assert seekPos >= info.uncompressedOffset;
-        assert seekPos < info.uncompressedOffset + info.uncompressedSize;
+        assert (curBlockInfo.compressedOffset & 3) == 0;
+        assert curBlockInfo.uncompressedSize > 0;
+        assert seekPos >= curBlockInfo.uncompressedOffset;
+        assert seekPos < curBlockInfo.uncompressedOffset
+                         + curBlockInfo.uncompressedSize;
 
         // Seek in the underlying stream and create a new Block decoder
         // only if really needed. We can skip it if the current position
@@ -640,17 +657,17 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // In that case, decoding of the current Block hasn't been started
         // yet. (Decoding of a Block won't be started until at least one
         // byte will also be read from it.)
-        if (!(curPos > info.uncompressedOffset && curPos <= seekPos)) {
+        if (!(curPos > curBlockInfo.uncompressedOffset && curPos <= seekPos)) {
             // Seek to the beginning of the Block.
-            in.seek(info.compressedOffset);
+            in.seek(curBlockInfo.compressedOffset);
 
             // Since it is possible that this Block is from a different
             // Stream than the previous Block, initialize a new Check.
-            check = Check.getInstance(info.streamFlags.checkType);
+            check = Check.getInstance(curBlockInfo.getCheckType());
 
             // Create a new Block decoder.
-            initBlockDecoder(info);
-            curPos = info.uncompressedOffset;
+            initBlockDecoder();
+            curPos = curBlockInfo.uncompressedOffset;
         }
 
         // If the target wasn't at a Block boundary, decompress and throw
@@ -662,23 +679,22 @@ public class SeekableXZInputStream extends SeekableInputStream {
             long skipAmount = seekPos - curPos;
             if (blockDecoder.skip(skipAmount) != skipAmount)
                 throw new CorruptedInputException();
-        }
 
-        curPos = seekPos;
+            curPos = seekPos;
+        }
     }
 
     /**
      * Initializes a new BlockInputStream. This is a helper function for
      * <code>seek()</code>.
      */
-    private void initBlockDecoder(BlockInfo info) throws IOException {
+    private void initBlockDecoder() throws IOException {
         try {
             // Set it to null first so that GC can collect it if memory
             // runs tight when initializing a new BlockInputStream.
             blockDecoder = null;
             blockDecoder = new BlockInputStream(in, check, memoryLimit,
-                                                info.unpaddedSize,
-                                                info.uncompressedSize);
+                    curBlockInfo.unpaddedSize, curBlockInfo.uncompressedSize);
         } catch (MemoryLimitException e) {
             // BlockInputStream doesn't know how much memory we had
             // already needed so we need to recreate the exception.

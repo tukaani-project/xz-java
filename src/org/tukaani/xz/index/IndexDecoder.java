@@ -20,25 +20,29 @@ import org.tukaani.xz.MemoryLimitException;
 import org.tukaani.xz.UnsupportedOptionsException;
 
 public class IndexDecoder extends IndexBase {
-    private final BlockInfo info = new BlockInfo();
+    private final StreamFlags streamFlags;
     private final long streamPadding;
     private final int memoryUsage;
+
+    // Unpadded Size and Uncompressed Size fields
     private final long[] unpadded;
     private final long[] uncompressed;
+
+    // Uncompressed size of the largest Block. It is used by
+    // SeekableXZInputStream to find out the largest Block of the .xz file.
     private long largestBlockSize = 0;
 
-    /**
-     * Current position in the arrays. This is initialized to <code>-1</code>
-     * because then it is possible to use <code>hasNext()</code> and
-     * <code>getNext()</code> to get BlockInfo of the first Block.
-     */
-    private int pos = -1;
+    // Offsets relative to the beginning of the .xz file. These are all zero
+    // for the first Stream in the file.
+    private int recordOffset = 0;
+    private long compressedOffset = 0;
+    private long uncompressedOffset = 0;
 
     public IndexDecoder(SeekableInputStream in, StreamFlags streamFooterFlags,
                         long streamPadding, int memoryLimit)
             throws IOException {
         super(new CorruptedInputException("XZ Index is corrupt"));
-        info.streamFlags = streamFooterFlags;
+        this.streamFlags = streamFooterFlags;
         this.streamPadding = streamPadding;
 
         // If endPos is exceeded before the CRC32 field has been decoded,
@@ -128,7 +132,51 @@ public class IndexDecoder extends IndexBase {
                 throw new CorruptedInputException("XZ Index is corrupt");
     }
 
-    public BlockInfo locate(long target) {
+    public void setOffsets(IndexDecoder prev) {
+        // NOTE: SeekableXZInputStream checks that the total number of Blocks
+        // in concatenated Streams fits into an int.
+        recordOffset = prev.recordOffset + (int)prev.recordCount;
+        compressedOffset = prev.compressedOffset
+                           + prev.getStreamSize() + prev.streamPadding;
+        assert (compressedOffset & 3) == 0;
+        uncompressedOffset = prev.uncompressedOffset + prev.uncompressedSum;
+    }
+
+    public int getMemoryUsage() {
+        return memoryUsage;
+    }
+
+    public StreamFlags getStreamFlags() {
+        return streamFlags;
+    }
+
+    public int getRecordCount() {
+        // It was already checked in the constructor that it fits into an int.
+        // Otherwise we couldn't have allocated the arrays.
+        return (int)recordCount;
+    }
+
+    public long getUncompressedSize() {
+        return uncompressedSum;
+    }
+
+    public long getLargestBlockSize() {
+        return largestBlockSize;
+    }
+
+    public boolean hasUncompressedOffset(long pos) {
+        return pos >= uncompressedOffset
+               && pos < uncompressedOffset + uncompressedSum;
+    }
+
+    public boolean hasRecord(int blockNumber) {
+        return blockNumber >= recordOffset
+               && blockNumber < recordOffset + recordCount;
+    }
+
+    public void locateBlock(BlockInfo info, long target) {
+        assert target >= uncompressedOffset;
+        target -= uncompressedOffset;
         assert target < uncompressedSum;
 
         int left = 0;
@@ -143,36 +191,20 @@ public class IndexDecoder extends IndexBase {
                 right = i;
         }
 
-        pos = left;
-        return getInfo();
+        setBlockInfo(info, recordOffset + left);
     }
 
-    public int getMemoryUsage() {
-        return memoryUsage;
-    }
+    public void setBlockInfo(BlockInfo info, int blockNumber) {
+        // The caller has checked that the given Block number is inside
+        // this Index.
+        assert blockNumber >= recordOffset;
+        assert blockNumber - recordOffset < recordCount;
 
-    public long getStreamAndPaddingSize() {
-        return getStreamSize() + streamPadding;
-    }
+        info.index = this;
+        info.blockNumber = blockNumber;
 
-    public long getUncompressedSize() {
-        return uncompressedSum;
-    }
+        int pos = blockNumber - recordOffset;
 
-    public long getLargestBlockSize() {
-        return largestBlockSize;
-    }
-
-    public boolean hasNext() {
-        return pos + 1 < recordCount;
-    }
-
-    public BlockInfo getNext() {
-        ++pos;
-        return getInfo();
-    }
-
-    private BlockInfo getInfo() {
         if (pos == 0) {
             info.compressedOffset = 0;
             info.uncompressedOffset = 0;
@@ -184,7 +216,8 @@ public class IndexDecoder extends IndexBase {
         info.unpaddedSize = unpadded[pos] - info.compressedOffset;
         info.uncompressedSize = uncompressed[pos] - info.uncompressedOffset;
 
-        info.compressedOffset += DecoderUtil.STREAM_HEADER_SIZE;
-        return info;
+        info.compressedOffset += compressedOffset
+                                 + DecoderUtil.STREAM_HEADER_SIZE;
+        info.uncompressedOffset += uncompressedOffset;
     }
 }
