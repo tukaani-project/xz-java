@@ -722,6 +722,30 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
+     * Seeks to the beginning of the given XZ Block.
+     *
+     * @throws      XZIOException
+     *              if <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
+     *              <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>,
+     *              or if stream has been closed
+     *
+     * @since 1.3
+     */
+    public void seekToBlock(int blockNumber) throws IOException {
+        if (in == null)
+            throw new XZIOException("Stream closed");
+
+        if (blockNumber < 0 || blockNumber >= blockCount)
+            throw new XZIOException("Invalid XZ Block number: " + blockNumber);
+
+        // This is a bit silly implementation. Here we locate the uncompressed
+        // offset of the specified Block, then when doing the actual seek in
+        // seek(), we need to find the Block number based on seekPos.
+        seekPos = getBlockPos(blockNumber);
+        seekNeeded = true;
+    }
+
+    /**
      * Does the actual seeking. This is also called when <code>read</code>
      * needs a new Block to decode.
      */
