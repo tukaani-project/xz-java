@@ -25,7 +25,7 @@ public abstract class LZEncoder {
 
     /**
      * Number of bytes that must be available, the current byte included,
-     * to make hasEnoughInput return true. Flushing and finishing are
+     * to make hasEnoughData return true. Flushing and finishing are
      * naturally exceptions to this since there cannot be any data after
      * the end of the uncompressed input.
      */
