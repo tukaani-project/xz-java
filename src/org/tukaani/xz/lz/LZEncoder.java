@@ -205,12 +205,26 @@ public abstract class LZEncoder {
         if (writePos >= keepSizeAfter)
             readLimit = writePos - keepSizeAfter;
 
-        // After flushing or setting a preset dictionary there may be pending
-        // data that hasn't been ran through the match finder yet.
-        //
-        // NOTE: The test for readLimit is only to avoid wasting time
-        // if we get very little new input and thus readLimit wasn't
-        // increased above.
+        processPendingBytes();
+
+        // Tell the caller how much input we actually copied into
+        // the dictionary.
+        return len;
+    }
+
+    /**
+     * Process pending bytes remaining from preset dictionary initialization
+     * or encoder flush operation.
+     */
+    private void processPendingBytes() {
+        // After flushing or setting a preset dictionary there will be
+        // pending data that hasn't been ran through the match finder yet.
+        // Run it through the match finder now if there is enough new data
+        // available (readPos < readLimit) that the encoder may encode at
+        // least one more input byte. This way we don't waste any time
+        // looping in the match finder (and marking the same bytes as
+        // pending again) if the application provides very little new data
+        // per write call.
         if (pendingSize > 0 && readPos < readLimit) {
             readPos -= pendingSize;
             int oldPendingSize = pendingSize;
@@ -218,10 +232,6 @@ public abstract class LZEncoder {
             skip(oldPendingSize);
             assert pendingSize < oldPendingSize;
         }
-
-        // Tell the caller how much input we actually copied into
-        // the dictionary.
-        return len;
     }
 
     /**
@@ -238,6 +248,7 @@ public abstract class LZEncoder {
      */
     public void setFlushing() {
         readLimit = writePos - 1;
+        processPendingBytes();
     }
 
     /**
@@ -247,6 +258,7 @@ public abstract class LZEncoder {
     public void setFinishing() {
         readLimit = writePos - 1;
         finishing = true;
+        processPendingBytes();
     }
 
     /**
