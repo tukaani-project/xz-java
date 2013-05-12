@@ -2,6 +2,25 @@
 XZ for Java release notes
 =========================
 
+1.3 (2013-05-12)
+
+    * Fix a data corruption bug when flushing the LZMA2 encoder or
+      when using a preset dictionary.
+
+    * Make information about the XZ Block positions and sizes available
+      in SeekableXZInputStream by adding the following public functions:
+        - int getStreamCount()
+        - int getBlockCount()
+        - long getBlockPos(int blockNumber)
+        - long getBlockSize(int blockNumber)
+        - long getBlockCompPos(int blockNumber)
+        - long getBlockCompSize(int blockNumber)
+        - int getBlockCheckType(int blockNumber)
+        - int getBlockNumber(long pos)
+        - void seekToBlock(int blockNumber)
+
+    * Minor improvements to javadoc comments were made.
+
 1.2 (2013-01-29)
 
     * Use fields instead of reallocating frequently-needed temporary
