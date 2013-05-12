@@ -55,7 +55,8 @@ import org.tukaani.xz.common.DecoderUtil;
  * that it returns <code>-1</code>. This way the decompressor will parse the
  * file footers and verify the integrity checks, giving the caller more
  * confidence that the uncompressed data is valid. (This advice seems to
- * apply to <code>java.util.zip.GZIPInputStream</code> too.)
+ * apply to
+ * {@link java.util.zip.GZIPInputStream java.util.zip.GZIPInputStream} too.)
  *
  * @see SingleXZInputStream
  */
