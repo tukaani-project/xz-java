@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import org.tukaani.xz.lz.LZDecoder;
-import org.tukaani.xz.rangecoder.RangeDecoder;
+import org.tukaani.xz.rangecoder.RangeDecoderFromBuffer;
 import org.tukaani.xz.lzma.LZMADecoder;
 
 /**
@@ -46,7 +46,8 @@ public class LZMA2InputStream extends InputStream {
     private DataInputStream in;
 
     private final LZDecoder lz;
-    private final RangeDecoder rc = new RangeDecoder(COMPRESSED_SIZE_MAX);
+    private final RangeDecoderFromBuffer rc
+            = new RangeDecoderFromBuffer(COMPRESSED_SIZE_MAX);
     private LZMADecoder lzma;
 
     private int uncompressedSize = 0;
@@ -226,6 +227,8 @@ public class LZMA2InputStream extends InputStream {
                 } else {
                     lz.setLimit(copySizeMax);
                     lzma.decode();
+                    if (!rc.isInBufferOK())
+                        throw new CorruptedInputException();
                 }
 
                 int copiedSize = lz.flush(buf, off);

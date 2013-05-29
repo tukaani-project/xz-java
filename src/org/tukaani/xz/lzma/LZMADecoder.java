@@ -13,7 +13,6 @@ package org.tukaani.xz.lzma;
 import java.io.IOException;
 import org.tukaani.xz.lz.LZDecoder;
 import org.tukaani.xz.rangecoder.RangeDecoder;
-import org.tukaani.xz.CorruptedInputException;
 
 public final class LZMADecoder extends LZMACoder {
     private final LZDecoder lz;
@@ -54,9 +53,6 @@ public final class LZMADecoder extends LZMACoder {
         }
 
         rc.normalize();
-
-        if (!rc.isInBufferOK())
-            throw new CorruptedInputException();
     }
 
     private int decodeMatch(int posState) throws IOException {

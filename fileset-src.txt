@@ -86,6 +86,8 @@ src/org/tukaani/xz/lzma/State.java
 src/org/tukaani/xz/package-info.java
 src/org/tukaani/xz/rangecoder/RangeCoder.java
 src/org/tukaani/xz/rangecoder/RangeDecoder.java
+src/org/tukaani/xz/rangecoder/RangeDecoderFromBuffer.java
+src/org/tukaani/xz/rangecoder/RangeDecoderFromStream.java
 src/org/tukaani/xz/rangecoder/RangeEncoder.java
 src/org/tukaani/xz/simple/ARM.java
 src/org/tukaani/xz/simple/ARMThumb.java
