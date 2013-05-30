@@ -33,6 +33,7 @@ src/org/tukaani/xz/LZMA2Encoder.java
 src/org/tukaani/xz/LZMA2InputStream.java
 src/org/tukaani/xz/LZMA2Options.java
 src/org/tukaani/xz/LZMA2OutputStream.java
+src/org/tukaani/xz/LZMAInputStream.java
 src/org/tukaani/xz/MemoryLimitException.java
 src/org/tukaani/xz/PowerPCOptions.java
 src/org/tukaani/xz/RawCoder.java

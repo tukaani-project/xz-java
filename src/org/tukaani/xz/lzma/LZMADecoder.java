@@ -36,6 +36,16 @@ public final class LZMADecoder extends LZMACoder {
         repLenDecoder.reset();
     }
 
+    /**
+     * Returns true if LZMA end marker was detected. It is encoded as
+     * the maximum match distance which with signed ints becomes -1. This
+     * function is needed only for LZMA1. LZMA2 doesn't use the end marker
+     * in the LZMA layer.
+     */
+    public boolean endMarkerDetected() {
+        return reps[0] == -1;
+    }
+
     public void decode() throws IOException {
         lz.repeatPending();
 
@@ -48,6 +58,10 @@ public final class LZMADecoder extends LZMACoder {
                 int len = rc.decodeBit(isRep, state.get()) == 0
                           ? decodeMatch(posState)
                           : decodeRepMatch(posState);
+
+                // NOTE: With LZMA1 streams that have the end marker,
+                // this will throw CorruptedInputException. LZMAInputStream
+                // handles it specially.
                 lz.repeat(reps[0], len);
             }
         }
