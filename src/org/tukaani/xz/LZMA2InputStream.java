@@ -69,7 +69,7 @@ public class LZMA2InputStream extends InputStream {
      * @return      approximate memory requirements as kibibytes (KiB)
      */
     public static int getMemoryUsage(int dictSize) {
-        // The base state is aroudn 30-40 KiB (probabilities etc.),
+        // The base state is around 30-40 KiB (probabilities etc.),
         // range decoder needs COMPRESSED_SIZE_MAX bytes for buffering,
         // and LZ decoder needs a dictionary buffer.
         return 40 + COMPRESSED_SIZE_MAX / 1024 + getDictSize(dictSize) / 1024;
@@ -117,7 +117,7 @@ public class LZMA2InputStream extends InputStream {
     /**
      * Creates a new LZMA2 decompressor using a preset dictionary.
      * <p>
-     * This is like <code>LZMAInputStream(InputStream, int)</code> except
+     * This is like <code>LZMA2InputStream(InputStream, int)</code> except
      * that the dictionary may be initialized using a preset dictionary.
      * If a preset dictionary was used when compressing the data, the
      * same preset dictionary must be provided when decompressing.
@@ -174,7 +174,7 @@ public class LZMA2InputStream extends InputStream {
      * <p>
      * If <code>len</code> is zero, no bytes are read and <code>0</code>
      * is returned. Otherwise this will block until <code>len</code>
-     * bytes have been decompressed, the end of LZMA2 stream is reached,
+     * bytes have been decompressed, the end of the LZMA2 stream is reached,
      * or an exception is thrown.
      *
      * @param       buf         target buffer for uncompressed data
@@ -318,7 +318,7 @@ public class LZMA2InputStream extends InputStream {
      * thrown before the number of bytes claimed to be available have
      * been read from this input stream.
      * <p>
-     * In LZMAInputStream, the return value will be non-zero when the
+     * In LZMA2InputStream, the return value will be non-zero when the
      * decompressor is in the middle of an LZMA2 chunk. The return value
      * will then be the number of uncompressed bytes remaining from that
      * chunk.
