@@ -105,6 +105,14 @@
                 <attribute name="Class-Path" value="xz.jar"/>
             </manifest>
         </jar>
+
+        <jar destfile="${jar_dir}/LZMADecDemo.jar" basedir="${classes_dir}"
+             includes="LZMADecDemo.class">
+            <manifest>
+                <attribute name="Main-Class" value="LZMADecDemo"/>
+                <attribute name="Class-Path" value="xz.jar"/>
+            </manifest>
+        </jar>
     </target>
 
     <!-- It's an ugly quick hack. Maybe some day there will be a cleaner
