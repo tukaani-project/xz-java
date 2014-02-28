@@ -39,7 +39,7 @@ class SimpleInputStream extends InputStream {
 
         // The simpleFilter argument comes from this package
         // so it is known to be non-null already.
-        assert simpleFilter == null;
+        assert simpleFilter != null;
 
         this.in = in;
         this.simpleFilter = simpleFilter;
