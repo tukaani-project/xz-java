@@ -70,6 +70,8 @@ public class XZOutputStream extends FinishableOutputStream {
     private IOException exception = null;
     private boolean finished = false;
 
+    private final byte[] tempBuf = new byte[1];
+
     /**
      * Creates a new XZ compressor using one filter and CRC64 as
      * the integrity check. This constructor is equivalent to passing
@@ -235,8 +237,8 @@ public class XZOutputStream extends FinishableOutputStream {
      * @throws      IOException may be thrown by the underlying output stream
      */
     public void write(int b) throws IOException {
-        byte[] buf = new byte[] { (byte)b };
-        write(buf, 0, 1);
+        tempBuf[0] = (byte)b;
+        write(tempBuf, 0, 1);
     }
 
     /**

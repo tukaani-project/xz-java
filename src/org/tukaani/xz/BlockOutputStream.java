@@ -25,6 +25,8 @@ class BlockOutputStream extends FinishableOutputStream {
     private final long compressedSizeLimit;
     private long uncompressedSize = 0;
 
+    private final byte[] tempBuf = new byte[1];
+
     public BlockOutputStream(OutputStream out, FilterEncoder[] filters,
                              Check check) throws IOException {
         this.out = out;
@@ -83,9 +85,8 @@ class BlockOutputStream extends FinishableOutputStream {
     }
 
     public void write(int b) throws IOException {
-        byte[] buf = new byte[1];
-        buf[0] = (byte)b;
-        write(buf, 0, 1);
+        tempBuf[0] = (byte)b;
+        write(tempBuf, 0, 1);
     }
 
     public void write(byte[] buf, int off, int len) throws IOException {

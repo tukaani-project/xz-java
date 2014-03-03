@@ -59,6 +59,8 @@ public class LZMA2InputStream extends InputStream {
 
     private IOException exception = null;
 
+    private final byte[] tempBuf = new byte[1];
+
     /**
      * Gets approximate decompressor memory requirements as kibibytes for
      * the given dictionary size.
@@ -166,8 +168,7 @@ public class LZMA2InputStream extends InputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public int read() throws IOException {
-        byte[] buf = new byte[1];
-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
+        return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
     /**

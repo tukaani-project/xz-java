@@ -31,6 +31,8 @@ class BlockInputStream extends InputStream {
     private long uncompressedSize = 0;
     private boolean endReached = false;
 
+    private final byte[] tempBuf = new byte[1];
+
     public BlockInputStream(InputStream in, Check check, int memoryLimit,
                             long unpaddedSizeInIndex,
                             long uncompressedSizeInIndex)
@@ -196,8 +198,7 @@ class BlockInputStream extends InputStream {
     }
 
     public int read() throws IOException {
-        byte[] buf = new byte[1];
-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
+        return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
     public int read(byte[] buf, int off, int len) throws IOException {

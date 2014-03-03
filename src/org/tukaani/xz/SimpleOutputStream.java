@@ -25,6 +25,8 @@ class SimpleOutputStream extends FinishableOutputStream {
     private IOException exception = null;
     private boolean finished = false;
 
+    private final byte[] tempBuf = new byte[1];
+
     static int getMemoryUsage() {
         return 1 + TMPBUF_SIZE / 1024;
     }
@@ -39,9 +41,8 @@ class SimpleOutputStream extends FinishableOutputStream {
     }
 
     public void write(int b) throws IOException {
-        byte[] buf = new byte[1];
-        buf[0] = (byte)b;
-        write(buf, 0, 1);
+        tempBuf[0] = (byte)b;
+        write(tempBuf, 0, 1);
     }
 
     public void write(byte[] buf, int off, int len) throws IOException {

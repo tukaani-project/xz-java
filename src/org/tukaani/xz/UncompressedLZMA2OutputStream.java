@@ -24,6 +24,8 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
     private boolean finished = false;
     private IOException exception = null;
 
+    private final byte[] tempBuf = new byte[1];
+
     static int getMemoryUsage() {
         // uncompBuf + a little extra
         return 70;
@@ -38,9 +40,8 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
     }
 
     public void write(int b) throws IOException {
-        byte[] buf = new byte[1];
-        buf[0] = (byte)b;
-        write(buf, 0, 1);
+        tempBuf[0] = (byte)b;
+        write(tempBuf, 0, 1);
     }
 
     public void write(byte[] buf, int off, int len) throws IOException {

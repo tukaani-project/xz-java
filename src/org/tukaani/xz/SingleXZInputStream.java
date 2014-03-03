@@ -49,6 +49,8 @@ public class SingleXZInputStream extends InputStream {
     private boolean endReached = false;
     private IOException exception = null;
 
+    private final byte[] tempBuf = new byte[1];
+
     /**
      * Creates a new XZ decompressor that decompresses exactly one
      * XZ Stream from <code>in</code> without a memory usage limit.
@@ -175,8 +177,7 @@ public class SingleXZInputStream extends InputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public int read() throws IOException {
-        byte[] buf = new byte[1];
-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
+        return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
     /**

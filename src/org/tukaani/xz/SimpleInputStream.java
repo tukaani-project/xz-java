@@ -27,6 +27,8 @@ class SimpleInputStream extends InputStream {
     private boolean endReached = false;
     private IOException exception = null;
 
+    private final byte[] tempBuf = new byte[1];
+
     static int getMemoryUsage() {
         return 1 + TMPBUF_SIZE / 1024;
     }
@@ -46,8 +48,7 @@ class SimpleInputStream extends InputStream {
     }
 
     public int read() throws IOException {
-        byte[] buf = new byte[1];
-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
+        return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
     public int read(byte[] buf, int off, int len) throws IOException {

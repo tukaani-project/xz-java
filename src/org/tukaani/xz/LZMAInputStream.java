@@ -53,6 +53,8 @@ public class LZMAInputStream extends InputStream {
 
     private boolean endReached = false;
 
+    private final byte[] tempBuf = new byte[1];
+
     /**
      * Number of uncompressed bytes left to be decompressed, or -1 if
      * the end marker is used.
@@ -439,8 +441,7 @@ public class LZMAInputStream extends InputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public int read() throws IOException {
-        byte[] buf = new byte[1];
-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
+        return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
     /**

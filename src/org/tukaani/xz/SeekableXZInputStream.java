@@ -170,6 +170,12 @@ public class SeekableXZInputStream extends SeekableInputStream {
     private IOException exception = null;
 
     /**
+     * Temporary buffer for read(). This avoids reallocating memory
+     * on every read() call.
+     */
+    private final byte[] tempBuf = new byte[1];
+
+    /**
      * Creates a new seekable XZ decompressor without a memory usage limit.
      *
      * @param       in          seekable input stream containing one or more
@@ -544,8 +550,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public int read() throws IOException {
-        byte[] buf = new byte[1];
-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
+        return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
     /**

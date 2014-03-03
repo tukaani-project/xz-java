@@ -35,6 +35,8 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private boolean finished = false;
     private IOException exception = null;
 
+    private final byte[] tempBuf = new byte[1];
+
     private static int getExtraSizeBefore(int dictSize) {
         return COMPRESSED_SIZE_MAX > dictSize
                ? COMPRESSED_SIZE_MAX - dictSize : 0;
@@ -77,9 +79,8 @@ class LZMA2OutputStream extends FinishableOutputStream {
     }
 
     public void write(int b) throws IOException {
-        byte[] buf = new byte[1];
-        buf[0] = (byte)b;
-        write(buf, 0, 1);
+        tempBuf[0] = (byte)b;
+        write(tempBuf, 0, 1);
     }
 
     public void write(byte[] buf, int off, int len) throws IOException {
