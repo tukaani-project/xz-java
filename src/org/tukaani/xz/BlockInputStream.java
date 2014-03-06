@@ -18,7 +18,6 @@ import org.tukaani.xz.common.DecoderUtil;
 import org.tukaani.xz.check.Check;
 
 class BlockInputStream extends InputStream {
-    private final InputStream in;
     private final DataInputStream inData;
     private final CountingInputStream inCounted;
     private InputStream filterChain;
@@ -37,7 +36,6 @@ class BlockInputStream extends InputStream {
                             long unpaddedSizeInIndex,
                             long uncompressedSizeInIndex)
             throws IOException, IndexIndicatorException {
-        this.in = in;
         this.check = check;
         inData = new DataInputStream(in);
 
