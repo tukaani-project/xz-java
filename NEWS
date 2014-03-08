@@ -2,6 +2,13 @@
 XZ for Java release notes
 =========================
 
+1.5 (2014-03-08)
+
+    * Fix a wrong assertion in BCJ decoders.
+
+    * Use a field instead of reallocating a temporary one-byte buffer
+      in read() and write() implementations in several classes.
+
 1.4 (2013-09-22)
 
     * Add LZMAInputStream for decoding .lzma files and raw LZMA streams.
