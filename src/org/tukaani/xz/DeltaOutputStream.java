@@ -13,11 +13,11 @@ import java.io.IOException;
 import org.tukaani.xz.delta.DeltaEncoder;
 
 class DeltaOutputStream extends FinishableOutputStream {
-    private static final int TMPBUF_SIZE = 4096;
+    private static final int FILTER_BUF_SIZE = 4096;
 
     private FinishableOutputStream out;
     private final DeltaEncoder delta;
-    private final byte[] tmpbuf = new byte[TMPBUF_SIZE];
+    private final byte[] filterBuf = new byte[FILTER_BUF_SIZE];
 
     private boolean finished = false;
     private IOException exception = null;
@@ -25,7 +25,7 @@ class DeltaOutputStream extends FinishableOutputStream {
     private final byte[] tempBuf = new byte[1];
 
     static int getMemoryUsage() {
-        return 1 + TMPBUF_SIZE / 1024;
+        return 1 + FILTER_BUF_SIZE / 1024;
     }
 
     DeltaOutputStream(FinishableOutputStream out, DeltaOptions options) {
@@ -49,15 +49,15 @@ class DeltaOutputStream extends FinishableOutputStream {
             throw new XZIOException("Stream finished");
 
         try {
-            while (len > TMPBUF_SIZE) {
-                delta.encode(buf, off, TMPBUF_SIZE, tmpbuf);
-                out.write(tmpbuf);
-                off += TMPBUF_SIZE;
-                len -= TMPBUF_SIZE;
+            while (len > FILTER_BUF_SIZE) {
+                delta.encode(buf, off, FILTER_BUF_SIZE, filterBuf);
+                out.write(filterBuf);
+                off += FILTER_BUF_SIZE;
+                len -= FILTER_BUF_SIZE;
             }
 
-            delta.encode(buf, off, len, tmpbuf);
-            out.write(tmpbuf, 0, len);
+            delta.encode(buf, off, len, filterBuf);
+            out.write(filterBuf, 0, len);
         } catch (IOException e) {
             exception = e;
             throw e;

@@ -13,12 +13,12 @@ import java.io.IOException;
 import org.tukaani.xz.simple.SimpleFilter;
 
 class SimpleOutputStream extends FinishableOutputStream {
-    private static final int TMPBUF_SIZE = 4096;
+    private static final int FILTER_BUF_SIZE = 4096;
 
     private FinishableOutputStream out;
     private final SimpleFilter simpleFilter;
 
-    private final byte[] tmpbuf = new byte[TMPBUF_SIZE];
+    private final byte[] filterBuf = new byte[FILTER_BUF_SIZE];
     private int pos = 0;
     private int unfiltered = 0;
 
@@ -28,7 +28,7 @@ class SimpleOutputStream extends FinishableOutputStream {
     private final byte[] tempBuf = new byte[1];
 
     static int getMemoryUsage() {
-        return 1 + TMPBUF_SIZE / 1024;
+        return 1 + FILTER_BUF_SIZE / 1024;
     }
 
     SimpleOutputStream(FinishableOutputStream out,
@@ -56,21 +56,21 @@ class SimpleOutputStream extends FinishableOutputStream {
             throw new XZIOException("Stream finished or closed");
 
         while (len > 0) {
-            // Copy more unfiltered data into tmpbuf.
-            int copySize = Math.min(len, TMPBUF_SIZE - (pos + unfiltered));
-            System.arraycopy(buf, off, tmpbuf, pos + unfiltered, copySize);
+            // Copy more unfiltered data into filterBuf.
+            int copySize = Math.min(len, FILTER_BUF_SIZE - (pos + unfiltered));
+            System.arraycopy(buf, off, filterBuf, pos + unfiltered, copySize);
             off += copySize;
             len -= copySize;
             unfiltered += copySize;
 
-            // Filter the data in tmpbuf.
-            int filtered = simpleFilter.code(tmpbuf, pos, unfiltered);
+            // Filter the data in filterBuf.
+            int filtered = simpleFilter.code(filterBuf, pos, unfiltered);
             assert filtered <= unfiltered;
             unfiltered -= filtered;
 
             // Write out the filtered data.
             try {
-                out.write(tmpbuf, pos, filtered);
+                out.write(filterBuf, pos, filtered);
             } catch (IOException e) {
                 exception = e;
                 throw e;
@@ -78,11 +78,11 @@ class SimpleOutputStream extends FinishableOutputStream {
 
             pos += filtered;
 
-            // If end of tmpbuf was reached, move the pending unfiltered
+            // If end of filterBuf was reached, move the pending unfiltered
             // data to the beginning of the buffer so that more data can
-            // be copied into tmpbuf on the next loop iteration.
-            if (pos + unfiltered == TMPBUF_SIZE) {
-                System.arraycopy(tmpbuf, pos, tmpbuf, 0, unfiltered);
+            // be copied into filterBuf on the next loop iteration.
+            if (pos + unfiltered == FILTER_BUF_SIZE) {
+                System.arraycopy(filterBuf, pos, filterBuf, 0, unfiltered);
                 pos = 0;
             }
         }
@@ -95,7 +95,7 @@ class SimpleOutputStream extends FinishableOutputStream {
             throw exception;
 
         try {
-            out.write(tmpbuf, pos, unfiltered);
+            out.write(filterBuf, pos, unfiltered);
         } catch (IOException e) {
             exception = e;
             throw e;

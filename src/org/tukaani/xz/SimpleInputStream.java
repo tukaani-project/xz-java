@@ -14,12 +14,12 @@ import java.io.IOException;
 import org.tukaani.xz.simple.SimpleFilter;
 
 class SimpleInputStream extends InputStream {
-    private static final int TMPBUF_SIZE = 4096;
+    private static final int FILTER_BUF_SIZE = 4096;
 
     private InputStream in;
     private final SimpleFilter simpleFilter;
 
-    private final byte[] tmpbuf = new byte[TMPBUF_SIZE];
+    private final byte[] filterBuf = new byte[FILTER_BUF_SIZE];
     private int pos = 0;
     private int filtered = 0;
     private int unfiltered = 0;
@@ -30,7 +30,7 @@ class SimpleInputStream extends InputStream {
     private final byte[] tempBuf = new byte[1];
 
     static int getMemoryUsage() {
-        return 1 + TMPBUF_SIZE / 1024;
+        return 1 + FILTER_BUF_SIZE / 1024;
     }
 
     SimpleInputStream(InputStream in, SimpleFilter simpleFilter) {
@@ -70,18 +70,18 @@ class SimpleInputStream extends InputStream {
             while (true) {
                 // Copy filtered data into the caller-provided buffer.
                 int copySize = Math.min(filtered, len);
-                System.arraycopy(tmpbuf, pos, buf, off, copySize);
+                System.arraycopy(filterBuf, pos, buf, off, copySize);
                 pos += copySize;
                 filtered -= copySize;
                 off += copySize;
                 len -= copySize;
                 size += copySize;
 
-                // If end of tmpbuf was reached, move the pending data to
+                // If end of filterBuf was reached, move the pending data to
                 // the beginning of the buffer so that more data can be
-                // copied into tmpbuf on the next loop iteration.
-                if (pos + filtered + unfiltered == TMPBUF_SIZE) {
-                    System.arraycopy(tmpbuf, pos, tmpbuf, 0,
+                // copied into filterBuf on the next loop iteration.
+                if (pos + filtered + unfiltered == FILTER_BUF_SIZE) {
+                    System.arraycopy(filterBuf, pos, filterBuf, 0,
                                      filtered + unfiltered);
                     pos = 0;
                 }
@@ -92,8 +92,9 @@ class SimpleInputStream extends InputStream {
                 assert filtered == 0;
 
                 // Get more data into the temporary buffer.
-                int inSize = TMPBUF_SIZE - (pos + filtered + unfiltered);
-                inSize = in.read(tmpbuf, pos + filtered + unfiltered, inSize);
+                int inSize = FILTER_BUF_SIZE - (pos + filtered + unfiltered);
+                inSize = in.read(filterBuf, pos + filtered + unfiltered,
+                                 inSize);
 
                 if (inSize == -1) {
                     // Mark the remaining unfiltered bytes to be ready
@@ -102,9 +103,9 @@ class SimpleInputStream extends InputStream {
                     filtered = unfiltered;
                     unfiltered = 0;
                 } else {
-                    // Filter the data in tmpbuf.
+                    // Filter the data in filterBuf.
                     unfiltered += inSize;
-                    filtered = simpleFilter.code(tmpbuf, pos, unfiltered);
+                    filtered = simpleFilter.code(filterBuf, pos, unfiltered);
                     assert filtered <= unfiltered;
                     unfiltered -= filtered;
                 }
