@@ -17,8 +17,8 @@ import org.tukaani.xz.rangecoder.RangeEncoder;
 final class LZMAEncoderNormal extends LZMAEncoder {
     private static final int OPTS = 4096;
 
-    private static int EXTRA_SIZE_BEFORE = OPTS;
-    private static int EXTRA_SIZE_AFTER = OPTS;
+    private static final int EXTRA_SIZE_BEFORE = OPTS;
+    private static final int EXTRA_SIZE_AFTER = OPTS;
 
     private final Optimum[] opts = new Optimum[OPTS];
     private int optCur = 0;

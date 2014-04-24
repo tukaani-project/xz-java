@@ -131,7 +131,7 @@ public final class LZMADecoder extends LZMACoder {
 
 
     private class LiteralDecoder extends LiteralCoder {
-        LiteralSubdecoder[] subdecoders;
+        private final LiteralSubdecoder[] subdecoders;
 
         LiteralDecoder(int lc, int lp) {
             super(lc, lp);

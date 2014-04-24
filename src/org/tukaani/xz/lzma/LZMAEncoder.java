@@ -494,7 +494,7 @@ public abstract class LZMAEncoder extends LZMACoder {
 
 
     class LiteralEncoder extends LiteralCoder {
-        LiteralSubencoder[] subencoders;
+        private final LiteralSubencoder[] subencoders;
 
         LiteralEncoder(int lc, int lp) {
             super(lc, lp);
