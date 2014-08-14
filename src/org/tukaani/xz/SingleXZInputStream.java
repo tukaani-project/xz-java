@@ -41,15 +41,25 @@ import org.tukaani.xz.check.Check;
  */
 public class SingleXZInputStream extends InputStream {
     private InputStream in;
-    private int memoryLimit;
-    private StreamFlags streamHeaderFlags;
-    private Check check;
+    private final int memoryLimit;
+    private final StreamFlags streamHeaderFlags;
+    private final Check check;
     private BlockInputStream blockDecoder = null;
     private final IndexHash indexHash = new IndexHash();
     private boolean endReached = false;
     private IOException exception = null;
 
     private final byte[] tempBuf = new byte[1];
+
+    /**
+     * Reads the Stream Header into a buffer.
+     * This is a helper function for the constructors.
+     */
+    private static byte[] readStreamHeader(InputStream in) throws IOException {
+        byte[] streamHeader = new byte[DecoderUtil.STREAM_HEADER_SIZE];
+        new DataInputStream(in).readFully(streamHeader);
+        return streamHeader;
+    }
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
@@ -79,7 +89,7 @@ public class SingleXZInputStream extends InputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public SingleXZInputStream(InputStream in) throws IOException {
-        initialize(in, -1);
+        this(in, -1);
     }
 
     /**
@@ -114,23 +124,11 @@ public class SingleXZInputStream extends InputStream {
      */
     public SingleXZInputStream(InputStream in, int memoryLimit)
             throws IOException {
-        initialize(in, memoryLimit);
+        this(in, memoryLimit, readStreamHeader(in));
     }
 
     SingleXZInputStream(InputStream in, int memoryLimit,
                         byte[] streamHeader) throws IOException {
-        initialize(in, memoryLimit, streamHeader);
-    }
-
-    private void initialize(InputStream in, int memoryLimit)
-            throws IOException {
-        byte[] streamHeader = new byte[DecoderUtil.STREAM_HEADER_SIZE];
-        new DataInputStream(in).readFully(streamHeader);
-        initialize(in, memoryLimit, streamHeader);
-    }
-
-    private void initialize(InputStream in, int memoryLimit,
-                            byte[] streamHeader) throws IOException {
         this.in = in;
         this.memoryLimit = memoryLimit;
         streamHeaderFlags = DecoderUtil.decodeStreamHeader(streamHeader);
