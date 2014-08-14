@@ -138,6 +138,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
     private Check check;
 
     /**
+     * Flag indicating if the integrity checks will be verified.
+     */
+    private final boolean verifyCheck;
+
+    /**
      * Decoder of the current XZ Block, if any.
      */
     private BlockInputStream blockDecoder = null;
@@ -239,6 +244,68 @@ public class SeekableXZInputStream extends SeekableInputStream {
      */
     public SeekableXZInputStream(SeekableInputStream in, int memoryLimit)
             throws IOException {
+        this(in, memoryLimit, true);
+    }
+
+    /**
+     * Creates a new seekable XZ decomporessor with an optional
+     * memory usage limit and ability to disable verification
+     * of integrity checks.
+     * <p>
+     * Note that integrity check verification should almost never be disabled.
+     * Possible reasons to disable integrity check verification:
+     * <ul>
+     *   <li>Trying to recover data from a corrupt .xz file.</li>
+     *   <li>Speeding up decompression. This matters mostly with SHA-256
+     *   or with files that have compressed extremely well. It's recommended
+     *   that integrity checking isn't disabled for performance reasons
+     *   unless the file integrity is verified externally in some other
+     *   way.</li>
+     * </ul>
+     * <p>
+     * <code>verifyCheck</code> only affects the integrity check of
+     * the actual compressed data. The CRC32 fields in the headers
+     * are always verified.
+     *
+     * @param       in          seekable input stream containing one or more
+     *                          XZ Streams; the whole input stream is used
+     *
+     * @param       memoryLimit memory usage limit in kibibytes (KiB)
+     *                          or <code>-1</code> to impose no
+     *                          memory usage limit
+     *
+     * @param       verifyCheck if <code>true</code>, the integrity checks
+     *                          will be verified; this should almost never
+     *                          be set to <code>false</code>
+     *
+     * @throws      XZFormatException
+     *                          input is not in the XZ format
+     *
+     * @throws      CorruptedInputException
+     *                          XZ data is corrupt or truncated
+     *
+     * @throws      UnsupportedOptionsException
+     *                          XZ headers seem valid but they specify
+     *                          options not supported by this implementation
+     *
+     * @throws      MemoryLimitException
+     *                          decoded XZ Indexes would need more memory
+     *                          than allowed by the memory usage limit
+     *
+     * @throws      EOFException
+     *                          less than 6 bytes of input was available
+     *                          from <code>in</code>, or (unlikely) the size
+     *                          of the underlying stream got smaller while
+     *                          this was reading from it
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.6
+     */
+    public SeekableXZInputStream(SeekableInputStream in, int memoryLimit,
+                                 boolean verifyCheck)
+            throws IOException {
+        this.verifyCheck = verifyCheck;
         this.in = in;
         DataInputStream inData = new DataInputStream(in);
 
@@ -879,7 +946,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
             // Set it to null first so that GC can collect it if memory
             // runs tight when initializing a new BlockInputStream.
             blockDecoder = null;
-            blockDecoder = new BlockInputStream(in, check, memoryLimit,
+            blockDecoder = new BlockInputStream(
+                    in, check, verifyCheck, memoryLimit,
                     curBlockInfo.unpaddedSize, curBlockInfo.uncompressedSize);
         } catch (MemoryLimitException e) {
             // BlockInputStream doesn't know how much memory we had

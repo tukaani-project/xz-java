@@ -22,6 +22,7 @@ class BlockInputStream extends InputStream {
     private final CountingInputStream inCounted;
     private InputStream filterChain;
     private final Check check;
+    private final boolean verifyCheck;
 
     private long uncompressedSizeInHeader = -1;
     private long compressedSizeInHeader = -1;
@@ -32,11 +33,14 @@ class BlockInputStream extends InputStream {
 
     private final byte[] tempBuf = new byte[1];
 
-    public BlockInputStream(InputStream in, Check check, int memoryLimit,
+    public BlockInputStream(InputStream in,
+                            Check check, boolean verifyCheck,
+                            int memoryLimit,
                             long unpaddedSizeInIndex,
                             long uncompressedSizeInIndex)
             throws IOException, IndexIndicatorException {
         this.check = check;
+        this.verifyCheck = verifyCheck;
         inData = new DataInputStream(in);
 
         byte[] buf = new byte[DecoderUtil.BLOCK_HEADER_SIZE_MAX];
@@ -206,7 +210,9 @@ class BlockInputStream extends InputStream {
         int ret = filterChain.read(buf, off, len);
 
         if (ret > 0) {
-            check.update(buf, off, ret);
+            if (verifyCheck)
+                check.update(buf, off, ret);
+
             uncompressedSize += ret;
 
             // Catch invalid values.
@@ -256,10 +262,10 @@ class BlockInputStream extends InputStream {
             if (inData.readUnsignedByte() != 0x00)
                 throw new CorruptedInputException();
 
-        // Validate the integrity check.
+        // Validate the integrity check if verifyCheck is true.
         byte[] storedCheck = new byte[check.getSize()];
         inData.readFully(storedCheck);
-        if (!Arrays.equals(check.finish(), storedCheck))
+        if (verifyCheck && !Arrays.equals(check.finish(), storedCheck))
             throw new CorruptedInputException("Integrity check ("
                     + check.getName() + ") does not match");
     }

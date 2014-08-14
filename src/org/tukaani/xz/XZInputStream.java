@@ -64,6 +64,7 @@ public class XZInputStream extends InputStream {
     private final int memoryLimit;
     private InputStream in;
     private SingleXZInputStream xzIn;
+    private final boolean verifyCheck;
     private boolean endReached = false;
     private IOException exception = null;
 
@@ -129,9 +130,66 @@ public class XZInputStream extends InputStream {
      * @throws      IOException may be thrown by <code>in</code>
      */
     public XZInputStream(InputStream in, int memoryLimit) throws IOException {
+        this(in, memoryLimit, true);
+    }
+
+    /**
+     * Creates a new XZ decompressor with an optional memory usage limit
+     * and ability to disable verification of integrity checks.
+     * <p>
+     * This is identical to <code>XZInputStream(InputStream,int)</code> except
+     * that this takes also the <code>verifyCheck</code> argument.
+     * <p>
+     * Note that integrity check verification should almost never be disabled.
+     * Possible reasons to disable integrity check verification:
+     * <ul>
+     *   <li>Trying to recover data from a corrupt .xz file.</li>
+     *   <li>Speeding up decompression. This matters mostly with SHA-256
+     *   or with files that have compressed extremely well. It's recommended
+     *   that integrity checking isn't disabled for performance reasons
+     *   unless the file integrity is verified externally in some other
+     *   way.</li>
+     * </ul>
+     * <p>
+     * <code>verifyCheck</code> only affects the integrity check of
+     * the actual compressed data. The CRC32 fields in the headers
+     * are always verified.
+     *
+     * @param       in          input stream from which XZ-compressed
+     *                          data is read
+     *
+     * @param       memoryLimit memory usage limit in kibibytes (KiB)
+     *                          or <code>-1</code> to impose no
+     *                          memory usage limit
+     *
+     * @param       verifyCheck if <code>true</code>, the integrity checks
+     *                          will be verified; this should almost never
+     *                          be set to <code>false</code>
+     *
+     * @throws      XZFormatException
+     *                          input is not in the XZ format
+     *
+     * @throws      CorruptedInputException
+     *                          XZ header CRC32 doesn't match
+     *
+     * @throws      UnsupportedOptionsException
+     *                          XZ header is valid but specifies options
+     *                          not supported by this implementation
+     *
+     * @throws      EOFException
+     *                          less than 12 bytes of input was available
+     *                          from <code>in</code>
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.6
+     */
+    public XZInputStream(InputStream in, int memoryLimit, boolean verifyCheck)
+            throws IOException {
         this.in = in;
         this.memoryLimit = memoryLimit;
-        this.xzIn = new SingleXZInputStream(in, memoryLimit);
+        this.verifyCheck = verifyCheck;
+        this.xzIn = new SingleXZInputStream(in, memoryLimit, verifyCheck);
     }
 
     /**
@@ -265,7 +323,7 @@ public class XZInputStream extends InputStream {
         inData.readFully(buf, 4, DecoderUtil.STREAM_HEADER_SIZE - 4);
 
         try {
-            xzIn = new SingleXZInputStream(in, memoryLimit, buf);
+            xzIn = new SingleXZInputStream(in, memoryLimit, verifyCheck, buf);
         } catch (XZFormatException e) {
             // Since this isn't the first .xz Stream, it is more
             // logical to tell that the data is corrupt.
