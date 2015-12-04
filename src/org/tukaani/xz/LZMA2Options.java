@@ -563,7 +563,7 @@ public class LZMA2Options extends FilterOptions {
     }
 
     public InputStream getInputStream(InputStream in) throws IOException {
-        return new LZMA2InputStream(in, dictSize);
+        return new LZMA2InputStream(in, dictSize, presetDict);
     }
 
     FilterEncoder getFilterEncoder() {
