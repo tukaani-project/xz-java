@@ -91,6 +91,7 @@ src/org/tukaani/xz/rangecoder/RangeDecoder.java
 src/org/tukaani/xz/rangecoder/RangeDecoderFromBuffer.java
 src/org/tukaani/xz/rangecoder/RangeDecoderFromStream.java
 src/org/tukaani/xz/rangecoder/RangeEncoder.java
+src/org/tukaani/xz/rangecoder/RangeEncoderToBuffer.java
 src/org/tukaani/xz/simple/ARM.java
 src/org/tukaani/xz/simple/ARMThumb.java
 src/org/tukaani/xz/simple/IA64.java

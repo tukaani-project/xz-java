@@ -13,7 +13,7 @@ package org.tukaani.xz;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import org.tukaani.xz.lz.LZEncoder;
-import org.tukaani.xz.rangecoder.RangeEncoder;
+import org.tukaani.xz.rangecoder.RangeEncoderToBuffer;
 import org.tukaani.xz.lzma.LZMAEncoder;
 
 class LZMA2OutputStream extends FinishableOutputStream {
@@ -23,7 +23,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private final DataOutputStream outData;
 
     private final LZEncoder lz;
-    private final RangeEncoder rc;
+    private final RangeEncoderToBuffer rc;
     private final LZMAEncoder lzma;
 
     private final int props; // Cannot change props on the fly for now.
@@ -57,7 +57,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
 
         this.out = out;
         outData = new DataOutputStream(out);
-        rc = new RangeEncoder(COMPRESSED_SIZE_MAX);
+        rc = new RangeEncoderToBuffer(COMPRESSED_SIZE_MAX);
 
         int dictSize = options.getDictSize();
         int extraSizeBefore = getExtraSizeBefore(dictSize);

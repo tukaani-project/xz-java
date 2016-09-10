@@ -10,10 +10,9 @@
 
 package org.tukaani.xz.rangecoder;
 
-import java.io.OutputStream;
 import java.io.IOException;
 
-public final class RangeEncoder extends RangeCoder {
+public abstract class RangeEncoder extends RangeCoder {
     private static final int MOVE_REDUCING_BITS = 4;
     private static final int BIT_PRICE_SHIFT_BITS = 4;
 
@@ -26,12 +25,9 @@ public final class RangeEncoder extends RangeCoder {
     // NOTE: int is OK for LZMA2 because a compressed chunk
     // is not more than 64 KiB, but with LZMA1 there is no chunking
     // so in theory cacheSize can grow very big. To be very safe,
-    // use long instead of int if you adapt this code for LZMA1.
-    private int cacheSize;
+    // use long instead of int since this code is used for LZMA1 too.
+    long cacheSize;
     private byte cache;
-
-    private final byte[] buf;
-    private int bufPos;
 
     static {
         for (int i = (1 << MOVE_REDUCING_BITS) / 2; i < BIT_MODEL_TOTAL;
@@ -55,33 +51,32 @@ public final class RangeEncoder extends RangeCoder {
         }
     }
 
-    public RangeEncoder(int bufSize) {
-        buf = new byte[bufSize];
-        reset();
-    }
-
     public void reset() {
         low = 0;
         range = 0xFFFFFFFF;
         cache = 0x00;
         cacheSize = 1;
-        bufPos = 0;
     }
 
     public int getPendingSize() {
-        return bufPos + cacheSize + 5 - 1;
+        // This function is only needed by users of RangeEncoderToBuffer,
+        // but providing a must-be-never-called version here makes
+        // LZMAEncoder simpler.
+        throw new Error();
     }
 
     public int finish() {
         for (int i = 0; i < 5; ++i)
             shiftLow();
 
-        return bufPos;
+        // RangeEncoderToBuffer.finish() needs a return value to tell
+        // how big the finished buffer is. RangeEncoderToStream has no
+        // buffer and thus no return value is needed. Here we use a dummy
+        // value which can be overriden in RangeEncoderToBuffer.finish().
+        return -1;
     }
 
-    public void write(OutputStream out) throws IOException {
-        out.write(buf, 0, bufPos);
-    }
+    abstract void writeByte(byte b) /*throws IOException*/;
 
     private void shiftLow() {
         int lowHi = (int)(low >>> 32);
@@ -90,7 +85,7 @@ public final class RangeEncoder extends RangeCoder {
             int temp = cache;
 
             do {
-                buf[bufPos++] = (byte)(temp + lowHi);
+                writeByte((byte)(temp + lowHi));
                 temp = 0xFF;
             } while (--cacheSize != 0);
 
