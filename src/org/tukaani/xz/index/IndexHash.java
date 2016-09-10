@@ -50,9 +50,13 @@ public class IndexHash extends IndexBase {
         CheckedInputStream inChecked = new CheckedInputStream(in, crc32);
 
         // Get and validate the Number of Records field.
+        // If Block Header Size was corrupt and became Index Indicator,
+        // this error would actually be about corrupt Block Header.
+        // This is why the error message mentions both possibilities.
         long storedRecordCount = DecoderUtil.decodeVLI(inChecked);
         if (storedRecordCount != recordCount)
-            throw new CorruptedInputException("XZ Index is corrupt");
+            throw new CorruptedInputException(
+                    "XZ Block Header or the start of XZ Index is corrupt");
 
         // Decode and hash the Index field and compare it to
         // the hash value calculated from the decoded Blocks.
