@@ -48,7 +48,7 @@ public final class RangeEncoderToBuffer extends RangeEncoder {
         out.write(buf, 0, bufPos);
     }
 
-    void writeByte(byte b) {
-        buf[bufPos++] = b;
+    void writeByte(int b) {
+        buf[bufPos++] = (byte)b;
     }
 }

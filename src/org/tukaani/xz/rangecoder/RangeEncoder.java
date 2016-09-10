@@ -76,7 +76,7 @@ public abstract class RangeEncoder extends RangeCoder {
         return -1;
     }
 
-    abstract void writeByte(byte b) throws IOException;
+    abstract void writeByte(int b) throws IOException;
 
     private void shiftLow() throws IOException {
         int lowHi = (int)(low >>> 32);
@@ -85,7 +85,7 @@ public abstract class RangeEncoder extends RangeCoder {
             int temp = cache;
 
             do {
-                writeByte((byte)(temp + lowHi));
+                writeByte(temp + lowHi);
                 temp = 0xFF;
             } while (--cacheSize != 0);
 
