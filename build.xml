@@ -106,6 +106,14 @@
             </manifest>
         </jar>
 
+        <jar destfile="${jar_dir}/LZMAEncDemo.jar" basedir="${classes_dir}"
+             includes="LZMAEncDemo.class">
+            <manifest>
+                <attribute name="Main-Class" value="LZMAEncDemo"/>
+                <attribute name="Class-Path" value="xz.jar"/>
+            </manifest>
+        </jar>
+
         <jar destfile="${jar_dir}/LZMADecDemo.jar" basedir="${classes_dir}"
              includes="LZMADecDemo.class">
             <manifest>

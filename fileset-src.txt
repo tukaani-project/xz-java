@@ -1,4 +1,5 @@
 src/LZMADecDemo.java
+src/LZMAEncDemo.java
 src/XZDecDemo.java
 src/XZEncDemo.java
 src/XZSeekDecDemo.java
