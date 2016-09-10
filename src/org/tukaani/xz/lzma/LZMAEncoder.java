@@ -113,7 +113,7 @@ public abstract class LZMAEncoder extends LZMACoder {
      * cares about the second highest bit.
      */
     public static int getDistSlot(int dist) {
-        if (dist <= DIST_MODEL_START)
+        if (dist <= DIST_MODEL_START && dist >= 0)
             return dist;
 
         int n = dist;
