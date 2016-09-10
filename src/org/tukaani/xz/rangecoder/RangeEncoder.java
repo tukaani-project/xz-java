@@ -65,7 +65,7 @@ public abstract class RangeEncoder extends RangeCoder {
         throw new Error();
     }
 
-    public int finish() {
+    public int finish() throws IOException {
         for (int i = 0; i < 5; ++i)
             shiftLow();
 
@@ -76,9 +76,9 @@ public abstract class RangeEncoder extends RangeCoder {
         return -1;
     }
 
-    abstract void writeByte(byte b) /*throws IOException*/;
+    abstract void writeByte(byte b) throws IOException;
 
-    private void shiftLow() {
+    private void shiftLow() throws IOException {
         int lowHi = (int)(low >>> 32);
 
         if (lowHi != 0 || low < 0xFF000000L) {
@@ -96,7 +96,8 @@ public abstract class RangeEncoder extends RangeCoder {
         low = (low & 0x00FFFFFF) << 8;
     }
 
-    public void encodeBit(short[] probs, int index, int bit) {
+    public void encodeBit(short[] probs, int index, int bit)
+            throws IOException {
         int prob = probs[index];
         int bound = (range >>> BIT_MODEL_TOTAL_BITS) * prob;
 
@@ -124,7 +125,7 @@ public abstract class RangeEncoder extends RangeCoder {
                       >>> MOVE_REDUCING_BITS];
     }
 
-    public void encodeBitTree(short[] probs, int symbol) {
+    public void encodeBitTree(short[] probs, int symbol) throws IOException {
         int index = 1;
         int mask = probs.length;
 
@@ -153,7 +154,8 @@ public abstract class RangeEncoder extends RangeCoder {
         return price;
     }
 
-    public void encodeReverseBitTree(short[] probs, int symbol) {
+    public void encodeReverseBitTree(short[] probs, int symbol)
+            throws IOException {
         int index = 1;
         symbol |= probs.length;
 
@@ -180,7 +182,7 @@ public abstract class RangeEncoder extends RangeCoder {
         return price;
     }
 
-    public void encodeDirectBits(int value, int count) {
+    public void encodeDirectBits(int value, int count) throws IOException {
         do {
             range >>>= 1;
             low += range & (0 - ((value >>> --count) & 1));

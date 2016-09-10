@@ -33,7 +33,14 @@ public final class RangeEncoderToBuffer extends RangeEncoder {
     }
 
     public int finish() {
-        super.finish();
+        // super.finish() cannot throw an IOException because writeByte()
+        // provided in this file cannot throw an IOException.
+        try {
+            super.finish();
+        } catch (IOException e) {
+            throw new Error();
+        }
+
         return bufPos;
     }
 
