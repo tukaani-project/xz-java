@@ -206,6 +206,29 @@ public abstract class LZMAEncoder extends LZMACoder {
     }
 
     /**
+     * Compress for LZMA1.
+     */
+    public void encodeForLZMA1() throws IOException {
+        if (!lz.isStarted() && !encodeInit())
+            return;
+
+        while (encodeSymbol()) {}
+    }
+
+    public void encodeLZMA1EndMarker() throws IOException {
+        // End of stream marker is encoded as a match with the maximum
+        // possible distance. The length is ignored by the decoder,
+        // but the minimum length has been used by the LZMA SDK.
+        //
+        // Distance is a 32-bit unsigned integer in LZMA.
+        // With Java's signed int, UINT32_MAX becomes -1.
+        int posState = (lz.getPos() - readAhead) & posMask;
+        rc.encodeBit(isMatch[state.get()], posState, 1);
+        rc.encodeBit(isRep, state.get(), 0);
+        encodeMatch(-1, MATCH_LEN_MIN, posState);
+    }
+
+    /**
      * Compresses for LZMA2.
      *
      * @return      true if the LZMA2 chunk became full, false otherwise
