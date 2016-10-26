@@ -30,7 +30,8 @@ public class LZMAOutputStream extends FinishableOutputStream {
 
     private final int props;
     private final boolean useEndMarker;
-    private long uncompressedSize = 0;
+    private final long expectedUncompressedSize;
+    private long currentUncompressedSize = 0;
 
     private boolean finished = false;
     private IOException exception = null;
@@ -38,12 +39,19 @@ public class LZMAOutputStream extends FinishableOutputStream {
     private final byte[] tempBuf = new byte[1];
 
     private LZMAOutputStream(OutputStream out, LZMA2Options options,
-                             boolean useHeader, boolean useEndMarker)
+                             boolean useHeader, boolean useEndMarker,
+                             long expectedUncompressedSize)
             throws IOException {
         if (out == null)
             throw new NullPointerException();
 
+        // -1 indicates unknown and >= 0 are for known sizes.
+        if (expectedUncompressedSize < -1)
+            throw new IllegalArgumentException(
+                    "Invalid expected input size (less than -1)");
+
         this.useEndMarker = useEndMarker;
+        this.expectedUncompressedSize = expectedUncompressedSize;
 
         this.out = out;
         rc = new RangeEncoderToStream(out);
@@ -70,22 +78,31 @@ public class LZMAOutputStream extends FinishableOutputStream {
         props = (options.getPb() * 5 + options.getLp()) * 9 + options.getLc();
 
         if (useHeader) {
+            // Props byte stores lc, lp, and pb.
             out.write(props);
 
+            // Dictionary size is stored as a 32-bit unsigned little endian
+            // integer.
             for (int i = 0; i < 4; ++i) {
                 out.write(dictSize & 0xFF);
                 dictSize >>>= 8;
             }
 
+            // Uncompressed size is stored as a 64-bit unsigned little endian
+            // integer. The max value (-1 in two's complement) indicates
+            // unknown size.
             for (int i = 0; i < 8; ++i)
-                out.write(0xFF);
+                out.write((int)(expectedUncompressedSize >>> (8 * i)) & 0xFF);
         }
     }
 
     /**
      * Creates a new compressor for the legacy .lzma file format.
-     * The files will always use the end of stream marker and thus
-     * will not have the uncompressed size stored in the header.
+     * <p>
+     * If the uncompressed size of the input data is known, it will be stored
+     * in the .lzma header and no end of stream marker will be used. Otherwise
+     * the header will indicate unknown uncompressed size and the end of stream
+     * marker will be used.
      * <p>
      * Note that a preset dictionary cannot be used in .lzma files but
      * it can be used for raw LZMA streams.
@@ -96,18 +113,22 @@ public class LZMAOutputStream extends FinishableOutputStream {
      * @param       options     LZMA compression options; the same class
      *                          is used here as is for LZMA2
      *
+     * @param       inputSize   uncompressed size of the data to be compressed;
+     *                          use <code>-1</code> when unknown
+     *
      * @throws      IOException may be thrown from <code>out</code>
      */
-    public LZMAOutputStream(OutputStream out, LZMA2Options options)
+    public LZMAOutputStream(OutputStream out, LZMA2Options options,
+                            long inputSize)
             throws IOException {
-        this(out, options, true, true);
+        this(out, options, true, inputSize == -1, inputSize);
     }
 
     /**
      * Creates a new compressor for raw LZMA (also known as LZMA1) stream.
      * <p>
      * Raw LZMA streams can be encoded with or without end of stream marker.
-     * When decompressing the stream, one must if the end marker was used
+     * When decompressing the stream, one must know if the end marker was used
      * and tell it to the decompressor. If the end marker wasn't used, the
      * decompressor will also need to know the uncompressed size.
      *
@@ -124,7 +145,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
      */
     public LZMAOutputStream(OutputStream out, LZMA2Options options,
                             boolean useEndMarker) throws IOException {
-        this(out, options, false, useEndMarker);
+        this(out, options, false, useEndMarker, -1);
     }
 
     /**
@@ -142,7 +163,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
      * the end of stream marker.
      */
     public long getUncompressedSize() {
-        return uncompressedSize;
+        return currentUncompressedSize;
     }
 
     public void write(int b) throws IOException {
@@ -160,7 +181,12 @@ public class LZMAOutputStream extends FinishableOutputStream {
         if (finished)
             throw new XZIOException("Stream finished or closed");
 
-        uncompressedSize += len;
+        if (expectedUncompressedSize != -1
+                && expectedUncompressedSize - currentUncompressedSize < len)
+            throw new XZIOException("Expected uncompressed input size ("
+                    + expectedUncompressedSize + " bytes) was exceeded");
+
+        currentUncompressedSize += len;
 
         try {
             while (len > 0) {
@@ -190,9 +216,15 @@ public class LZMAOutputStream extends FinishableOutputStream {
             if (exception != null)
                 throw exception;
 
-            lz.setFinishing();
-
             try {
+                if (expectedUncompressedSize != -1
+                        && expectedUncompressedSize != currentUncompressedSize)
+                    throw new XZIOException("Expected uncompressed size ("
+                            + expectedUncompressedSize + ") doesn't equal "
+                            + "the number of bytes written to the stream ("
+                            + currentUncompressedSize + ")");
+
+                lz.setFinishing();
                 lzma.encodeForLZMA1();
 
                 if (useEndMarker)
