@@ -2,6 +2,19 @@
 XZ for Java release notes
 =========================
 
+1.6 (2016-11-27)
+
+    * Fix LZMA2Options.getInputStream to work with a preset dictionary.
+
+    * Make it possible to disable verification of integrity checks in
+      XZ decompression. It should almost never be used but may be useful
+      in some rare situations. This feature is available via new
+      constructors in XZInputStream, SingleXZInputStream, and
+      SeekableXZInputStream.
+
+    * Add LZMAOutputStream for encoding to raw LZMA (i.e. LZMA1) streams
+      and to the legacy .lzma format.
+
 1.5 (2014-03-08)
 
     * Fix a wrong assertion in BCJ decoders.
