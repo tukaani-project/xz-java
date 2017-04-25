@@ -97,7 +97,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * The list is in reverse order: The first element is
      * the last Stream in the file.
      */
-    private final ArrayList streams = new ArrayList();
+    private final ArrayList<IndexDecoder> streams
+            = new ArrayList<IndexDecoder>();
 
     /**
      * Bitmask of all Check IDs seen.
@@ -438,9 +439,9 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // Store the relative offsets of the Streams. This way we don't
         // need to recalculate them in this class when seeking; the
         // IndexDecoder instances will handle them.
-        IndexDecoder prev = (IndexDecoder)streams.get(streams.size() - 1);
+        IndexDecoder prev = streams.get(streams.size() - 1);
         for (int i = streams.size() - 2; i >= 0; --i) {
-            IndexDecoder cur = (IndexDecoder)streams.get(i);
+            IndexDecoder cur = streams.get(i);
             cur.setOffsets(prev);
             prev = cur;
         }
@@ -449,7 +450,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // The blockNumber will be left to -1 so that .hasNext()
         // and .setNext() work to get the first Block when starting
         // to decompress from the beginning of the file.
-        IndexDecoder first = (IndexDecoder)streams.get(streams.size() - 1);
+        IndexDecoder first = streams.get(streams.size() - 1);
         curBlockInfo = new BlockInfo(first);
 
         // queriedBlockInfo needs to be allocated too. The Stream used for
@@ -898,7 +899,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // Locate the Stream that contains the target position.
         IndexDecoder index;
         for (int i = 0; ; ++i) {
-            index = (IndexDecoder)streams.get(i);
+            index = streams.get(i);
             if (index.hasUncompressedOffset(pos))
                 break;
         }
@@ -929,7 +930,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // Search the Stream that contains the given Block and then
         // search the Block from that Stream.
         for (int i = 0; ; ++i) {
-            IndexDecoder index = (IndexDecoder)streams.get(i);
+            IndexDecoder index = streams.get(i);
             if (index.hasRecord(blockNumber)) {
                 index.setBlockInfo(info, blockNumber);
                 return;
