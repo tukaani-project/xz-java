@@ -232,8 +232,6 @@ class LZMA2OutputStream extends FinishableOutputStream {
                 exception = e;
                 throw e;
             }
-
-            finished = true;
         }
     }
 
