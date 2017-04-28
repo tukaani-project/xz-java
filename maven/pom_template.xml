@@ -32,8 +32,8 @@
     </licenses>
 
     <scm>
-        <url>http://git.tukaani.org/?p=xz-java.git</url>
-        <connection>scm:git:http://git.tukaani.org/xz-java.git</connection>
+        <url>https://git.tukaani.org/?p=xz-java.git</url>
+        <connection>scm:git:https://git.tukaani.org/xz-java.git</connection>
     </scm>
 
     <developers>
