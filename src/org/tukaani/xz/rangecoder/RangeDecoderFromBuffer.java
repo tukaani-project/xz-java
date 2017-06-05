@@ -18,11 +18,11 @@ public final class RangeDecoderFromBuffer extends RangeDecoder {
     private static final int INIT_SIZE = 5;
 
     private final byte[] buf;
-    private int pos = 0;
-    private int end = 0;
+    private int pos;
 
     public RangeDecoderFromBuffer(int inputSizeMax) {
         buf = new byte[inputSizeMax - INIT_SIZE];
+        pos = buf.length;
     }
 
     public void prepareInputBuffer(DataInputStream in, int len)
@@ -36,17 +36,17 @@ public final class RangeDecoderFromBuffer extends RangeDecoder {
         code = in.readInt();
         range = 0xFFFFFFFF;
 
-        pos = 0;
-        end = len - INIT_SIZE;
-        in.readFully(buf, 0, end);
-    }
-
-    public boolean isInBufferOK() {
-        return pos <= end;
+        // Read the data to the end of the buffer. If the data is corrupt
+        // and the decoder, reading from buf, tries to read past the end of
+        // the data, ArrayIndexOutOfBoundsException will be thrown and
+        // the problem is detected immediately.
+        len -= INIT_SIZE;
+        pos = buf.length - len;
+        in.readFully(buf, pos, len);
     }
 
     public boolean isFinished() {
-        return pos == end && code == 0;
+        return pos == buf.length && code == 0;
     }
 
     public void normalize() throws IOException {

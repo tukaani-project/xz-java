@@ -228,8 +228,6 @@ public class LZMA2InputStream extends InputStream {
                 } else {
                     lz.setLimit(copySizeMax);
                     lzma.decode();
-                    if (!rc.isInBufferOK())
-                        throw new CorruptedInputException();
                 }
 
                 int copiedSize = lz.flush(buf, off);
