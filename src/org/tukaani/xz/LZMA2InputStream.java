@@ -51,7 +51,7 @@ public class LZMA2InputStream extends InputStream {
     private LZMADecoder lzma;
 
     private int uncompressedSize = 0;
-    private boolean isLZMAChunk;
+    private boolean isLZMAChunk = false;
 
     private boolean needDictReset = true;
     private boolean needProps = true;
@@ -323,7 +323,9 @@ public class LZMA2InputStream extends InputStream {
      * In LZMA2InputStream, the return value will be non-zero when the
      * decompressor is in the middle of an LZMA2 chunk. The return value
      * will then be the number of uncompressed bytes remaining from that
-     * chunk.
+     * chunk. The return value can also be non-zero in the middle of
+     * an uncompressed chunk, but then the return value depends also on
+     * the <code>available()</code> method of the underlying InputStream.
      *
      * @return      the number of uncompressed bytes that can be read
      *              without blocking
@@ -335,7 +337,8 @@ public class LZMA2InputStream extends InputStream {
         if (exception != null)
             throw exception;
 
-        return uncompressedSize;
+        return isLZMAChunk ? uncompressedSize
+                           : Math.min(uncompressedSize, in.available());
     }
 
     /**
