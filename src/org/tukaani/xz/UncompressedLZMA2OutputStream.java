@@ -94,6 +94,8 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
             exception = e;
             throw e;
         }
+
+        finished = true;
     }
 
     public void flush() throws IOException {
@@ -124,8 +126,6 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
                 exception = e;
                 throw e;
             }
-
-            finished = true;
         }
     }
 
