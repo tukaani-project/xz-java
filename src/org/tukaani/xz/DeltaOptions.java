@@ -75,7 +75,8 @@ public class DeltaOptions extends FilterOptions {
         return DeltaOutputStream.getMemoryUsage();
     }
 
-    public FinishableOutputStream getOutputStream(FinishableOutputStream out) {
+    public FinishableOutputStream getOutputStream(FinishableOutputStream out,
+                                                  ArrayCache arrayCache) {
         return new DeltaOutputStream(out, this);
     }
 
@@ -83,7 +84,7 @@ public class DeltaOptions extends FilterOptions {
         return 1;
     }
 
-    public InputStream getInputStream(InputStream in) {
+    public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new DeltaInputStream(in, distance);
     }
 

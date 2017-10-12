@@ -22,11 +22,12 @@ public class X86Options extends BCJOptions {
         super(ALIGNMENT);
     }
 
-    public FinishableOutputStream getOutputStream(FinishableOutputStream out) {
+    public FinishableOutputStream getOutputStream(FinishableOutputStream out,
+                                                  ArrayCache arrayCache) {
         return new SimpleOutputStream(out, new X86(true, startOffset));
     }
 
-    public InputStream getInputStream(InputStream in) {
+    public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new SimpleInputStream(in, new X86(false, startOffset));
     }
 

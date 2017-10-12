@@ -22,11 +22,12 @@ public class IA64Options extends BCJOptions {
         super(ALIGNMENT);
     }
 
-    public FinishableOutputStream getOutputStream(FinishableOutputStream out) {
+    public FinishableOutputStream getOutputStream(FinishableOutputStream out,
+                                                  ArrayCache arrayCache) {
         return new SimpleOutputStream(out, new IA64(true, startOffset));
     }
 
-    public InputStream getInputStream(InputStream in) {
+    public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new SimpleInputStream(in, new IA64(false, startOffset));
     }
 
