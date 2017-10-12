@@ -6,12 +6,14 @@ src/XZSeekDecDemo.java
 src/XZSeekEncDemo.java
 src/org/tukaani/xz/ARMOptions.java
 src/org/tukaani/xz/ARMThumbOptions.java
+src/org/tukaani/xz/ArrayCache.java
 src/org/tukaani/xz/BCJCoder.java
 src/org/tukaani/xz/BCJDecoder.java
 src/org/tukaani/xz/BCJEncoder.java
 src/org/tukaani/xz/BCJOptions.java
 src/org/tukaani/xz/BlockInputStream.java
 src/org/tukaani/xz/BlockOutputStream.java
+src/org/tukaani/xz/CloseIgnoringInputStream.java
 src/org/tukaani/xz/CorruptedInputException.java
 src/org/tukaani/xz/CountingInputStream.java
 src/org/tukaani/xz/CountingOutputStream.java
@@ -40,6 +42,7 @@ src/org/tukaani/xz/LZMAOutputStream.java
 src/org/tukaani/xz/MemoryLimitException.java
 src/org/tukaani/xz/PowerPCOptions.java
 src/org/tukaani/xz/RawCoder.java
+src/org/tukaani/xz/ResettableArrayCache.java
 src/org/tukaani/xz/SPARCOptions.java
 src/org/tukaani/xz/SeekableFileInputStream.java
 src/org/tukaani/xz/SeekableInputStream.java
