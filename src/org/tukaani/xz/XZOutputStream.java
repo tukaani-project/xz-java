@@ -52,6 +52,8 @@ import org.tukaani.xz.index.IndexEncoder;
  * </pre></blockquote>
  */
 public class XZOutputStream extends FinishableOutputStream {
+    private final ArrayCache arrayCache;
+
     private OutputStream out;
     private final StreamFlags streamFlags = new StreamFlags();
     private final Check check;
@@ -95,6 +97,33 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
+     * Creates a new XZ compressor using one filter and CRC64 as
+     * the integrity check. This constructor is equivalent to passing
+     * a single-member FilterOptions array to
+     * <code>XZOutputStream(OutputStream, FilterOptions[], ArrayCache)</code>.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       filterOptions
+     *                          filter options to use
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      UnsupportedOptionsException
+     *                          invalid filter chain
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     *
+     * @since 1.7
+     */
+    public XZOutputStream(OutputStream out, FilterOptions filterOptions,
+                          ArrayCache arrayCache)
+            throws IOException {
+        this(out, filterOptions, XZ.CHECK_CRC64, arrayCache);
+    }
+
+    /**
      * Creates a new XZ compressor using one filter and the specified
      * integrity check type. This constructor is equivalent to
      * passing a single-member FilterOptions array to
@@ -120,6 +149,38 @@ public class XZOutputStream extends FinishableOutputStream {
     }
 
     /**
+     * Creates a new XZ compressor using one filter and the specified
+     * integrity check type. This constructor is equivalent to
+     * passing a single-member FilterOptions array to
+     * <code>XZOutputStream(OutputStream, FilterOptions[], int,
+     * ArrayCache)</code>.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       filterOptions
+     *                          filter options to use
+     *
+     * @param       checkType   type of the integrity check,
+     *                          for example XZ.CHECK_CRC32
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      UnsupportedOptionsException
+     *                          invalid filter chain
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     *
+     * @since 1.7
+     */
+    public XZOutputStream(OutputStream out, FilterOptions filterOptions,
+                          int checkType, ArrayCache arrayCache)
+            throws IOException {
+        this(out, new FilterOptions[] { filterOptions }, checkType,
+             arrayCache);
+    }
+
+    /**
      * Creates a new XZ compressor using 1-4 filters and CRC64 as
      * the integrity check. This constructor is equivalent
      * <code>XZOutputStream(out, filterOptions, XZ.CHECK_CRC64)</code>.
@@ -138,6 +199,33 @@ public class XZOutputStream extends FinishableOutputStream {
     public XZOutputStream(OutputStream out, FilterOptions[] filterOptions)
             throws IOException {
         this(out, filterOptions, XZ.CHECK_CRC64);
+    }
+
+    /**
+     * Creates a new XZ compressor using 1-4 filters and CRC64 as
+     * the integrity check. This constructor is equivalent
+     * <code>XZOutputStream(out, filterOptions, XZ.CHECK_CRC64,
+     * arrayCache)</code>.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       filterOptions
+     *                          array of filter options to use
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      UnsupportedOptionsException
+     *                          invalid filter chain
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     *
+     * @since 1.7
+     */
+    public XZOutputStream(OutputStream out, FilterOptions[] filterOptions,
+                          ArrayCache arrayCache)
+            throws IOException {
+        this(out, filterOptions, XZ.CHECK_CRC64, arrayCache);
     }
 
     /**
@@ -160,6 +248,35 @@ public class XZOutputStream extends FinishableOutputStream {
      */
     public XZOutputStream(OutputStream out, FilterOptions[] filterOptions,
                           int checkType) throws IOException {
+        this(out, filterOptions, checkType, ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new XZ compressor using 1-4 filters and the specified
+     * integrity check type.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       filterOptions
+     *                          array of filter options to use
+     *
+     * @param       checkType   type of the integrity check,
+     *                          for example XZ.CHECK_CRC32
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      UnsupportedOptionsException
+     *                          invalid filter chain
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     *
+     * @since 1.7
+     */
+    public XZOutputStream(OutputStream out, FilterOptions[] filterOptions,
+                          int checkType, ArrayCache arrayCache)
+            throws IOException {
+        this.arrayCache = arrayCache;
         this.out = out;
         updateFilters(filterOptions);
 
@@ -277,7 +394,8 @@ public class XZOutputStream extends FinishableOutputStream {
 
         try {
             if (blockEncoder == null)
-                blockEncoder = new BlockOutputStream(out, filters, check);
+                blockEncoder = new BlockOutputStream(out, filters, check,
+                                                     arrayCache);
 
             blockEncoder.write(buf, off, len);
         } catch (IOException e) {

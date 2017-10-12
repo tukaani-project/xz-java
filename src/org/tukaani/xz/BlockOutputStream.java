@@ -28,7 +28,8 @@ class BlockOutputStream extends FinishableOutputStream {
     private final byte[] tempBuf = new byte[1];
 
     public BlockOutputStream(OutputStream out, FilterEncoder[] filters,
-                             Check check) throws IOException {
+                             Check check, ArrayCache arrayCache)
+            throws IOException {
         this.out = out;
         this.check = check;
 
@@ -36,7 +37,7 @@ class BlockOutputStream extends FinishableOutputStream {
         outCounted = new CountingOutputStream(out);
         filterChain = outCounted;
         for (int i = filters.length - 1; i >= 0; --i)
-            filterChain = filters[i].getOutputStream(filterChain);
+            filterChain = filters[i].getOutputStream(filterChain, arrayCache);
 
         // Prepare to encode the Block Header field.
         ByteArrayOutputStream bufStream = new ByteArrayOutputStream();
