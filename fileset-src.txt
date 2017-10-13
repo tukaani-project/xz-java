@@ -7,6 +7,7 @@ src/XZSeekEncDemo.java
 src/org/tukaani/xz/ARMOptions.java
 src/org/tukaani/xz/ARMThumbOptions.java
 src/org/tukaani/xz/ArrayCache.java
+src/org/tukaani/xz/BasicArrayCache.java
 src/org/tukaani/xz/BCJCoder.java
 src/org/tukaani/xz/BCJDecoder.java
 src/org/tukaani/xz/BCJEncoder.java
