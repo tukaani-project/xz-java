@@ -74,6 +74,14 @@
             </manifest>
         </jar>
 
+        <jar destfile="${jar_dir}/TestAllocSpeed.jar" basedir="${classes_dir}"
+             includes="TestAllocSpeed.class">
+            <manifest>
+                <attribute name="Main-Class" value="TestAllocSpeed"/>
+                <attribute name="Class-Path" value="xz.jar"/>
+            </manifest>
+        </jar>
+
         <jar destfile="${jar_dir}/XZEncDemo.jar" basedir="${classes_dir}"
              includes="XZEncDemo.class">
             <manifest>

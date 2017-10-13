@@ -1,3 +1,4 @@
+src/TestAllocSpeed.java
 src/LZMADecDemo.java
 src/LZMAEncDemo.java
 src/XZDecDemo.java
