@@ -39,7 +39,7 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
         return SimpleInputStream.getMemoryUsage();
     }
 
-    public InputStream getInputStream(InputStream in) {
+    public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         SimpleFilter simpleFilter = null;
 
         if (filterID == X86_FILTER_ID)

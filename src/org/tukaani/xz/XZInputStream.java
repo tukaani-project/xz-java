@@ -61,6 +61,8 @@ import org.tukaani.xz.common.DecoderUtil;
  * @see SingleXZInputStream
  */
 public class XZInputStream extends InputStream {
+    private final ArrayCache arrayCache;
+
     private final int memoryLimit;
     private InputStream in;
     private SingleXZInputStream xzIn;
@@ -101,6 +103,40 @@ public class XZInputStream extends InputStream {
     }
 
     /**
+     * Creates a new XZ decompressor without a memory usage limit.
+     * <p>
+     * This is identical to <code>XZInputStream(InputStream)</code>
+     * except that this takes also the <code>arrayCache</code> argument.
+     *
+     * @param       in          input stream from which XZ-compressed
+     *                          data is read
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      XZFormatException
+     *                          input is not in the XZ format
+     *
+     * @throws      CorruptedInputException
+     *                          XZ header CRC32 doesn't match
+     *
+     * @throws      UnsupportedOptionsException
+     *                          XZ header is valid but specifies options
+     *                          not supported by this implementation
+     *
+     * @throws      EOFException
+     *                          less than 12 bytes of input was available
+     *                          from <code>in</code>
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public XZInputStream(InputStream in, ArrayCache arrayCache)
+            throws IOException {
+        this(in, -1, arrayCache);
+    }
+
+    /**
      * Creates a new XZ decompressor with an optional memory usage limit.
      * <p>
      * This is identical to <code>XZInputStream(InputStream)</code> except
@@ -131,6 +167,45 @@ public class XZInputStream extends InputStream {
      */
     public XZInputStream(InputStream in, int memoryLimit) throws IOException {
         this(in, memoryLimit, true);
+    }
+
+    /**
+     * Creates a new XZ decompressor with an optional memory usage limit.
+     * <p>
+     * This is identical to <code>XZInputStream(InputStream)</code> except
+     * that this takes also the <code>memoryLimit</code> and
+     * <code>arrayCache</code> arguments.
+     *
+     * @param       in          input stream from which XZ-compressed
+     *                          data is read
+     *
+     * @param       memoryLimit memory usage limit in kibibytes (KiB)
+     *                          or <code>-1</code> to impose no
+     *                          memory usage limit
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      XZFormatException
+     *                          input is not in the XZ format
+     *
+     * @throws      CorruptedInputException
+     *                          XZ header CRC32 doesn't match
+     *
+     * @throws      UnsupportedOptionsException
+     *                          XZ header is valid but specifies options
+     *                          not supported by this implementation
+     *
+     * @throws      EOFException
+     *                          less than 12 bytes of input was available
+     *                          from <code>in</code>
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public XZInputStream(InputStream in, int memoryLimit,
+                         ArrayCache arrayCache) throws IOException {
+        this(in, memoryLimit, true, arrayCache);
     }
 
     /**
@@ -186,10 +261,55 @@ public class XZInputStream extends InputStream {
      */
     public XZInputStream(InputStream in, int memoryLimit, boolean verifyCheck)
             throws IOException {
+        this(in, memoryLimit, verifyCheck, ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new XZ decompressor with an optional memory usage limit
+     * and ability to disable verification of integrity checks.
+     * <p>
+     * This is identical to <code>XZInputStream(InputStream,int,boolean)</code>
+     * except that this takes also the <code>arrayCache</code> argument.
+     *
+     * @param       in          input stream from which XZ-compressed
+     *                          data is read
+     *
+     * @param       memoryLimit memory usage limit in kibibytes (KiB)
+     *                          or <code>-1</code> to impose no
+     *                          memory usage limit
+     *
+     * @param       verifyCheck if <code>true</code>, the integrity checks
+     *                          will be verified; this should almost never
+     *                          be set to <code>false</code>
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      XZFormatException
+     *                          input is not in the XZ format
+     *
+     * @throws      CorruptedInputException
+     *                          XZ header CRC32 doesn't match
+     *
+     * @throws      UnsupportedOptionsException
+     *                          XZ header is valid but specifies options
+     *                          not supported by this implementation
+     *
+     * @throws      EOFException
+     *                          less than 12 bytes of input was available
+     *                          from <code>in</code>
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public XZInputStream(InputStream in, int memoryLimit, boolean verifyCheck,
+                         ArrayCache arrayCache) throws IOException {
+        this.arrayCache = arrayCache;
         this.in = in;
         this.memoryLimit = memoryLimit;
         this.verifyCheck = verifyCheck;
-        this.xzIn = new SingleXZInputStream(in, memoryLimit, verifyCheck);
+        this.xzIn = new SingleXZInputStream(in, memoryLimit, verifyCheck,
+                                            arrayCache);
     }
 
     /**
@@ -323,7 +443,8 @@ public class XZInputStream extends InputStream {
         inData.readFully(buf, 4, DecoderUtil.STREAM_HEADER_SIZE - 4);
 
         try {
-            xzIn = new SingleXZInputStream(in, memoryLimit, verifyCheck, buf);
+            xzIn = new SingleXZInputStream(in, memoryLimit, verifyCheck, buf,
+                                           arrayCache);
         } catch (XZFormatException e) {
             // Since this isn't the first .xz Stream, it is more
             // logical to tell that the data is corrupt.
@@ -356,13 +477,48 @@ public class XZInputStream extends InputStream {
     /**
      * Closes the stream and calls <code>in.close()</code>.
      * If the stream was already closed, this does nothing.
+     * <p>
+     * This is equivalent to <code>close(true)</code>.
      *
      * @throws  IOException if thrown by <code>in.close()</code>
      */
     public void close() throws IOException {
+        close(true);
+    }
+
+    /**
+     * Closes the stream and optionally calls <code>in.close()</code>.
+     * If the stream was already closed, this does nothing.
+     * If <code>close(false)</code> has been called, a further
+     * call of <code>close(true)</code> does nothing (it doesn't call
+     * <code>in.close()</code>).
+     * <p>
+     * If you don't want to close the underlying <code>InputStream</code>,
+     * there is usually no need to worry about closing this stream either;
+     * it's fine to do nothing and let the garbage collector handle it.
+     * However, if you are using {@link ArrayCache}, <code>close(false)</code>
+     * can be useful to put the allocated arrays back to the cache without
+     * closing the underlying <code>InputStream</code>.
+     * <p>
+     * Note that if you successfully reach the end of the stream
+     * (<code>read</code> returns <code>-1</code>), the arrays are
+     * automatically put back to the cache by that <code>read</code> call. In
+     * this situation <code>close(false)</code> is redundant (but harmless).
+     *
+     * @throws  IOException if thrown by <code>in.close()</code>
+     *
+     * @since 1.7
+     */
+    public void close(boolean closeInput) throws IOException {
         if (in != null) {
+            if (xzIn != null) {
+                xzIn.close(false);
+                xzIn = null;
+            }
+
             try {
-                in.close();
+                if (closeInput)
+                    in.close();
             } finally {
                 in = null;
             }

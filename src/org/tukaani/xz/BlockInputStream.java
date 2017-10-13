@@ -37,7 +37,8 @@ class BlockInputStream extends InputStream {
                             Check check, boolean verifyCheck,
                             int memoryLimit,
                             long unpaddedSizeInIndex,
-                            long uncompressedSizeInIndex)
+                            long uncompressedSizeInIndex,
+                            ArrayCache arrayCache)
             throws IOException, IndexIndicatorException {
         this.check = check;
         this.verifyCheck = verifyCheck;
@@ -196,7 +197,7 @@ class BlockInputStream extends InputStream {
         // Initialize the filter chain.
         filterChain = inCounted;
         for (int i = filters.length - 1; i >= 0; --i)
-            filterChain = filters[i].getInputStream(filterChain);
+            filterChain = filters[i].getInputStream(filterChain, arrayCache);
     }
 
     public int read() throws IOException {
@@ -272,6 +273,26 @@ class BlockInputStream extends InputStream {
 
     public int available() throws IOException {
         return filterChain.available();
+    }
+
+    public void close() {
+        // This puts all arrays, that were allocated from ArrayCache,
+        // back to the ArrayCache. The last filter in the chain will
+        // call inCounted.close() which, being an instance of
+        // CloseIgnoringInputStream, won't close() the InputStream that
+        // was provided by the application.
+        try {
+            filterChain.close();
+        } catch (IOException e) {
+            // It's a bug if we get here. The InputStreams that we are closing
+            // are all from this package and they are known to not throw
+            // IOException. (They could throw an IOException if we were
+            // closing the application-supplied InputStream, but
+            // inCounted.close() doesn't do that.)
+            assert false;
+        }
+
+        filterChain = null;
     }
 
     public long getUnpaddedSize() {

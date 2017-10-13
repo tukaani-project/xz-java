@@ -26,7 +26,7 @@ class DeltaDecoder extends DeltaCoder implements FilterDecoder {
         return 1;
     }
 
-    public InputStream getInputStream(InputStream in) {
+    public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new DeltaInputStream(in, distance);
     }
 }
