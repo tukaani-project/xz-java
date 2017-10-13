@@ -10,6 +10,7 @@
 
 package org.tukaani.xz.lzma;
 
+import org.tukaani.xz.ArrayCache;
 import org.tukaani.xz.lz.LZEncoder;
 import org.tukaani.xz.lz.Matches;
 import org.tukaani.xz.rangecoder.RangeEncoder;
@@ -40,13 +41,14 @@ final class LZMAEncoderNormal extends LZMAEncoder {
 
     LZMAEncoderNormal(RangeEncoder rc, int lc, int lp, int pb,
                              int dictSize, int extraSizeBefore,
-                             int niceLen, int mf, int depthLimit) {
+                             int niceLen, int mf, int depthLimit,
+                             ArrayCache arrayCache) {
         super(rc, LZEncoder.getInstance(dictSize,
                                         Math.max(extraSizeBefore,
                                                  EXTRA_SIZE_BEFORE),
                                         EXTRA_SIZE_AFTER,
                                         niceLen, MATCH_LEN_MAX,
-                                        mf, depthLimit),
+                                        mf, depthLimit, arrayCache),
               lc, lp, pb, dictSize, niceLen);
 
         for (int i = 0; i < OPTS; ++i)

@@ -10,6 +10,8 @@
 
 package org.tukaani.xz.lz;
 
+import org.tukaani.xz.ArrayCache;
+
 final class BT4 extends LZEncoder {
     private final Hash234 hash;
     private final int[] tree;
@@ -25,14 +27,16 @@ final class BT4 extends LZEncoder {
     }
 
     BT4(int dictSize, int beforeSizeMin, int readAheadMax,
-            int niceLen, int matchLenMax, int depthLimit) {
-        super(dictSize, beforeSizeMin, readAheadMax, niceLen, matchLenMax);
+            int niceLen, int matchLenMax, int depthLimit,
+            ArrayCache arrayCache) {
+        super(dictSize, beforeSizeMin, readAheadMax, niceLen, matchLenMax,
+              arrayCache);
 
         cyclicSize = dictSize + 1;
         lzPos = cyclicSize;
 
-        hash = new Hash234(dictSize);
-        tree = new int[cyclicSize * 2];
+        hash = new Hash234(dictSize, arrayCache);
+        tree = arrayCache.getIntArray(cyclicSize * 2, false);
 
         // Substracting 1 because the shortest match that this match
         // finder can find is 2 bytes, so there's no need to reserve
@@ -40,6 +44,12 @@ final class BT4 extends LZEncoder {
         matches = new Matches(niceLen - 1);
 
         this.depthLimit = depthLimit > 0 ? depthLimit : 16 + niceLen / 2;
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(tree);
+        hash.putArraysToCache(arrayCache);
+        super.putArraysToCache(arrayCache);
     }
 
     private int movePos() {

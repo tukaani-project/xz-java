@@ -13,11 +13,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 class UncompressedLZMA2OutputStream extends FinishableOutputStream {
+    private final ArrayCache arrayCache;
+
     private FinishableOutputStream out;
     private final DataOutputStream outData;
 
-    private final byte[] uncompBuf
-            = new byte[LZMA2OutputStream.COMPRESSED_SIZE_MAX];
+    private final byte[] uncompBuf;
     private int uncompPos = 0;
     private boolean dictResetNeeded = true;
 
@@ -31,12 +32,20 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
         return 70;
     }
 
-    UncompressedLZMA2OutputStream(FinishableOutputStream out) {
+    UncompressedLZMA2OutputStream(FinishableOutputStream out,
+                                  ArrayCache arrayCache) {
         if (out == null)
             throw new NullPointerException();
 
         this.out = out;
         outData = new DataOutputStream(out);
+
+        // We only allocate one array from the cache. We will call
+        // putArray directly in writeEndMarker and thus we don't use
+        // ResettableArrayCache here.
+        this.arrayCache = arrayCache;
+        uncompBuf = arrayCache.getByteArray(
+                LZMA2OutputStream.COMPRESSED_SIZE_MAX, false);
     }
 
     public void write(int b) throws IOException {
@@ -96,6 +105,7 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
         }
 
         finished = true;
+        arrayCache.putArray(uncompBuf);
     }
 
     public void flush() throws IOException {

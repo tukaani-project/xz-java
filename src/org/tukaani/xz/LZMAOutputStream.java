@@ -24,9 +24,11 @@ import org.tukaani.xz.lzma.LZMAEncoder;
 public class LZMAOutputStream extends FinishableOutputStream {
     private OutputStream out;
 
-    private final LZEncoder lz;
+    private final ArrayCache arrayCache;
+
+    private LZEncoder lz;
     private final RangeEncoderToStream rc;
-    private final LZMAEncoder lzma;
+    private LZMAEncoder lzma;
 
     private final int props;
     private final boolean useEndMarker;
@@ -40,7 +42,8 @@ public class LZMAOutputStream extends FinishableOutputStream {
 
     private LZMAOutputStream(OutputStream out, LZMA2Options options,
                              boolean useHeader, boolean useEndMarker,
-                             long expectedUncompressedSize)
+                             long expectedUncompressedSize,
+                             ArrayCache arrayCache)
             throws IOException {
         if (out == null)
             throw new NullPointerException();
@@ -53,6 +56,8 @@ public class LZMAOutputStream extends FinishableOutputStream {
         this.useEndMarker = useEndMarker;
         this.expectedUncompressedSize = expectedUncompressedSize;
 
+        this.arrayCache = arrayCache;
+
         this.out = out;
         rc = new RangeEncoderToStream(out);
 
@@ -61,7 +66,8 @@ public class LZMAOutputStream extends FinishableOutputStream {
                 options.getLc(), options.getLp(), options.getPb(),
                 options.getMode(),
                 dictSize, 0, options.getNiceLen(),
-                options.getMatchFinder(), options.getDepthLimit());
+                options.getMatchFinder(), options.getDepthLimit(),
+                arrayCache);
 
         lz = lzma.getLZEncoder();
 
@@ -121,7 +127,35 @@ public class LZMAOutputStream extends FinishableOutputStream {
     public LZMAOutputStream(OutputStream out, LZMA2Options options,
                             long inputSize)
             throws IOException {
-        this(out, options, true, inputSize == -1, inputSize);
+        this(out, options, inputSize, ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new compressor for the legacy .lzma file format.
+     * <p>
+     * This is identical to
+     * <code>LZMAOutputStream(OutputStream, LZMA2Options, long)</code>
+     * except that this also takes the <code>arrayCache</code> argument.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       options     LZMA compression options; the same class
+     *                          is used here as is for LZMA2
+     *
+     * @param       inputSize   uncompressed size of the data to be compressed;
+     *                          use <code>-1</code> when unknown
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     *
+     * @since 1.7
+     */
+    public LZMAOutputStream(OutputStream out, LZMA2Options options,
+                            long inputSize, ArrayCache arrayCache)
+            throws IOException {
+        this(out, options, true, inputSize == -1, inputSize, arrayCache);
     }
 
     /**
@@ -145,7 +179,35 @@ public class LZMAOutputStream extends FinishableOutputStream {
      */
     public LZMAOutputStream(OutputStream out, LZMA2Options options,
                             boolean useEndMarker) throws IOException {
-        this(out, options, false, useEndMarker, -1);
+        this(out, options, useEndMarker, ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new compressor for raw LZMA (also known as LZMA1) stream.
+     * <p>
+     * This is identical to
+     * <code>LZMAOutputStream(OutputStream, LZMA2Options, boolean)</code>
+     * except that this also takes the <code>arrayCache</code> argument.
+     *
+     * @param       out         output stream to which the compressed data
+     *                          will be written
+     *
+     * @param       options     LZMA compression options; the same class
+     *                          is used here as is for LZMA2
+     *
+     * @param       useEndMarker
+     *                          if end of stream marker should be written
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      IOException may be thrown from <code>out</code>
+     *
+     * @since 1.7
+     */
+    public LZMAOutputStream(OutputStream out, LZMA2Options options,
+                            boolean useEndMarker, ArrayCache arrayCache)
+            throws IOException {
+        this(out, options, false, useEndMarker, -1, arrayCache);
     }
 
     /**
@@ -237,6 +299,10 @@ public class LZMAOutputStream extends FinishableOutputStream {
             }
 
             finished = true;
+
+            lzma.putArraysToCache(arrayCache);
+            lzma = null;
+            lz = null;
         }
     }
 

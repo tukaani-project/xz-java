@@ -12,14 +12,19 @@ package org.tukaani.xz.rangecoder;
 
 import java.io.OutputStream;
 import java.io.IOException;
+import org.tukaani.xz.ArrayCache;
 
 public final class RangeEncoderToBuffer extends RangeEncoder {
     private final byte[] buf;
     private int bufPos;
 
-    public RangeEncoderToBuffer(int bufSize) {
-        buf = new byte[bufSize];
+    public RangeEncoderToBuffer(int bufSize, ArrayCache arrayCache) {
+        buf = arrayCache.getByteArray(bufSize, false);
         reset();
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(buf);
     }
 
     public void reset() {

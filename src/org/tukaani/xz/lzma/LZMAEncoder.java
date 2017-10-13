@@ -11,6 +11,7 @@
 package org.tukaani.xz.lzma;
 
 import java.io.IOException;
+import org.tukaani.xz.ArrayCache;
 import org.tukaani.xz.lz.LZEncoder;
 import org.tukaani.xz.lz.Matches;
 import org.tukaani.xz.rangecoder.RangeEncoder;
@@ -91,20 +92,27 @@ public abstract class LZMAEncoder extends LZMACoder {
     public static LZMAEncoder getInstance(
                 RangeEncoder rc, int lc, int lp, int pb, int mode,
                 int dictSize, int extraSizeBefore,
-                int niceLen, int mf, int depthLimit) {
+                int niceLen, int mf, int depthLimit,
+                ArrayCache arrayCache) {
         switch (mode) {
             case MODE_FAST:
                 return new LZMAEncoderFast(rc, lc, lp, pb,
                                            dictSize, extraSizeBefore,
-                                           niceLen, mf, depthLimit);
+                                           niceLen, mf, depthLimit,
+                                           arrayCache);
 
             case MODE_NORMAL:
                 return new LZMAEncoderNormal(rc, lc, lp, pb,
                                              dictSize, extraSizeBefore,
-                                             niceLen, mf, depthLimit);
+                                             niceLen, mf, depthLimit,
+                                             arrayCache);
         }
 
         throw new IllegalArgumentException();
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        lz.putArraysToCache(arrayCache);
     }
 
     /**

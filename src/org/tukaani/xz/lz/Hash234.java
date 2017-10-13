@@ -10,6 +10,8 @@
 
 package org.tukaani.xz.lz;
 
+import org.tukaani.xz.ArrayCache;
+
 final class Hash234 extends CRC32Hash {
     private static final int HASH_2_SIZE = 1 << 10;
     private static final int HASH_2_MASK = HASH_2_SIZE - 1;
@@ -19,8 +21,8 @@ final class Hash234 extends CRC32Hash {
 
     private final int hash4Mask;
 
-    private final int[] hash2Table = new int[HASH_2_SIZE];
-    private final int[] hash3Table = new int[HASH_3_SIZE];
+    private final int[] hash2Table;
+    private final int[] hash3Table;
     private final int[] hash4Table;
 
     private int hash2Value = 0;
@@ -47,9 +49,18 @@ final class Hash234 extends CRC32Hash {
                / (1024 / 4) + 4;
     }
 
-    Hash234(int dictSize) {
-        hash4Table = new int[getHash4Size(dictSize)];
+    Hash234(int dictSize, ArrayCache arrayCache) {
+        hash2Table = arrayCache.getIntArray(HASH_2_SIZE, true);
+        hash3Table = arrayCache.getIntArray(HASH_3_SIZE, true);
+
+        hash4Table = arrayCache.getIntArray(getHash4Size(dictSize), true);
         hash4Mask = hash4Table.length - 1;
+    }
+
+    void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(hash4Table);
+        arrayCache.putArray(hash3Table);
+        arrayCache.putArray(hash2Table);
     }
 
     void calcHashes(byte[] buf, int off) {

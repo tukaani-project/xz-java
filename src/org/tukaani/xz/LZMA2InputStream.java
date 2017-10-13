@@ -43,11 +43,11 @@ public class LZMA2InputStream extends InputStream {
 
     private static final int COMPRESSED_SIZE_MAX = 1 << 16;
 
+    private final ArrayCache arrayCache;
     private DataInputStream in;
 
-    private final LZDecoder lz;
-    private final RangeDecoderFromBuffer rc
-            = new RangeDecoderFromBuffer(COMPRESSED_SIZE_MAX);
+    private LZDecoder lz;
+    private RangeDecoderFromBuffer rc;
     private LZMADecoder lzma;
 
     private int uncompressedSize = 0;
@@ -136,13 +136,41 @@ public class LZMA2InputStream extends InputStream {
      *                          to use no preset dictionary
      */
     public LZMA2InputStream(InputStream in, int dictSize, byte[] presetDict) {
+        this(in, dictSize, presetDict, ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new LZMA2 decompressor using a preset dictionary
+     * and array cache.
+     * <p>
+     * This is like <code>LZMA2InputStream(InputStream, int, byte[])</code>
+     * except that this also takes the <code>arrayCache</code> argument.
+     *
+     * @param       in          input stream from which LZMA2-compressed
+     *                          data is read
+     *
+     * @param       dictSize    LZMA2 dictionary size as bytes, must be
+     *                          in the range [<code>DICT_SIZE_MIN</code>,
+     *                          <code>DICT_SIZE_MAX</code>]
+     *
+     * @param       presetDict  preset dictionary or <code>null</code>
+     *                          to use no preset dictionary
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @since 1.7
+     */
+    LZMA2InputStream(InputStream in, int dictSize, byte[] presetDict,
+                     ArrayCache arrayCache) {
         // Check for null because otherwise null isn't detect
         // in this constructor.
         if (in == null)
             throw new NullPointerException();
 
+        this.arrayCache = arrayCache;
         this.in = new DataInputStream(in);
-        this.lz = new LZDecoder(getDictSize(dictSize), presetDict);
+        this.rc = new RangeDecoderFromBuffer(COMPRESSED_SIZE_MAX, arrayCache);
+        this.lz = new LZDecoder(getDictSize(dictSize), presetDict, arrayCache);
 
         if (presetDict != null && presetDict.length > 0)
             needDictReset = false;
@@ -254,6 +282,7 @@ public class LZMA2InputStream extends InputStream {
 
         if (control == 0x00) {
             endReached = true;
+            putArraysToCache();
             return;
         }
 
@@ -341,6 +370,16 @@ public class LZMA2InputStream extends InputStream {
                            : Math.min(uncompressedSize, in.available());
     }
 
+    private void putArraysToCache() {
+        if (lz != null) {
+            lz.putArraysToCache(arrayCache);
+            lz = null;
+
+            rc.putArraysToCache(arrayCache);
+            rc = null;
+        }
+    }
+
     /**
      * Closes the stream and calls <code>in.close()</code>.
      * If the stream was already closed, this does nothing.
@@ -349,6 +388,8 @@ public class LZMA2InputStream extends InputStream {
      */
     public void close() throws IOException {
         if (in != null) {
+            putArraysToCache();
+
             try {
                 in.close();
             } finally {

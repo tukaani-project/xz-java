@@ -12,6 +12,7 @@ package org.tukaani.xz.lz;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import org.tukaani.xz.ArrayCache;
 import org.tukaani.xz.CorruptedInputException;
 
 public final class LZDecoder {
@@ -23,8 +24,8 @@ public final class LZDecoder {
     private int pendingLen = 0;
     private int pendingDist = 0;
 
-    public LZDecoder(int dictSize, byte[] presetDict) {
-        buf = new byte[dictSize];
+    public LZDecoder(int dictSize, byte[] presetDict, ArrayCache arrayCache) {
+        buf = arrayCache.getByteArray(dictSize, false);
 
         if (presetDict != null) {
             pos = Math.min(presetDict.length, dictSize);
@@ -32,6 +33,10 @@ public final class LZDecoder {
             start = pos;
             System.arraycopy(presetDict, presetDict.length - pos, buf, 0, pos);
         }
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(buf);
     }
 
     public void reset() {

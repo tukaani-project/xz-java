@@ -30,6 +30,6 @@ class LZMA2Decoder extends LZMA2Coder implements FilterDecoder {
     }
 
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
-        return new LZMA2InputStream(in, dictSize);
+        return new LZMA2InputStream(in, dictSize, null, arrayCache);
     }
 }

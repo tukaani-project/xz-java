@@ -10,6 +10,8 @@
 
 package org.tukaani.xz.lz;
 
+import org.tukaani.xz.ArrayCache;
+
 final class HC4 extends LZEncoder {
     private final Hash234 hash;
     private final int[] chain;
@@ -32,14 +34,16 @@ final class HC4 extends LZEncoder {
      * See <code>LZEncoder.getInstance</code> for parameter descriptions.
      */
     HC4(int dictSize, int beforeSizeMin, int readAheadMax,
-            int niceLen, int matchLenMax, int depthLimit) {
-        super(dictSize, beforeSizeMin, readAheadMax, niceLen, matchLenMax);
+            int niceLen, int matchLenMax, int depthLimit,
+            ArrayCache arrayCache) {
+        super(dictSize, beforeSizeMin, readAheadMax, niceLen, matchLenMax,
+              arrayCache);
 
-        hash = new Hash234(dictSize);
+        hash = new Hash234(dictSize, arrayCache);
 
         // +1 because we need dictSize bytes of history + the current byte.
         cyclicSize = dictSize + 1;
-        chain = new int[cyclicSize];
+        chain = arrayCache.getIntArray(cyclicSize, false);
         lzPos = cyclicSize;
 
         // Substracting 1 because the shortest match that this match
@@ -51,6 +55,12 @@ final class HC4 extends LZEncoder {
         // The default is just something based on experimentation;
         // it's nothing magic.
         this.depthLimit = (depthLimit > 0) ? depthLimit : 4 + niceLen / 4;
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(chain);
+        hash.putArraysToCache(arrayCache);
+        super.putArraysToCache(arrayCache);
     }
 
     /**

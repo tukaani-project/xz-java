@@ -47,6 +47,7 @@ public class LZMAInputStream extends InputStream {
     public static final int DICT_SIZE_MAX = Integer.MAX_VALUE & ~15;
 
     private InputStream in;
+    private ArrayCache arrayCache;
     private LZDecoder lz;
     private RangeDecoderFromStream rc;
     private LZMADecoder lzma;
@@ -183,6 +184,42 @@ public class LZMAInputStream extends InputStream {
     }
 
     /**
+     * Creates a new .lzma file format decompressor without
+     * a memory usage limit.
+     * <p>
+     * This is identical to <code>LZMAInputStream(InputStream)</code>
+     * except that this also takes the <code>arrayCache</code> argument.
+     *
+     * @param       in          input stream from which .lzma data is read;
+     *                          it might be a good idea to wrap it in
+     *                          <code>BufferedInputStream</code>, see the
+     *                          note at the top of this page
+     *
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      CorruptedInputException
+     *                          file is corrupt or perhaps not in
+     *                          the .lzma format at all
+     *
+     * @throws      UnsupportedOptionsException
+     *                          dictionary size or uncompressed size is too
+     *                          big for this implementation
+     *
+     * @throws      EOFException
+     *                          file is truncated or perhaps not in
+     *                          the .lzma format at all
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public LZMAInputStream(InputStream in, ArrayCache arrayCache)
+            throws IOException {
+        this(in, -1, arrayCache);
+    }
+
+    /**
      * Creates a new .lzma file format decompressor with an optional
      * memory usage limit.
      *
@@ -214,6 +251,48 @@ public class LZMAInputStream extends InputStream {
      */
     public LZMAInputStream(InputStream in, int memoryLimit)
             throws IOException {
+        this(in, memoryLimit, ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new .lzma file format decompressor with an optional
+     * memory usage limit.
+     * <p>
+     * This is identical to <code>LZMAInputStream(InputStream, int)</code>
+     * except that this also takes the <code>arrayCache</code> argument.
+     *
+     * @param       in          input stream from which .lzma data is read;
+     *                          it might be a good idea to wrap it in
+     *                          <code>BufferedInputStream</code>, see the
+     *                          note at the top of this page
+     *
+     * @param       memoryLimit memory usage limit in kibibytes (KiB)
+     *                          or <code>-1</code> to impose no
+     *                          memory usage limit
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      CorruptedInputException
+     *                          file is corrupt or perhaps not in
+     *                          the .lzma format at all
+     *
+     * @throws      UnsupportedOptionsException
+     *                          dictionary size or uncompressed size is too
+     *                          big for this implementation
+     *
+     * @throws      MemoryLimitException
+     *                          memory usage limit was exceeded
+     *
+     * @throws      EOFException
+     *                          file is truncated or perhaps not in
+     *                          the .lzma format at all
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public LZMAInputStream(InputStream in, int memoryLimit,
+                           ArrayCache arrayCache) throws IOException {
         DataInputStream inData = new DataInputStream(in);
 
         // Properties byte (lc, lp, and pb)
@@ -237,7 +316,7 @@ public class LZMAInputStream extends InputStream {
         if (memoryLimit != -1 && memoryNeeded > memoryLimit)
             throw new MemoryLimitException(memoryNeeded, memoryLimit);
 
-        initialize(in, uncompSize, propsByte, dictSize, null);
+        initialize(in, uncompSize, propsByte, dictSize, null, arrayCache);
     }
 
     /**
@@ -288,7 +367,8 @@ public class LZMAInputStream extends InputStream {
      */
     public LZMAInputStream(InputStream in, long uncompSize, byte propsByte,
                            int dictSize) throws IOException {
-        initialize(in, uncompSize, propsByte, dictSize, null);
+        initialize(in, uncompSize, propsByte, dictSize, null,
+                   ArrayCache.getDefaultCache());
     }
 
     /**
@@ -326,7 +406,56 @@ public class LZMAInputStream extends InputStream {
     public LZMAInputStream(InputStream in, long uncompSize, byte propsByte,
                            int dictSize, byte[] presetDict)
             throws IOException {
-        initialize(in, uncompSize, propsByte, dictSize, presetDict);
+        initialize(in, uncompSize, propsByte, dictSize, presetDict,
+                   ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new input stream that decompresses raw LZMA data (no .lzma
+     * header) from <code>in</code> optionally with a preset dictionary.
+     * <p>
+     * This is identical to <code>LZMAInputStream(InputStream, long, byte, int,
+     * byte[])</code> except that this also takes the <code>arrayCache</code>
+     * argument.
+     *
+     * @param       in          input stream from which LZMA-compressed
+     *                          data is read
+     *
+     * @param       uncompSize  uncompressed size of the LZMA stream or -1
+     *                          if the end marker is used in the LZMA stream
+     *
+     * @param       propsByte   LZMA properties byte that has the encoded
+     *                          values for literal context bits (lc), literal
+     *                          position bits (lp), and position bits (pb)
+     *
+     * @param       dictSize    dictionary size as bytes, must be in the range
+     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *
+     * @param       presetDict  preset dictionary or <code>null</code>
+     *                          to use no preset dictionary
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      CorruptedInputException
+     *                          if <code>propsByte</code> is invalid or
+     *                          the first input byte is not 0x00
+     *
+     * @throws      UnsupportedOptionsException
+     *                          dictionary size or uncompressed size is too
+     *                          big for this implementation
+     *
+     * @throws      EOFException file is truncated or corrupt
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public LZMAInputStream(InputStream in, long uncompSize, byte propsByte,
+                           int dictSize, byte[] presetDict,
+                           ArrayCache arrayCache)
+            throws IOException {
+        initialize(in, uncompSize, propsByte, dictSize, presetDict,
+                   arrayCache);
     }
 
     /**
@@ -365,11 +494,62 @@ public class LZMAInputStream extends InputStream {
                            int lc, int lp, int pb,
                            int dictSize, byte[] presetDict)
             throws IOException {
-        initialize(in, uncompSize, lc, lp, pb, dictSize, presetDict);
+        initialize(in, uncompSize, lc, lp, pb, dictSize, presetDict,
+                   ArrayCache.getDefaultCache());
+    }
+
+    /**
+     * Creates a new input stream that decompresses raw LZMA data (no .lzma
+     * header) from <code>in</code> optionally with a preset dictionary.
+     * <p>
+     * This is identical to <code>LZMAInputStream(InputStream, long, int, int,
+     * int, int, byte[])</code> except that this also takes the
+     * <code>arrayCache</code> argument.
+     *
+     * @param       in          input stream from which LZMA-compressed
+     *                          data is read
+     *
+     * @param       uncompSize  uncompressed size of the LZMA stream or -1
+     *                          if the end marker is used in the LZMA stream
+     *
+     * @param       lc          number of literal context bits, must be
+     *                          in the range [0, 8]
+     *
+     * @param       lp          number of literal position bits, must be
+     *                          in the range [0, 4]
+     *
+     * @param       pb          number position bits, must be
+     *                          in the range [0, 4]
+     *
+     * @param       dictSize    dictionary size as bytes, must be in the range
+     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *
+     * @param       presetDict  preset dictionary or <code>null</code>
+     *                          to use no preset dictionary
+     *
+     * @param       arrayCache  cache to be used for allocating large arrays
+     *
+     * @throws      CorruptedInputException
+     *                          if the first input byte is not 0x00
+     *
+     * @throws      EOFException file is truncated or corrupt
+     *
+     * @throws      IOException may be thrown by <code>in</code>
+     *
+     * @since 1.7
+     */
+    public LZMAInputStream(InputStream in, long uncompSize,
+                           int lc, int lp, int pb,
+                           int dictSize, byte[] presetDict,
+                           ArrayCache arrayCache)
+            throws IOException {
+        initialize(in, uncompSize, lc, lp, pb, dictSize, presetDict,
+                   arrayCache);
     }
 
     private void initialize(InputStream in, long uncompSize, byte propsByte,
-                            int dictSize, byte[] presetDict)
+                            int dictSize, byte[] presetDict,
+                            ArrayCache arrayCache)
             throws IOException {
         // Validate the uncompressed size since the other "initialize" throws
         // IllegalArgumentException if uncompSize < -1.
@@ -394,12 +574,14 @@ public class LZMAInputStream extends InputStream {
             throw new UnsupportedOptionsException(
                     "LZMA dictionary is too big for this implementation");
 
-        initialize(in, uncompSize, lc, lp, pb, dictSize, presetDict);
+        initialize(in, uncompSize, lc, lp, pb, dictSize, presetDict,
+                   arrayCache);
     }
 
     private void initialize(InputStream in, long uncompSize,
                             int lc, int lp, int pb,
-                            int dictSize, byte[] presetDict)
+                            int dictSize, byte[] presetDict,
+                            ArrayCache arrayCache)
             throws IOException {
         // getDictSize validates dictSize and gives a message in
         // the exception too, so skip validating dictSize here.
@@ -408,6 +590,7 @@ public class LZMAInputStream extends InputStream {
             throw new IllegalArgumentException();
 
         this.in = in;
+        this.arrayCache = arrayCache;
 
         // If uncompressed size is known, use it to avoid wasting memory for
         // a uselessly large dictionary buffer.
@@ -415,9 +598,10 @@ public class LZMAInputStream extends InputStream {
         if (uncompSize >= 0 && dictSize > uncompSize)
             dictSize = getDictSize((int)uncompSize);
 
-        lz = new LZDecoder(getDictSize(dictSize), presetDict);
+        lz = new LZDecoder(getDictSize(dictSize), presetDict, arrayCache);
         rc = new RangeDecoderFromStream(in);
         lzma = new LZMADecoder(lz, rc, lc, lp, pb);
+
         remainingSize = uncompSize;
     }
 
@@ -539,6 +723,7 @@ public class LZMAInputStream extends InputStream {
                     if (!rc.isFinished() || lz.hasPending())
                         throw new CorruptedInputException();
 
+                    putArraysToCache();
                     return size == 0 ? -1 : size;
                 }
             }
@@ -551,6 +736,13 @@ public class LZMAInputStream extends InputStream {
         }
     }
 
+    private void putArraysToCache() {
+        if (lz != null) {
+            lz.putArraysToCache(arrayCache);
+            lz = null;
+        }
+    }
+
     /**
      * Closes the stream and calls <code>in.close()</code>.
      * If the stream was already closed, this does nothing.
@@ -559,6 +751,8 @@ public class LZMAInputStream extends InputStream {
      */
     public void close() throws IOException {
         if (in != null) {
+            putArraysToCache();
+
             try {
                 in.close();
             } finally {

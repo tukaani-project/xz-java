@@ -12,6 +12,7 @@ package org.tukaani.xz.rangecoder;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import org.tukaani.xz.ArrayCache;
 import org.tukaani.xz.CorruptedInputException;
 
 public final class RangeDecoderFromBuffer extends RangeDecoder {
@@ -20,9 +21,13 @@ public final class RangeDecoderFromBuffer extends RangeDecoder {
     private final byte[] buf;
     private int pos;
 
-    public RangeDecoderFromBuffer(int inputSizeMax) {
-        buf = new byte[inputSizeMax - INIT_SIZE];
+    public RangeDecoderFromBuffer(int inputSizeMax, ArrayCache arrayCache) {
+        buf = arrayCache.getByteArray(inputSizeMax - INIT_SIZE, false);
         pos = buf.length;
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(buf);
     }
 
     public void prepareInputBuffer(DataInputStream in, int len)

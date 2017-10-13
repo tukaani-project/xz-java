@@ -532,9 +532,9 @@ public class LZMA2Options extends FilterOptions {
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         if (mode == MODE_UNCOMPRESSED)
-            return new UncompressedLZMA2OutputStream(out);
+            return new UncompressedLZMA2OutputStream(out, arrayCache);
 
-        return new LZMA2OutputStream(out, this);
+        return new LZMA2OutputStream(out, this, arrayCache);
     }
 
     /**
@@ -565,7 +565,7 @@ public class LZMA2Options extends FilterOptions {
 
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache)
             throws IOException {
-        return new LZMA2InputStream(in, dictSize, presetDict);
+        return new LZMA2InputStream(in, dictSize, presetDict, arrayCache);
     }
 
     FilterEncoder getFilterEncoder() {

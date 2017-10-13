@@ -12,6 +12,7 @@ package org.tukaani.xz.lz;
 
 import java.io.OutputStream;
 import java.io.IOException;
+import org.tukaani.xz.ArrayCache;
 
 public abstract class LZEncoder {
     public static final int MF_HC4 = 0x04;
@@ -116,15 +117,16 @@ public abstract class LZEncoder {
      */
     public static LZEncoder getInstance(
             int dictSize, int extraSizeBefore, int extraSizeAfter,
-            int niceLen, int matchLenMax, int mf, int depthLimit) {
+            int niceLen, int matchLenMax, int mf, int depthLimit,
+            ArrayCache arrayCache) {
         switch (mf) {
             case MF_HC4:
                 return new HC4(dictSize, extraSizeBefore, extraSizeAfter,
-                               niceLen, matchLenMax, depthLimit);
+                               niceLen, matchLenMax, depthLimit, arrayCache);
 
             case MF_BT4:
                 return new BT4(dictSize, extraSizeBefore, extraSizeAfter,
-                               niceLen, matchLenMax, depthLimit);
+                               niceLen, matchLenMax, depthLimit, arrayCache);
         }
 
         throw new IllegalArgumentException();
@@ -134,15 +136,20 @@ public abstract class LZEncoder {
      * Creates a new LZEncoder. See <code>getInstance</code>.
      */
     LZEncoder(int dictSize, int extraSizeBefore, int extraSizeAfter,
-              int niceLen, int matchLenMax) {
-        buf = new byte[getBufSize(dictSize, extraSizeBefore, extraSizeAfter,
-                                  matchLenMax)];
+              int niceLen, int matchLenMax, ArrayCache arrayCache) {
+        buf = arrayCache.getByteArray(getBufSize(dictSize, extraSizeBefore,
+                                                 extraSizeAfter, matchLenMax),
+                                      false);
 
         keepSizeBefore = extraSizeBefore + dictSize;
         keepSizeAfter = extraSizeAfter + matchLenMax;
 
         this.matchLenMax = matchLenMax;
         this.niceLen = niceLen;
+    }
+
+    public void putArraysToCache(ArrayCache arrayCache) {
+        arrayCache.putArray(buf);
     }
 
     /**
