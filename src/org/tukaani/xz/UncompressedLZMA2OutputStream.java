@@ -65,12 +65,13 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
 
         try {
             while (len > 0) {
-                int copySize = Math.min(uncompBuf.length - uncompPos, len);
+                int copySize = Math.min(LZMA2OutputStream.COMPRESSED_SIZE_MAX
+                                        - uncompPos, len);
                 System.arraycopy(buf, off, uncompBuf, uncompPos, copySize);
                 len -= copySize;
                 uncompPos += copySize;
 
-                if (uncompPos == uncompBuf.length)
+                if (uncompPos == LZMA2OutputStream.COMPRESSED_SIZE_MAX)
                     writeChunk();
             }
         } catch (IOException e) {

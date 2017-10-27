@@ -17,6 +17,7 @@ import org.tukaani.xz.CorruptedInputException;
 
 public final class LZDecoder {
     private final byte[] buf;
+    private final int bufSize; // To avoid buf.length with an array-cached buf.
     private int start = 0;
     private int pos = 0;
     private int full = 0;
@@ -25,7 +26,8 @@ public final class LZDecoder {
     private int pendingDist = 0;
 
     public LZDecoder(int dictSize, byte[] presetDict, ArrayCache arrayCache) {
-        buf = arrayCache.getByteArray(dictSize, false);
+        bufSize = dictSize;
+        buf = arrayCache.getByteArray(bufSize, false);
 
         if (presetDict != null) {
             pos = Math.min(presetDict.length, dictSize);
@@ -44,12 +46,12 @@ public final class LZDecoder {
         pos = 0;
         full = 0;
         limit = 0;
-        buf[buf.length - 1] = 0x00;
+        buf[bufSize - 1] = 0x00;
     }
 
     public void setLimit(int outMax) {
-        if (buf.length - pos <= outMax)
-            limit = buf.length;
+        if (bufSize - pos <= outMax)
+            limit = bufSize;
         else
             limit = pos + outMax;
     }
@@ -69,7 +71,7 @@ public final class LZDecoder {
     public int getByte(int dist) {
         int offset = pos - dist - 1;
         if (dist >= pos)
-            offset += buf.length;
+            offset += bufSize;
 
         return buf[offset] & 0xFF;
     }
@@ -91,11 +93,11 @@ public final class LZDecoder {
 
         int back = pos - dist - 1;
         if (dist >= pos)
-            back += buf.length;
+            back += bufSize;
 
         do {
             buf[pos++] = buf[back++];
-            if (back == buf.length)
+            if (back == bufSize)
                 back = 0;
         } while (--left > 0);
 
@@ -110,7 +112,7 @@ public final class LZDecoder {
 
     public void copyUncompressed(DataInputStream inData, int len)
             throws IOException {
-        int copySize = Math.min(buf.length - pos, len);
+        int copySize = Math.min(bufSize - pos, len);
         inData.readFully(buf, pos, copySize);
         pos += copySize;
 
@@ -120,7 +122,7 @@ public final class LZDecoder {
 
     public int flush(byte[] out, int outOff) {
         int copySize = pos - start;
-        if (pos == buf.length)
+        if (pos == bufSize)
             pos = 0;
 
         System.arraycopy(buf, start, out, outOff, copySize);

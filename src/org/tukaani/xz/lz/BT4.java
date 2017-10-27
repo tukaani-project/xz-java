@@ -59,7 +59,7 @@ final class BT4 extends LZEncoder {
             if (++lzPos == Integer.MAX_VALUE) {
                 int normalizationOffset = Integer.MAX_VALUE - cyclicSize;
                 hash.normalize(normalizationOffset);
-                normalize(tree, normalizationOffset);
+                normalize(tree, cyclicSize * 2, normalizationOffset);
                 lzPos -= normalizationOffset;
             }
 

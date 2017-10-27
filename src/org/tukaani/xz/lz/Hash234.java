@@ -24,6 +24,7 @@ final class Hash234 extends CRC32Hash {
     private final int[] hash2Table;
     private final int[] hash3Table;
     private final int[] hash4Table;
+    private final int hash4Size;
 
     private int hash2Value = 0;
     private int hash3Value = 0;
@@ -53,8 +54,9 @@ final class Hash234 extends CRC32Hash {
         hash2Table = arrayCache.getIntArray(HASH_2_SIZE, true);
         hash3Table = arrayCache.getIntArray(HASH_3_SIZE, true);
 
-        hash4Table = arrayCache.getIntArray(getHash4Size(dictSize), true);
-        hash4Mask = hash4Table.length - 1;
+        hash4Size = getHash4Size(dictSize);
+        hash4Table = arrayCache.getIntArray(hash4Size, true);
+        hash4Mask = hash4Size - 1;
     }
 
     void putArraysToCache(ArrayCache arrayCache) {
@@ -93,8 +95,8 @@ final class Hash234 extends CRC32Hash {
     }
 
     void normalize(int normalizeOffset) {
-        LZEncoder.normalize(hash2Table, normalizeOffset);
-        LZEncoder.normalize(hash3Table, normalizeOffset);
-        LZEncoder.normalize(hash4Table, normalizeOffset);
+        LZEncoder.normalize(hash2Table, HASH_2_SIZE, normalizeOffset);
+        LZEncoder.normalize(hash3Table, HASH_3_SIZE, normalizeOffset);
+        LZEncoder.normalize(hash4Table, hash4Size, normalizeOffset);
     }
 }

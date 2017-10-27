@@ -36,6 +36,7 @@ public abstract class LZEncoder {
     final int niceLen;
 
     final byte[] buf;
+    final int bufSize; // To avoid buf.length with an array-cached buf.
 
     int readPos = -1;
     private int readLimit = -1;
@@ -43,8 +44,9 @@ public abstract class LZEncoder {
     private int writePos = 0;
     private int pendingSize = 0;
 
-    static void normalize(int[] positions, int normalizationOffset) {
-        for (int i = 0; i < positions.length; ++i) {
+    static void normalize(int[] positions, int positionsCount,
+                          int normalizationOffset) {
+        for (int i = 0; i < positionsCount; ++i) {
             if (positions[i] <= normalizationOffset)
                 positions[i] = 0;
             else
@@ -137,9 +139,9 @@ public abstract class LZEncoder {
      */
     LZEncoder(int dictSize, int extraSizeBefore, int extraSizeAfter,
               int niceLen, int matchLenMax, ArrayCache arrayCache) {
-        buf = arrayCache.getByteArray(getBufSize(dictSize, extraSizeBefore,
-                                                 extraSizeAfter, matchLenMax),
-                                      false);
+        bufSize = getBufSize(dictSize, extraSizeBefore, extraSizeAfter,
+                             matchLenMax);
+        buf = arrayCache.getByteArray(bufSize, false);
 
         keepSizeBefore = extraSizeBefore + dictSize;
         keepSizeAfter = extraSizeAfter + matchLenMax;
@@ -196,13 +198,13 @@ public abstract class LZEncoder {
         assert !finishing;
 
         // Move the sliding window if needed.
-        if (readPos >= buf.length - keepSizeAfter)
+        if (readPos >= bufSize - keepSizeAfter)
             moveWindow();
 
         // Try to fill the dictionary buffer. If it becomes full,
         // some of the input bytes may be left unused.
-        if (len > buf.length - writePos)
-            len = buf.length - writePos;
+        if (len > bufSize - writePos)
+            len = bufSize - writePos;
 
         System.arraycopy(in, off, buf, writePos, len);
         writePos += len;

@@ -76,7 +76,7 @@ final class HC4 extends LZEncoder {
             if (++lzPos == Integer.MAX_VALUE) {
                 int normalizationOffset = Integer.MAX_VALUE - cyclicSize;
                 hash.normalize(normalizationOffset);
-                normalize(chain, normalizationOffset);
+                normalize(chain, cyclicSize, normalizationOffset);
                 lzPos -= normalizationOffset;
             }
 
