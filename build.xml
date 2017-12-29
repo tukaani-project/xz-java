@@ -38,7 +38,7 @@
         <get src="${extdoc_url}/package-list"
              dest="${extdoc_dir}/package-list" skipexisting="true"/>
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
-                 source="${sourcever}" packagenames="org.tukaani.xz"
+                 packagenames="org.tukaani.xz"
                  windowtitle="XZ data compression"
                  linkoffline="${extdoc_url} ${extdoc_dir}"/>
     </target>
@@ -47,7 +47,7 @@
         <mkdir dir="${classes_dir}"/>
         <javac srcdir="." sourcepath="${src_dir}" destdir="${classes_dir}"
                includeAntRuntime="false" debug="${debug}"
-               source="${sourcever}" includesfile="fileset-src.txt"
+               includesfile="fileset-src.txt"
                excludes="**/package-info.java">
             <compilerarg compiler="modern" value="-Xlint"/>
         </javac>
