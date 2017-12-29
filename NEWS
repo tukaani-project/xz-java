@@ -2,6 +2,18 @@
 XZ for Java release notes
 =========================
 
+1.7 (2017-12-29)
+
+    * Fix LZMA2InputStream.available() which could return a too high
+      value in case of uncompressed LZMA2 chunks. This incorrect
+      value was visible via other available() methods too, for example,
+      XZInputStream.available().
+
+    * Add the ArrayCache API. It's a pool-like API to reuse large byte
+      and int arrays between compressor and decompressor instances.
+      If you are (de)compressing many tiny files in a row, taking
+      advantage of this API can improve performance significantly.
+
 1.6 (2016-11-27)
 
     * Fix LZMA2Options.getInputStream to work with a preset dictionary.
