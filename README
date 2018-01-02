@@ -28,6 +28,11 @@ Building
     will download a small file named "package-list" from Oracle to
     enable linking to the documentation of the standard Java classes.
 
+    If you are using OpenJDK 9 or later, you will need to edit the
+    "sourcever = 1.5" line in the file "build.properties" before
+    running "ant". Set it to 1.6 or higher. The default value 1.5
+    isn't supported by OpenJDK 9 or later.
+
     If you cannot or don't want to use Ant, just compile all .java
     files under the "src" directory.
 
