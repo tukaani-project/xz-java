@@ -65,6 +65,8 @@
                 <attribute name="Implementation-Version" value="${version}"/>
                 <attribute name="Implementation-URL" value="${homepage}"/>
                 <attribute name="Sealed" value="true"/>
+                <attribute name="Automatic-Module-Name"
+                           value="org.tukaani.xz"/>
                 <!-- Attributes required for OSGi bundles. -->
                 <attribute name="Bundle-ManifestVersion" value="2"/>
                 <attribute name="Bundle-SymbolicName" value="org.tukaani.xz"/>
