@@ -94,9 +94,9 @@ final class Hash234 extends CRC32Hash {
         hash4Table[hash4Value] = pos;
     }
 
-    void normalize(int normalizeOffset) {
-        LZEncoder.normalize(hash2Table, HASH_2_SIZE, normalizeOffset);
-        LZEncoder.normalize(hash3Table, HASH_3_SIZE, normalizeOffset);
-        LZEncoder.normalize(hash4Table, hash4Size, normalizeOffset);
+    void normalize(int normalizationOffset) {
+        LZEncoder.normalize(hash2Table, HASH_2_SIZE, normalizationOffset);
+        LZEncoder.normalize(hash3Table, HASH_3_SIZE, normalizationOffset);
+        LZEncoder.normalize(hash4Table, hash4Size, normalizationOffset);
     }
 }
