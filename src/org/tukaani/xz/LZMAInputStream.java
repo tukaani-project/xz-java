@@ -53,6 +53,7 @@ public class LZMAInputStream extends InputStream {
     private LZMADecoder lzma;
 
     private boolean endReached = false;
+    private boolean relaxedEndCondition = false;
 
     private final byte[] tempBuf = new byte[1];
 
@@ -606,6 +607,31 @@ public class LZMAInputStream extends InputStream {
     }
 
     /**
+     * Enables relaxed end-of-stream condition when uncompressed size is known.
+     * This is useful if uncompressed size is known but it is unknown if
+     * the end of stream (EOS) marker is present. After calling this function,
+     * both are allowed.
+     * <p>
+     * Note that this doesn't actually check if the EOS marker is present.
+     * This introduces a few minor downsides:
+     * <ul>
+     *   <li>Some (not all!) streams that would have more data than
+     *   the specified uncompressed size, for example due to data corruption,
+     *   will be accepted as valid.</li>
+     *   <li>After <code>read</code> has returned <code>-1</code> the
+     *   input position might not be at the end of the stream (too little
+     *   input may have been read).</li>
+     * </ul>
+     * <p>
+     * This should be called after the constructor before reading any data
+     * from the stream. This is a separate function because adding even more
+     * constructors to this class didn't look like a good alternative.
+     */
+    public void enableRelaxedEndCondition() {
+        relaxedEndCondition = true;
+    }
+
+    /**
      * Decompresses the next byte from this input stream.
      * <p>
      * Reading lots of data with <code>read()</code> from this input stream
@@ -718,9 +744,10 @@ public class LZMAInputStream extends InputStream {
                 if (endReached) {
                     // Checking these helps a lot when catching corrupt
                     // or truncated .lzma files. LZMA Utils doesn't do
-                    // the first check and thus it accepts many invalid
+                    // the second check and thus it accepts many invalid
                     // files that this implementation and XZ Utils don't.
-                    if (!rc.isFinished() || lz.hasPending())
+                    if (lz.hasPending() || (!relaxedEndCondition
+                                            && !rc.isFinished()))
                         throw new CorruptedInputException();
 
                     putArraysToCache();
