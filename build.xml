@@ -14,7 +14,7 @@
     <property file="build.properties"/>
 
     <target name="clean"
-            description="Deletes generated files except 'extdoc/package-list'">
+            description="Deletes generated files except 'extdoc'">
         <delete dir="${build_dir}"/>
     </target>
 
@@ -35,8 +35,8 @@
             description="Generates HTML documentation with javadoc">
         <mkdir dir="${doc_dir}"/>
         <mkdir dir="${extdoc_dir}"/>
-        <get src="${extdoc_url}/package-list"
-             dest="${extdoc_dir}/package-list" skipexisting="true"/>
+        <get src="${extdoc_url}/${extdoc_file}"
+             dest="${extdoc_dir}/${extdoc_file}" skipexisting="true"/>
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
                  source="${sourcever}" packagenames="org.tukaani.xz"
                  windowtitle="XZ data compression"
