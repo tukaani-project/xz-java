@@ -28,6 +28,7 @@
         <zip destfile="${dist_file}">
             <fileset dir="." includesfile="fileset-misc.txt"/>
             <fileset dir="." includesfile="fileset-src.txt"/>
+            <fileset dir="." includesfile="fileset-src9.txt"/>
         </zip>
     </target>
 
@@ -54,21 +55,50 @@
                excludes="**/package-info.java">
             <compilerarg compiler="modern" line="-Xlint -Xlint:-options"/>
         </javac>
+
+        <!-- Build Java 9 files only if sourcever9 is set: -->
+        <mkdir dir="${classes9_dir}"/>
+        <condition property="exclude_java9" value="**">
+            <not><isset property="sourcever9"/></not>
+        </condition>
+
+        <!-- Regular Java 9 files excluding module-info.java: -->
+        <javac srcdir="." sourcepath="${src_dir}"
+               destdir="${classes9_dir}"
+               classpath="${classes_dir}"
+               includeAntRuntime="false" debug="${debug}"
+               release="${sourcever9}"
+               includesfile="fileset-src9.txt"
+               excludes="${exclude_java9} **/module-info.java">
+            <compilerarg compiler="modern" line="-Xlint"/>
+        </javac>
+
+        <!-- module-info.java needs special treatment because it wants to
+             be on the source path and also see source files from the
+             package being exported. -->
+        <javac srcdir="." sourcepath="${src9_dir}:${src_dir}"
+               destdir="${classes9_dir}"
+               includeAntRuntime="false" debug="${debug}"
+               release="${sourcever9}"
+               includes="src9/module-info.java"
+               excludes="${exclude_java9}">
+            <compilerarg compiler="modern" line="-Xlint"/>
+        </javac>
     </target>
 
     <target name="jar" depends="compile"
             description="Creates JAR packages">
         <mkdir dir="${jar_dir}"/>
 
-        <jar destfile="${jar_dir}/xz.jar" basedir="${classes_dir}"
-             includes="org/tukaani/xz/**">
+        <jar destfile="${jar_dir}/xz.jar">
+            <fileset dir="${classes_dir}" includes="org/tukaani/xz/**"/>
+            <zipfileset prefix="META-INF/versions/9/" dir="${classes9_dir}"/>
             <manifest>
                 <attribute name="Implementation-Title" value="${title}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
                 <attribute name="Implementation-URL" value="${homepage}"/>
                 <attribute name="Sealed" value="true"/>
-                <attribute name="Automatic-Module-Name"
-                           value="org.tukaani.xz"/>
+                <attribute name="Multi-Release" value="true"/>
                 <!-- Attributes required for OSGi bundles. -->
                 <attribute name="Bundle-ManifestVersion" value="2"/>
                 <attribute name="Bundle-SymbolicName" value="org.tukaani.xz"/>
@@ -157,8 +187,10 @@
         <jar destfile="${maven_dir}/xz-${version}-javadoc.jar"
              basedir="${doc_dir}"/>
 
-        <jar destfile="${maven_dir}/xz-${version}-sources.jar"
-             basedir="${src_dir}" includes="org/tukaani/xz/**"/>
+        <jar destfile="${maven_dir}/xz-${version}-sources.jar">
+            <fileset dir="${src_dir}" includes="org/tukaani/xz/**"/>
+            <zipfileset prefix="META-INF/versions/9/" dir="${src9_dir}"/>
+        </jar>
     </target>
 
 </project>
