@@ -52,7 +52,7 @@
                release="${sourcever}"
                includesfile="fileset-src.txt"
                excludes="**/package-info.java">
-            <compilerarg compiler="modern" value="-Xlint"/>
+            <compilerarg compiler="modern" line="-Xlint -Xlint:-options"/>
         </javac>
     </target>
 
