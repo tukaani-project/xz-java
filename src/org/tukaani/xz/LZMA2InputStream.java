@@ -13,6 +13,7 @@ package org.tukaani.xz;
 import java.io.InputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.EOFException;
 import org.tukaani.xz.lz.LZDecoder;
 import org.tukaani.xz.rangecoder.RangeDecoderFromBuffer;
 import org.tukaani.xz.lzma.LZMADecoder;

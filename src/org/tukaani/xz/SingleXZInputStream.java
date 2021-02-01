@@ -28,7 +28,7 @@ import org.tukaani.xz.check.Check;
  * Unless you know what you are doing, don't use this class to decompress
  * standalone .xz files. For that purpose, use <code>XZInputStream</code>.
  *
- * <h4>When uncompressed size is known beforehand</h4>
+ * <h2>When uncompressed size is known beforehand</h2>
  * <p>
  * If you are decompressing complete XZ streams and your application knows
  * exactly how much uncompressed data there should be, it is good to try

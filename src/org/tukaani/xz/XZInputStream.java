@@ -22,10 +22,10 @@ import org.tukaani.xz.common.DecoderUtil;
  * its input stream until the end of the input or until an error occurs.
  * This supports decompressing concatenated .xz files.
  *
- * <h4>Typical use cases</h4>
+ * <h2>Typical use cases</h2>
  * <p>
  * Getting an input stream to decompress a .xz file:
- * <p><blockquote><pre>
+ * <blockquote><pre>
  * InputStream infile = new FileInputStream("foo.xz");
  * XZInputStream inxz = new XZInputStream(infile);
  * </pre></blockquote>
@@ -42,12 +42,12 @@ import org.tukaani.xz.common.DecoderUtil;
  * the specified limit, MemoryLimitException will be thrown when reading
  * from the stream. For example, the following sets the memory usage limit
  * to 100&nbsp;MiB:
- * <p><blockquote><pre>
+ * <blockquote><pre>
  * InputStream infile = new FileInputStream("foo.xz");
  * XZInputStream inxz = new XZInputStream(infile, 100 * 1024);
  * </pre></blockquote>
  *
- * <h4>When uncompressed size is known beforehand</h4>
+ * <h2>When uncompressed size is known beforehand</h2>
  * <p>
  * If you are decompressing complete files and your application knows
  * exactly how much uncompressed data there should be, it is good to try

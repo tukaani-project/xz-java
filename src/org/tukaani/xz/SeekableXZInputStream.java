@@ -45,7 +45,7 @@ import org.tukaani.xz.index.BlockInfo;
  * Block inside a Stream is located using binary search and thus is fast
  * even with a huge number of Blocks.
  *
- * <h4>Memory usage</h4>
+ * <h2>Memory usage</h2>
  * <p>
  * The amount of memory needed for the Indexes is taken into account when
  * checking the memory usage limit. Each Stream is calculated to need at
@@ -53,7 +53,7 @@ import org.tukaani.xz.index.BlockInfo;
  * to the next kibibyte. So unless the file has a huge number of Streams or
  * Blocks, these don't take significant amount of memory.
  *
- * <h4>Creating random-accessible .xz files</h4>
+ * <h2>Creating random-accessible .xz files</h2>
  * <p>
  * When using {@link XZOutputStream}, a new Block can be started by calling
  * its {@link XZOutputStream#endBlock() endBlock} method. If you know

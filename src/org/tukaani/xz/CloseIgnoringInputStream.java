@@ -18,7 +18,7 @@ import java.io.FilterInputStream;
  * {@code close()} to release memory allocated from an {@link ArrayCache}
  * but don't want to close the underlying {@code InputStream}.
  * For example:
- * <p><blockquote><pre>
+ * <blockquote><pre>
  * InputStream rawdec = new LZMA2InputStream(
  *         new CloseIgnoringInputStream(myInputStream),
  *         myDictSize, null, myArrayCache);

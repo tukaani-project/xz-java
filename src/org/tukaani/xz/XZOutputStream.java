@@ -19,18 +19,18 @@ import org.tukaani.xz.index.IndexEncoder;
 /**
  * Compresses into the .xz file format.
  *
- * <h4>Examples</h4>
+ * <h2>Examples</h2>
  * <p>
  * Getting an output stream to compress with LZMA2 using the default
  * settings and the default integrity check type (CRC64):
- * <p><blockquote><pre>
+ * <blockquote><pre>
  * FileOutputStream outfile = new FileOutputStream("foo.xz");
  * XZOutputStream outxz = new XZOutputStream(outfile, new LZMA2Options());
  * </pre></blockquote>
  * <p>
  * Using the preset level <code>8</code> for LZMA2 (the default
  * is <code>6</code>) and SHA-256 instead of CRC64 for integrity checking:
- * <p><blockquote><pre>
+ * <blockquote><pre>
  * XZOutputStream outxz = new XZOutputStream(outfile, new LZMA2Options(8),
  *                                           XZ.CHECK_SHA256);
  * </pre></blockquote>
@@ -38,7 +38,7 @@ import org.tukaani.xz.index.IndexEncoder;
  * Using the x86 BCJ filter together with LZMA2 to compress x86 executables
  * and printing the memory usage information before creating the
  * XZOutputStream:
- * <p><blockquote><pre>
+ * <blockquote><pre>
  * X86Options x86 = new X86Options();
  * LZMA2Options lzma2 = new LZMA2Options();
  * FilterOptions[] options = { x86, lzma2 };
