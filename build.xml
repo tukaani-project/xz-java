@@ -40,6 +40,7 @@
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
                  source="${sourcever}" packagenames="org.tukaani.xz"
                  windowtitle="XZ data compression"
+                 nodeprecatedlist="true" nohelp="true"
                  linkoffline="${extdoc_url} ${extdoc_dir}"/>
     </target>
 
