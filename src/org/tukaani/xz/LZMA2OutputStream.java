@@ -22,7 +22,6 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private final ArrayCache arrayCache;
 
     private FinishableOutputStream out;
-    private final DataOutputStream outData;
 
     private LZEncoder lz;
     private RangeEncoderToBuffer rc;
@@ -36,6 +35,8 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private int pendingSize = 0;
     private boolean finished = false;
     private IOException exception = null;
+
+    private final byte[] chunkHeader = new byte[6];
 
     private final byte[] tempBuf = new byte[1];
 
@@ -60,7 +61,6 @@ class LZMA2OutputStream extends FinishableOutputStream {
 
         this.arrayCache = arrayCache;
         this.out = out;
-        outData = new DataOutputStream(out);
         rc = new RangeEncoderToBuffer(COMPRESSED_SIZE_MAX, arrayCache);
 
         int dictSize = options.getDictSize();
@@ -154,13 +154,18 @@ class LZMA2OutputStream extends FinishableOutputStream {
         }
 
         control |= (uncompressedSize - 1) >>> 16;
-        outData.writeByte(control);
+        chunkHeader[0] = (byte)control;
+        chunkHeader[1] = (byte)((uncompressedSize - 1) >>> 8);
+        chunkHeader[2] = (byte)(uncompressedSize - 1);
+        chunkHeader[3] = (byte)((compressedSize - 1) >>> 8);
+        chunkHeader[4] = (byte)(compressedSize - 1);
 
-        outData.writeShort(uncompressedSize - 1);
-        outData.writeShort(compressedSize - 1);
-
-        if (propsNeeded)
-            outData.writeByte(props);
+        if (propsNeeded) {
+            chunkHeader[5] = (byte)props;
+            out.write(chunkHeader, 0, 6);
+        } else {
+            out.write(chunkHeader, 0, 5);
+        }
 
         rc.write(out);
 
@@ -172,8 +177,10 @@ class LZMA2OutputStream extends FinishableOutputStream {
     private void writeUncompressed(int uncompressedSize) throws IOException {
         while (uncompressedSize > 0) {
             int chunkSize = Math.min(uncompressedSize, COMPRESSED_SIZE_MAX);
-            outData.writeByte(dictResetNeeded ? 0x01 : 0x02);
-            outData.writeShort(chunkSize - 1);
+            chunkHeader[0] = (byte)(dictResetNeeded ? 0x01 : 0x02);
+            chunkHeader[1] = (byte)((chunkSize - 1) >>> 8);
+            chunkHeader[2] = (byte)(chunkSize - 1);
+            out.write(chunkHeader, 0, 3);
             lz.copyUncompressed(out, uncompressedSize, chunkSize);
             uncompressedSize -= chunkSize;
             dictResetNeeded = false;
