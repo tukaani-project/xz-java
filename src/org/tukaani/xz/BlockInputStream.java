@@ -44,17 +44,18 @@ class BlockInputStream extends InputStream {
         this.verifyCheck = verifyCheck;
         inData = new DataInputStream(in);
 
-        byte[] buf = new byte[DecoderUtil.BLOCK_HEADER_SIZE_MAX];
-
         // Block Header Size or Index Indicator
-        inData.readFully(buf, 0, 1);
+        int b = inData.readUnsignedByte();
 
         // See if this begins the Index field.
-        if (buf[0] == 0x00)
+        if (b == 0x00)
             throw new IndexIndicatorException();
 
         // Read the rest of the Block Header.
-        headerSize = 4 * ((buf[0] & 0xFF) + 1);
+        headerSize = 4 * (b + 1);
+
+        final byte[] buf = new byte[headerSize];
+        buf[0] = (byte)b;
         inData.readFully(buf, 1, headerSize - 1);
 
         // Validate the CRC32.
