@@ -627,6 +627,8 @@ public class LZMAInputStream extends InputStream {
      * This should be called after the constructor before reading any data
      * from the stream. This is a separate function because adding even more
      * constructors to this class didn't look like a good alternative.
+     *
+     * @since 1.9
      */
     public void enableRelaxedEndCondition() {
         relaxedEndCondition = true;
