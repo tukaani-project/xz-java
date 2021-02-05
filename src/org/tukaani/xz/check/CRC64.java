@@ -38,7 +38,8 @@ public class CRC64 extends Check {
         int end = off + len;
 
         while (off < end)
-            crc = crcTable[(buf[off++] ^ (int)crc) & 0xFF] ^ (crc >>> 8);
+            crc = crcTable[(buf[off++] & 0xFF) ^ ((int)crc & 0xFF)]
+                  ^ (crc >>> 8);
     }
 
     public byte[] finish() {
