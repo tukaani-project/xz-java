@@ -92,14 +92,43 @@ public final class LZDecoder {
         pendingDist = dist;
 
         int back = pos - dist - 1;
-        if (dist >= pos)
+        if (back < 0) {
+            // The distance wraps around to the end of the cyclic dictionary
+            // buffer. We cannot get here if the dictionary isn't full.
+            assert full == bufSize;
             back += bufSize;
 
+            // Here we will never copy more than dist + 1 bytes and
+            // so the copying won't repeat from its own output.
+            // Thus, we can always use arraycopy safely.
+            int copySize = Math.min(bufSize - back, left);
+            assert copySize <= dist + 1;
+
+            System.arraycopy(buf, back, buf, pos, copySize);
+            pos += copySize;
+            back = 0;
+            left -= copySize;
+
+            if (left == 0)
+                return;
+        }
+
+        assert back < pos;
+        assert left > 0;
+
         do {
-            buf[pos++] = buf[back++];
-            if (back == bufSize)
-                back = 0;
-        } while (--left > 0);
+            // Determine the number of bytes to copy on this loop iteration:
+            // copySize is set so that the source and destination ranges
+            // don't overlap. If "left" is large enough, the destination
+            // range will start right after the last byte of the source
+            // range. This way we don't need to advance "back" which
+            // allows the next iteration of this loop to copy (up to)
+            // twice the number of bytes.
+            int copySize = Math.min(left, pos - back);
+            System.arraycopy(buf, back, buf, pos, copySize);
+            pos += copySize;
+            left -= copySize;
+        } while (left > 0);
 
         if (full < pos)
             full = pos;
