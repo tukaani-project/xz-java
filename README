@@ -18,23 +18,54 @@ Introduction
 
         https://tukaani.org/xz/java.html
 
-    The source code is compatible with Java 5 and later.
+    The source code is compatible with Java 5 and later (except
+    module-info.java which is Java 9 or later). However, the default
+    build options require OpenJDK 11 or later, and create Java 7
+    compatible binaries.
 
-Building
+Building with Apache Ant
 
-    It is recommended to use Apache Ant. Type "ant" to compile the
-    classes and create the .jar files. Type "ant doc" to build the
-    javadoc HTML documentation. Note that building the documentation
-    will download a small file named "package-list" from Oracle to
-    enable linking to the documentation of the standard Java classes.
+    Type "ant" to compile the classes and create the .jar files.
+    Type "ant doc" to build the javadoc HTML documentation. Note
+    that building the documentation will download a small file named
+    "element-list" or "package-list" from Oracle to enable linking to
+    the documentation of the standard Java classes.
 
-    If you are using OpenJDK 9 or later, you will need to edit the
-    "sourcever = 1.5" line in the file "build.properties" before
-    running "ant". Set it to 1.6 or higher. The default value 1.5
-    isn't supported by OpenJDK 9 or later.
+    If you are using Ant older than 1.9.8:
 
-    If you cannot or don't want to use Ant, just compile all .java
-    files under the "src" directory.
+        Edit build.xml and remove the release attributes from <javac>
+        tags, that is, remove all occurrences of these two lines:
+
+            release="${sourcever}"
+
+            release="${sourcever9}"
+
+        The downside of the above is that then -source and -target
+        options will be used instead of --release.
+
+    If you are using OpenJDK version older than 11:
+
+        Adjust extdoc_url and extdoc_file to point to an older URL
+        and to use "package-list" instead of "element-list". This
+        modification isn't required if the documentation won't be
+        built.
+
+    If you are using OpenJDK version older than 9:
+
+        Comment the sourcever9 line in the file build.properties.
+        When it is commented, module-info.java won't be built and
+        xz.jar won't be a modular JAR.
+
+    If you are using OpenJDK version older than 7:
+
+        In build.properties, set "sourcever = 5" or "sourcever = 6"
+        to be compatible with Java 5 or 6.
+
+Building without Apache Ant
+
+    If you cannot or don't want to use Ant, just compile all .java files
+    under the "src" directory (possibly skip the demo files src/*.java).
+    For module support (Java >= 9) compile also src9/module-info.java.
 
 Demo programs
 
