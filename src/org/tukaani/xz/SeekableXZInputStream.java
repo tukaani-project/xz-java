@@ -69,6 +69,21 @@ import org.tukaani.xz.index.BlockInfo;
  * <code>--block-list=SIZES</code> which allows specifying sizes of
  * individual Blocks.
  *
+ * <h2>Example: getting the uncompressed size of a .xz file</h2>
+ * <blockquote><pre>
+ * String filename = "foo.xz";
+ * SeekableFileInputStream seekableFile
+ *         = new SeekableFileInputStream(filename);
+ *
+ * try {
+ *     SeekableXZInputStream seekableXZ
+ *             = new SeekableXZInputStream(seekableFile);
+ *     System.out.println("Uncompressed size: " + seekableXZ.length());
+ * } finally {
+ *     seekableFile.close();
+ * }
+ * </pre></blockquote>
+ *
  * @see SeekableFileInputStream
  * @see XZInputStream
  * @see XZOutputStream
