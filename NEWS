@@ -2,6 +2,32 @@
 XZ for Java release notes
 =========================
 
+1.9 (2021-03-12)
+
+    * Add LZMAInputStream.enableRelaxedEndCondition(). It allows
+      decompression of LZMA streams whose uncompressed size is known
+      but it is unknown if the end of stream marker is present. This
+      method is meant to be useful in Apache Commons Compress to
+      support .7z files created by certain very old 7-Zip versions.
+      Such files have the end of stream marker in the LZMA data even
+      though the uncompressed size is known. 7-Zip supports such files
+      and thus other implementations of the .7z format should support
+      them too.
+
+    * Make LZMA/LZMA2 decompression faster. With files that compress
+      extremely well the performance can be a lot better but with
+      more typical files the improvement is minor.
+
+    * Make the CRC64 code faster.
+
+    * Add module-info.java as multi-release JAR. The attribute
+      Automatic-Module-Name was removed.
+
+    * The binaries for XZ for Java 1.9 in the Maven Central now
+      require Java 7. Building the package requires at least Java 9
+      for module-info support but otherwise the code should still be
+      Java 5 compatible (see README and comments in build.properties).
+
 1.8 (2018-01-04)
 
     * Fix a binary compatibility regression: XZ for Java 1.7 binaries
