@@ -53,6 +53,11 @@
             <name>Igor Pavlov</name>
             <url>http://7-zip.org/</url>
         </contributor>
+
+        <contributor>
+            <name>Brett Okken</name>
+            <email>brett.okken.os@gmail.com</email>
+        </contributor>
     </contributors>
 
 </project>

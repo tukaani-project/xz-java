@@ -38,7 +38,7 @@
  * <p>
  * XZ for Java has been put into the public domain, thus you can do
  * whatever you want with it. All the files in the package have been
- * written by Lasse Collin and/or Igor Pavlov.
+ * written by Lasse Collin, Igor Pavlov, and/or Brett Okken.
  * <p>
  * This software is provided "as is", without any warranty.
  */
