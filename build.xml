@@ -36,10 +36,13 @@
             description="Generates HTML documentation with javadoc">
         <mkdir dir="${doc_dir}"/>
         <mkdir dir="${extdoc_dir}"/>
+        <!-- Ant 1.10.9 doesn't recognize element-list. To workaround this
+             we rename element-list to package-list when downloading.
+             javadoc from Java 15 seems to be fine with this hack. -->
         <get src="${extdoc_url}/${extdoc_file}"
-             dest="${extdoc_dir}/${extdoc_file}" skipexisting="true"/>
+             dest="${extdoc_dir}/package-list" skipexisting="true"/>
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
-                 source="${sourcever}" packagenames="org.tukaani.xz"
+                 packagenames="org.tukaani.xz"
                  windowtitle="XZ data compression"
                  nodeprecatedlist="true" nohelp="true"
                  linkoffline="${extdoc_url} ${extdoc_dir}"/>
