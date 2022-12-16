@@ -26,10 +26,12 @@ public final class ARM64 implements SimpleFilter {
 
         for (i = off; i <= end; i += 4) {
             // Handle BL instruction:
+            //
             // Convert the full 26 bit immediate, do not ignore any bits
-            // for possible false positives. The full range gives important
-            // compression ratio improvements for large files, but suffers
-            // slightly on small files.
+            // for possible false positives. The full range +/-128 MiB gives
+            // important compression ratio improvements for large files,
+            // but suffers slightly on small files if the filter is applied
+            // also to non-executable data sections.
             if ((buf[i + 3] & 0xFC) == 0x94) {
                 int src = ((buf[i + 3] & 0x03) << 24)
                           | ((buf[i + 2] & 0xFF) << 16)
@@ -54,12 +56,6 @@ public final class ARM64 implements SimpleFilter {
 
             } else if ((buf[i + 3] & 0x9F) == 0x90) {
                 // Handle ADRP instruction:
-                // Ignore data that appears to be a ADRP instruction if
-                // the highest 3 bits in the immediate are not all the same.
-                // In practice, this limits the immediate range to +/- 512 MiB,
-                // which is large enough for a majority of actual ARM64
-                // binary data. This reduces false positives of data that
-                // is not ADRP instructions.
                 int instruction = ((buf[i + 3] & 0xFF) << 24)
                                   | ((buf[i + 2] & 0xFF) << 16)
                                   | ((buf[i + 1] & 0xFF) << 8)
@@ -79,6 +75,14 @@ public final class ARM64 implements SimpleFilter {
                 final int src = ((instruction >>> 29) & 3)
                                 | ((instruction >>> 3) & 0x001FFFFC);
 
+                // Ignore the ADRP instruction if the highest 3 bits in the
+                // immediate are not all the same. This limits the address
+                // range to +/-512 MiB which is large enough for a majority
+                // of real-world ARM64 executable code. Limiting the range
+                // reduces false positives when the filter is applied on
+                // non-ARM64 data where a byte sequence looks like an ADRP
+                // instruction with a very large immediate value.
+                //
                 // This addition is an optimization to avoid the need for two
                 // checks for accepted +/- range. The more readable code
                 // would check if any of the four highest bits (3 ignored and
@@ -89,7 +93,7 @@ public final class ARM64 implements SimpleFilter {
                 //     continue;
                 //
                 // 0x001C0000 has the highest 3 bits set in the immediate.
-                // 0x00020000 has the 17th bit set
+                // 0x00020000 has the 17th bit set.
                 // If this addition results in any of the 3 highest bits set:
                 // - The src already had one or more of the 4 highest bits
                 //   set, but not all of them set (too large positive).
