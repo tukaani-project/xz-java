@@ -54,6 +54,8 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
             simpleFilter = new ARMThumb(false, startOffset);
         else if (filterID == SPARC_FILTER_ID)
             simpleFilter = new SPARC(false, startOffset);
+        else if (filterID == ARM64_FILTER_ID)
+            simpleFilter = new ARM64(false, startOffset);
         else
             assert false;
 

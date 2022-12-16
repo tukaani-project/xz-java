@@ -16,9 +16,10 @@ abstract class BCJCoder implements FilterCoder {
     public static final long ARM_FILTER_ID = 0x07;
     public static final long ARMTHUMB_FILTER_ID = 0x08;
     public static final long SPARC_FILTER_ID = 0x09;
+    public static final long ARM64_FILTER_ID = 0X0A;
 
     public static boolean isBCJFilterID(long filterID) {
-        return filterID >= 0x04 && filterID <= 0x09;
+        return filterID >= X86_FILTER_ID && filterID <= ARM64_FILTER_ID;
     }
 
     public boolean changesSize() {
