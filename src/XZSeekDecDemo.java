@@ -52,13 +52,13 @@ class XZSeekDecDemo {
                 System.out.write(buf, 0, size);
         } else {
             for (int i = 1; i < args.length; i += 2) {
-                int pos = Integer.parseInt(args[i]);
-                int len = Integer.parseInt(args[i + 1]);
+                long pos = Long.parseLong(args[i]);
+                long len = Long.parseLong(args[i + 1]);
 
                 in.seek(pos);
 
                 while (len > 0) {
-                    int size = Math.min(len, buf.length);
+                    int size = (int)Math.min(len, buf.length);
                     size = in.read(buf, 0, size);
 
                     if (size == -1) {
