@@ -109,6 +109,7 @@
                 <attribute name="Export-Package" value="org.tukaani.xz"/>
                 <attribute name="Bundle-Name" value="${title}"/>
                 <attribute name="Bundle-DocURL" value="${homepage}"/>
+                <attribute name="Bundle-License" value="Public Domain"/>
             </manifest>
         </jar>
 
