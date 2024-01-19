@@ -25,7 +25,7 @@
  * Threading is planned but it is unknown when it will be implemented.
  * <p>
  * For the latest source code, see the
- * <a href="https://tukaani.org/xz/java.html">home page of XZ for Java</a>.
+ * <a href="https://xz.tukaani.org/xz-for-java/">home page of XZ for Java</a>.
  *
  * <h2>Getting started</h2>
  * <p>
