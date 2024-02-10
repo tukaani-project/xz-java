@@ -12,16 +12,16 @@ package org.tukaani.xz.delta;
 abstract class DeltaCoder {
     static final int DISTANCE_MIN = 1;
     static final int DISTANCE_MAX = 256;
-    static final int DISTANCE_MASK = DISTANCE_MAX - 1;
 
     final int distance;
-    final byte[] history = new byte[DISTANCE_MAX];
-    int pos = 0;
+    final byte[] history;
 
     DeltaCoder(int distance) {
         if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("invalid distance: " + 
+                    distance);
 
         this.distance = distance;
+        this.history = new byte[distance];
     }
 }
