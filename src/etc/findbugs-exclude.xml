@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS" />
+    </Match>
+    <Match>
+        <Bug pattern="BED_BOGUS_EXCEPTION_DECLARATION" />
+    </Match>
+    <Match>
+        <Bug pattern="DRE_DECLARED_RUNTIME_EXCEPTION" />
+    </Match>
+    <Match>
+        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS" />
+    </Match>
+    <Match>
+        <Bug pattern="IMC_IMMATURE_CLASS_NO_EQUALS" />
+    </Match>
+    <Match>
+        <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING" />
+    </Match>
+    <Match>
+        <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING" />
+    </Match>
+</FindBugsFilter>
