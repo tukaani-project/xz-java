@@ -11,6 +11,7 @@
 package org.tukaani.xz.lz;
 
 import org.tukaani.xz.ArrayCache;
+import org.tukaani.xz.common.ArrayUtil;
 
 final class BT4 extends LZEncoder {
     private final Hash234 hash;
@@ -46,6 +47,7 @@ final class BT4 extends LZEncoder {
         this.depthLimit = depthLimit > 0 ? depthLimit : 16 + niceLen / 2;
     }
 
+    @Override
     public void putArraysToCache(ArrayCache arrayCache) {
         arrayCache.putArray(tree);
         hash.putArraysToCache(arrayCache);
@@ -70,6 +72,7 @@ final class BT4 extends LZEncoder {
         return avail;
     }
 
+    @Override
     public Matches getMatches() {
         matches.count = 0;
 
@@ -118,9 +121,10 @@ final class BT4 extends LZEncoder {
 
         // If a match was found, see how long it is.
         if (matches.count > 0) {
-            while (lenBest < matchLenLimit && buf[readPos + lenBest - delta2]
-                                              == buf[readPos + lenBest])
-                ++lenBest;
+            lenBest += ArrayUtil.mismatch(buf,
+                                          readPos + lenBest - delta2,
+                                          readPos + lenBest,
+                                          matchLenLimit - lenBest);
 
             matches.len[matches.count - 1] = lenBest;
 
@@ -160,22 +164,23 @@ final class BT4 extends LZEncoder {
                         + (delta > cyclicPos ? cyclicSize : 0)) << 1;
             int len = Math.min(len0, len1);
 
-            if (buf[readPos + len - delta] == buf[readPos + len]) {
-                while (++len < matchLenLimit)
-                    if (buf[readPos + len - delta] != buf[readPos + len])
-                        break;
+            int mismatch = ArrayUtil.mismatch(buf,
+                                              readPos + len - delta,
+                                              readPos + len,
+                                              matchLenLimit - len);
 
-                if (len > lenBest) {
-                    lenBest = len;
-                    matches.len[matches.count] = len;
-                    matches.dist[matches.count] = delta - 1;
-                    ++matches.count;
+            len += mismatch;
 
-                    if (len >= niceLenLimit) {
-                        tree[ptr1] = tree[pair];
-                        tree[ptr0] = tree[pair + 1];
-                        return matches;
-                    }
+            if (len > lenBest) {
+                lenBest = len;
+                matches.len[matches.count] = len;
+                matches.dist[matches.count] = delta - 1;
+                ++matches.count;
+
+                if (len >= niceLenLimit) {
+                    tree[ptr1] = tree[pair];
+                    tree[ptr0] = tree[pair + 1];
+                    return matches;
                 }
             }
 
@@ -215,18 +220,16 @@ final class BT4 extends LZEncoder {
                         + (delta > cyclicPos ? cyclicSize : 0)) << 1;
             int len = Math.min(len0, len1);
 
-            if (buf[readPos + len - delta] == buf[readPos + len]) {
-                // No need to look for longer matches than niceLenLimit
-                // because we only are updating the tree, not returning
-                // matches found to the caller.
-                do {
-                    if (++len == niceLenLimit) {
-                        tree[ptr1] = tree[pair];
-                        tree[ptr0] = tree[pair + 1];
-                        return;
-                    }
-                } while (buf[readPos + len - delta] == buf[readPos + len]);
+            // No need to look for longer matches than niceLenLimit
+            // because we only are updating the tree, not returning
+            // matches found to the caller.
+            int mismatch = ArrayUtil.mismatch(buf, readPos + len - delta, readPos + len, niceLenLimit);
+            if (mismatch == niceLenLimit) {
+                tree[ptr1] = tree[pair];
+                tree[ptr0] = tree[pair + 1];
+                return;
             }
+            len += mismatch;
 
             if ((buf[readPos + len - delta] & 0xFF)
                     < (buf[readPos + len] & 0xFF)) {
@@ -243,6 +246,7 @@ final class BT4 extends LZEncoder {
         }
     }
 
+    @Override
     public void skip(int len) {
         while (len-- > 0) {
             int niceLenLimit = niceLen;
