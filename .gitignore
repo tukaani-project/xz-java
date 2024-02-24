@@ -1,3 +1,4 @@
-build
-extdoc
-*.class
+/target/
+.classpath
+.project
+*.settings
