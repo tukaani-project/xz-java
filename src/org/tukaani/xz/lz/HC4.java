@@ -11,6 +11,7 @@
 package org.tukaani.xz.lz;
 
 import org.tukaani.xz.ArrayCache;
+import org.tukaani.xz.common.ArrayUtil;
 
 final class HC4 extends LZEncoder {
     private final Hash234 hash;
@@ -57,6 +58,7 @@ final class HC4 extends LZEncoder {
         this.depthLimit = (depthLimit > 0) ? depthLimit : 4 + niceLen / 4;
     }
 
+    @Override
     public void putArraysToCache(ArrayCache arrayCache) {
         arrayCache.putArray(chain);
         hash.putArraysToCache(arrayCache);
@@ -87,6 +89,7 @@ final class HC4 extends LZEncoder {
         return avail;
     }
 
+    @Override
     public Matches getMatches() {
         matches.count = 0;
         int matchLenLimit = matchLenMax;
@@ -136,9 +139,12 @@ final class HC4 extends LZEncoder {
 
         // If a match was found, see how long it is.
         if (matches.count > 0) {
-            while (lenBest < matchLenLimit && buf[readPos + lenBest - delta2]
-                                              == buf[readPos + lenBest])
-                ++lenBest;
+            // this often differs on first byte, so we call mismatch option
+            // optimized for that
+            lenBest += ArrayUtil.checkFirstMismatch(buf, 
+                                                    readPos + lenBest - delta2,
+                                                    readPos + lenBest,
+                                                    matchLenLimit - lenBest);
 
             matches.len[matches.count - 1] = lenBest;
 
@@ -167,34 +173,28 @@ final class HC4 extends LZEncoder {
             currentMatch = chain[cyclicPos - delta
                                  + (delta > cyclicPos ? cyclicSize : 0)];
 
-            // Test the first byte and the first new byte that would give us
-            // a match that is at least one byte longer than lenBest. This
-            // too short matches get quickly skipped.
-            if (buf[readPos + lenBest - delta] == buf[readPos + lenBest]
-                    && buf[readPos - delta] == buf[readPos]) {
-                // Calculate the length of the match.
-                int len = 0;
-                while (++len < matchLenLimit)
-                    if (buf[readPos + len - delta] != buf[readPos + len])
-                        break;
-
-                // Use the match if and only if it is better than the longest
-                // match found so far.
-                if (len > lenBest) {
-                    lenBest = len;
-                    matches.len[matches.count] = len;
+            // first check the byte past current lenBest, because it often will
+            // not match, in which case the rest of the match does not matter
+            if (buf[readPos + lenBest - delta] == buf[readPos + lenBest]) {
+                final int mismatch = ArrayUtil.mismatch(buf, readPos - delta, readPos, matchLenLimit);
+                // use the match only if it is better than the longest match
+                // found so far
+                if (mismatch > lenBest) {
+                    lenBest = mismatch;
+                    matches.len[matches.count] = mismatch;
                     matches.dist[matches.count] = delta - 1;
                     ++matches.count;
 
                     // Return if it is long enough (niceLen or reached the
                     // end of the dictionary).
-                    if (len >= niceLenLimit)
+                    if (mismatch >= niceLenLimit)
                         return matches;
                 }
             }
         }
     }
 
+    @Override
     public void skip(int len) {
         assert len >= 0;
 

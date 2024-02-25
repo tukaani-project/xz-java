@@ -10,9 +10,11 @@
 
 package org.tukaani.xz.lz;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+
 import org.tukaani.xz.ArrayCache;
+import org.tukaani.xz.common.ArrayUtil;
 
 public abstract class LZEncoder {
     public static final int MF_HC4 = 0x04;
@@ -334,13 +336,7 @@ public abstract class LZEncoder {
      * @return      length of the match; it is in the range [0, lenLimit]
      */
     public int getMatchLen(int dist, int lenLimit) {
-        int backPos = readPos - dist - 1;
-        int len = 0;
-
-        while (len < lenLimit && buf[readPos + len] == buf[backPos + len])
-            ++len;
-
-        return len;
+        return ArrayUtil.mismatch(buf, readPos - dist - 1, readPos, lenLimit);
     }
 
     /**
@@ -353,14 +349,8 @@ public abstract class LZEncoder {
      * @return      length of the match; it is in the range [0, lenLimit]
      */
     public int getMatchLen(int forward, int dist, int lenLimit) {
-        int curPos = readPos + forward;
-        int backPos = curPos - dist - 1;
-        int len = 0;
-
-        while (len < lenLimit && buf[curPos + len] == buf[backPos + len])
-            ++len;
-
-        return len;
+        final int curPos = readPos + forward;
+        return ArrayUtil.mismatch(buf, curPos - dist - 1, curPos, lenLimit);
     }
 
     /**
