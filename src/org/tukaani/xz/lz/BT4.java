@@ -223,13 +223,14 @@ final class BT4 extends LZEncoder {
             // No need to look for longer matches than niceLenLimit
             // because we only are updating the tree, not returning
             // matches found to the caller.
-            int mismatch = ArrayUtil.mismatch(buf, readPos + len - delta, readPos + len, niceLenLimit);
-            if (mismatch == niceLenLimit) {
+            int mismatch = ArrayUtil.mismatch(buf, readPos + len - delta,
+                                              readPos + len, niceLenLimit - len);
+            len += mismatch;
+            if (len == niceLenLimit) {
                 tree[ptr1] = tree[pair];
                 tree[ptr0] = tree[pair + 1];
                 return;
             }
-            len += mismatch;
 
             if ((buf[readPos + len - delta] & 0xFF)
                     < (buf[readPos + len] & 0xFF)) {

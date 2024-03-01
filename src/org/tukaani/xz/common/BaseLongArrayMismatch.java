@@ -32,6 +32,9 @@ abstract class BaseLongArrayMismatch implements ArrayMismatch {
      * {@link Long#numberOfTrailingZeros(long)} depending on
      * {@link ByteOrder#nativeOrder()}.
      * </p>
+     * 
+     * NOTE: With java 8 this can be replaced with a LongToIntFunction lambda. It will have
+     * no performance impacts, but will be easier to read.
      */
     private static final MethodHandle LEADING_ZEROS;
 

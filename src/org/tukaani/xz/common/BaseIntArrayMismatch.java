@@ -33,6 +33,9 @@ abstract class BaseIntArrayMismatch implements ArrayMismatch {
      * {@link Integer#numberOfTrailingZeros(int)} depending on
      * {@link ByteOrder#nativeOrder()}.
      * </p>
+     * 
+     * NOTE: With java 8 this can be replaced with a IntUnaryOperator lambda. It will have
+     * no performance impacts, but will be easier to read.
      */
     private static final MethodHandle LEADING_ZEROS;
 
