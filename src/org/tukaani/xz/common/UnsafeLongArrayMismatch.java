@@ -114,7 +114,11 @@ final class UnsafeLongArrayMismatch implements ArrayMismatch {
 
     @Override
     public int mismatch(byte[] a, int aFromIndex, int bFromIndex, int length) throws Throwable {
-        // the actual implementation class can choose to validate input or not
+        // it is important to check the indexes prior to making the Unsafe calls,
+        // as Unsafe does not validate and could result in SIGSEGV if out of bounds
+        if (aFromIndex < 0 || bFromIndex < 0 || Math.max(aFromIndex, bFromIndex) > a.length - length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
 
         int i = 0;
         for (int j = length - 7; i < j; i += 8) {
