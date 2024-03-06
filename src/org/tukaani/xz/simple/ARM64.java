@@ -1,5 +1,5 @@
 /*
- * BCJ filter for little endian ARM64 instructions
+ * BCJ filter for ARM64 instructions
  *
  * Authors: Jia Tan <jiat0218@gmail.com>
  *          Lasse Collin <lasse.collin@tukaani.org>

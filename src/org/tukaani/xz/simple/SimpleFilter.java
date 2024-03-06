@@ -1,5 +1,5 @@
 /*
- * BCJ filter for little endian ARM instructions
+ * SimpleFilter
  *
  * Author: Lasse Collin <lasse.collin@tukaani.org>
  *

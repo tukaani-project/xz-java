@@ -13,7 +13,7 @@ import java.io.InputStream;
 import org.tukaani.xz.simple.ARM64;
 
 /**
- * BCJ filter for little endian ARM64 instructions.
+ * BCJ filter for ARM64 instructions.
  */
 public class ARM64Options extends BCJOptions {
     private static final int ALIGNMENT = 4;
