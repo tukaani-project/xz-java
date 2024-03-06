@@ -6,7 +6,7 @@ Introduction
 
     This aims to be a complete implementation of XZ data compression
     in pure Java. Features:
-      - Full support for the .xz file format specification version 1.0.4
+      - Full support for the .xz file format specification version 1.2.0
       - Single-threaded streamed compression and decompression
       - Single-threaded decompression with limited random access support
       - Raw streams (no .xz headers) for advanced users, including LZMA2
