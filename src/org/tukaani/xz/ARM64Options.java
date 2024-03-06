@@ -9,6 +9,8 @@ import org.tukaani.xz.simple.ARM64;
 
 /**
  * BCJ filter for ARM64 instructions.
+ *
+ * @since 1.10
  */
 public class ARM64Options extends BCJOptions {
     private static final int ALIGNMENT = 4;

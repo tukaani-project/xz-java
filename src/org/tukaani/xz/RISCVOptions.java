@@ -10,6 +10,8 @@ import org.tukaani.xz.simple.RISCVDecoder;
 
 /**
  * BCJ filter for RISC-V instructions.
+ *
+ * @since 1.10
  */
 public class RISCVOptions extends BCJOptions {
     private static final int ALIGNMENT = 2;
