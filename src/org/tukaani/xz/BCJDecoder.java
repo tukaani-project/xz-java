@@ -51,6 +51,8 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
             simpleFilter = new SPARC(false, startOffset);
         else if (filterID == ARM64_FILTER_ID)
             simpleFilter = new ARM64(false, startOffset);
+        else if (filterID == RISCV_FILTER_ID)
+            simpleFilter = new RISCVDecoder(startOffset);
         else
             assert false;
 

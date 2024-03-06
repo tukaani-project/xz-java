@@ -46,6 +46,7 @@ src/org/tukaani/xz/MemoryLimitException.java
 src/org/tukaani/xz/PowerPCOptions.java
 src/org/tukaani/xz/RawCoder.java
 src/org/tukaani/xz/ResettableArrayCache.java
+src/org/tukaani/xz/RISCVOptions.java
 src/org/tukaani/xz/SPARCOptions.java
 src/org/tukaani/xz/SeekableFileInputStream.java
 src/org/tukaani/xz/SeekableInputStream.java
@@ -106,6 +107,8 @@ src/org/tukaani/xz/simple/ARMThumb.java
 src/org/tukaani/xz/simple/ARM64.java
 src/org/tukaani/xz/simple/IA64.java
 src/org/tukaani/xz/simple/PowerPC.java
+src/org/tukaani/xz/simple/RISCVDecoder.java
+src/org/tukaani/xz/simple/RISCVEncoder.java
 src/org/tukaani/xz/simple/SPARC.java
 src/org/tukaani/xz/simple/SimpleFilter.java
 src/org/tukaani/xz/simple/X86.java
