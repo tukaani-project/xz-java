@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: 0BSD
 // SPDX-FileCopyrightText: The XZ for Java authors and contributors
 // SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Brett Okken <brett.okken.os@gmail.com>
 
 package org.tukaani.xz.delta;
 
