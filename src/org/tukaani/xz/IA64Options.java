@@ -17,15 +17,18 @@ public class IA64Options extends BCJOptions {
         super(ALIGNMENT);
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return new SimpleOutputStream(out, new IA64(true, startOffset));
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new SimpleInputStream(in, new IA64(false, startOffset));
     }
 
+    @Override
     FilterEncoder getFilterEncoder() {
         return new BCJEncoder(this, BCJCoder.IA64_FILTER_ID);
     }

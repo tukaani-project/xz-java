@@ -25,18 +25,22 @@ class BCJEncoder extends BCJCoder implements FilterEncoder {
         this.options = (BCJOptions)options.clone();
     }
 
+    @Override
     public long getFilterID() {
         return filterID;
     }
 
+    @Override
     public byte[] getFilterProps() {
         return props;
     }
 
+    @Override
     public boolean supportsFlushing() {
         return false;
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return options.getOutputStream(out, arrayCache);

@@ -38,6 +38,7 @@ public class ResettableArrayCache extends ArrayCache {
         }
     }
 
+    @Override
     public byte[] getByteArray(int size, boolean fillWithZeros) {
         byte[] array = arrayCache.getByteArray(size, fillWithZeros);
 
@@ -50,6 +51,7 @@ public class ResettableArrayCache extends ArrayCache {
         return array;
     }
 
+    @Override
     public void putArray(byte[] array) {
         if (byteArrays != null) {
             // The array is more likely to be near the end of the list so
@@ -64,6 +66,7 @@ public class ResettableArrayCache extends ArrayCache {
         }
     }
 
+    @Override
     public int[] getIntArray(int size, boolean fillWithZeros) {
         int[] array = arrayCache.getIntArray(size, fillWithZeros);
 
@@ -76,6 +79,7 @@ public class ResettableArrayCache extends ArrayCache {
         return array;
     }
 
+    @Override
     public void putArray(int[] array) {
         if (intArrays != null) {
             synchronized(intArrays) {

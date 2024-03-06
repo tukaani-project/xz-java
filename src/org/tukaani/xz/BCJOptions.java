@@ -33,14 +33,17 @@ abstract class BCJOptions extends FilterOptions {
         return startOffset;
     }
 
+    @Override
     public int getEncoderMemoryUsage() {
         return SimpleOutputStream.getMemoryUsage();
     }
 
+    @Override
     public int getDecoderMemoryUsage() {
         return SimpleInputStream.getMemoryUsage();
     }
 
+    @Override
     public Object clone() {
         try {
             return super.clone();

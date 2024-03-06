@@ -17,15 +17,18 @@ public class ARMOptions extends BCJOptions {
         super(ALIGNMENT);
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return new SimpleOutputStream(out, new ARM(true, startOffset));
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new SimpleInputStream(in, new ARM(false, startOffset));
     }
 
+    @Override
     FilterEncoder getFilterEncoder() {
         return new BCJEncoder(this, BCJCoder.ARM_FILTER_ID);
     }

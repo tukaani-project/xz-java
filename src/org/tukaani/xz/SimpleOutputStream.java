@@ -35,11 +35,13 @@ class SimpleOutputStream extends FinishableOutputStream {
         this.simpleFilter = simpleFilter;
     }
 
+    @Override
     public void write(int b) throws IOException {
         tempBuf[0] = (byte)b;
         write(tempBuf, 0, 1);
     }
 
+    @Override
     public void write(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -99,10 +101,12 @@ class SimpleOutputStream extends FinishableOutputStream {
         finished = true;
     }
 
+    @Override
     public void flush() throws IOException {
         throw new UnsupportedOptionsException("Flushing is not supported");
     }
 
+    @Override
     public void finish() throws IOException {
         if (!finished) {
             // If it fails, don't call out.finish().
@@ -117,6 +121,7 @@ class SimpleOutputStream extends FinishableOutputStream {
         }
     }
 
+    @Override
     public void close() throws IOException {
         if (out != null) {
             if (!finished) {

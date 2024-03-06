@@ -10,8 +10,10 @@ public class None extends Check {
         name = "None";
     }
 
+    @Override
     public void update(byte[] buf, int off, int len) {}
 
+    @Override
     public byte[] finish() {
         byte[] empty = new byte[0];
         return empty;

@@ -13,10 +13,12 @@ public class SHA256 extends Check {
         sha256 = java.security.MessageDigest.getInstance("SHA-256");
     }
 
+    @Override
     public void update(byte[] buf, int off, int len) {
         sha256.update(buf, off, len);
     }
 
+    @Override
     public byte[] finish() {
         byte[] buf = sha256.digest();
         sha256.reset();

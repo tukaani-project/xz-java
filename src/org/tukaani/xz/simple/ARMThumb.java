@@ -15,6 +15,7 @@ public final class ARMThumb implements SimpleFilter {
         pos = startPos + 4;
     }
 
+    @Override
     public int code(byte[] buf, int off, int len) {
         int end = off + len - 4;
         int i;

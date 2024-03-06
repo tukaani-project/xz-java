@@ -13,18 +13,22 @@ class DeltaEncoder extends DeltaCoder implements FilterEncoder {
         this.options = (DeltaOptions)options.clone();
     }
 
+    @Override
     public long getFilterID() {
         return FILTER_ID;
     }
 
+    @Override
     public byte[] getFilterProps() {
         return props;
     }
 
+    @Override
     public boolean supportsFlushing() {
         return true;
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return options.getOutputStream(out, arrayCache);

@@ -61,6 +61,7 @@ public class DeltaInputStream extends InputStream {
      *
      * @throws      IOException may be thrown by <code>in</code>
      */
+    @Override
     public int read() throws IOException {
         return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
@@ -83,6 +84,7 @@ public class DeltaInputStream extends InputStream {
      * @throws      IOException may be thrown by underlaying input
      *                          stream <code>in</code>
      */
+    @Override
     public int read(byte[] buf, int off, int len) throws IOException {
         if (len == 0)
             return 0;
@@ -113,6 +115,7 @@ public class DeltaInputStream extends InputStream {
      *
      * @return      the value returned by <code>in.available()</code>
      */
+    @Override
     public int available() throws IOException {
         if (in == null)
             throw new XZIOException("Stream closed");
@@ -129,6 +132,7 @@ public class DeltaInputStream extends InputStream {
      *
      * @throws  IOException if thrown by <code>in.close()</code>
      */
+    @Override
     public void close() throws IOException {
         if (in != null) {
             try {

@@ -17,15 +17,18 @@ public class X86Options extends BCJOptions {
         super(ALIGNMENT);
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return new SimpleOutputStream(out, new X86(true, startOffset));
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new SimpleInputStream(in, new X86(false, startOffset));
     }
 
+    @Override
     FilterEncoder getFilterEncoder() {
         return new BCJEncoder(this, BCJCoder.X86_FILTER_ID);
     }

@@ -42,6 +42,7 @@ final class BT4 extends LZEncoder {
         this.depthLimit = depthLimit > 0 ? depthLimit : 16 + niceLen / 2;
     }
 
+    @Override
     public void putArraysToCache(ArrayCache arrayCache) {
         arrayCache.putArray(tree);
         hash.putArraysToCache(arrayCache);
@@ -66,6 +67,7 @@ final class BT4 extends LZEncoder {
         return avail;
     }
 
+    @Override
     public Matches getMatches() {
         matches.count = 0;
 
@@ -239,6 +241,7 @@ final class BT4 extends LZEncoder {
         }
     }
 
+    @Override
     public void skip(int len) {
         while (len-- > 0) {
             int niceLenLimit = niceLen;

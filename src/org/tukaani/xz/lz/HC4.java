@@ -53,6 +53,7 @@ final class HC4 extends LZEncoder {
         this.depthLimit = (depthLimit > 0) ? depthLimit : 4 + niceLen / 4;
     }
 
+    @Override
     public void putArraysToCache(ArrayCache arrayCache) {
         arrayCache.putArray(chain);
         hash.putArraysToCache(arrayCache);
@@ -83,6 +84,7 @@ final class HC4 extends LZEncoder {
         return avail;
     }
 
+    @Override
     public Matches getMatches() {
         matches.count = 0;
         int matchLenLimit = matchLenMax;
@@ -191,6 +193,7 @@ final class HC4 extends LZEncoder {
         }
     }
 
+    @Override
     public void skip(int len) {
         assert len >= 0;
 

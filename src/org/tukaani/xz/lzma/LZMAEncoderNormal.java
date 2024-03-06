@@ -50,6 +50,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             opts[i] = new Optimum();
     }
 
+    @Override
     public void reset() {
         optCur = 0;
         optEnd = 0;
@@ -93,6 +94,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
         return optCur;
     }
 
+    @Override
     int getNextSymbol() {
         // If there are pending symbols from an earlier call to this
         // function, return those symbols first.

@@ -17,15 +17,18 @@ public class SPARCOptions extends BCJOptions {
         super(ALIGNMENT);
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return new SimpleOutputStream(out, new SPARC(true, startOffset));
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new SimpleInputStream(in, new SPARC(false, startOffset));
     }
 
+    @Override
     FilterEncoder getFilterEncoder() {
         return new BCJEncoder(this, BCJCoder.SPARC_FILTER_ID);
     }

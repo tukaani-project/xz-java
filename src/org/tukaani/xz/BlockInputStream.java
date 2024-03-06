@@ -196,10 +196,12 @@ class BlockInputStream extends InputStream {
             filterChain = filters[i].getInputStream(filterChain, arrayCache);
     }
 
+    @Override
     public int read() throws IOException {
         return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
+    @Override
     public int read(byte[] buf, int off, int len) throws IOException {
         if (endReached)
             return -1;
@@ -267,10 +269,12 @@ class BlockInputStream extends InputStream {
                     + check.getName() + ") does not match");
     }
 
+    @Override
     public int available() throws IOException {
         return filterChain.available();
     }
 
+    @Override
     public void close() {
         // This puts all arrays, that were allocated from ArrayCache,
         // back to the ArrayCache. The last filter in the chain will

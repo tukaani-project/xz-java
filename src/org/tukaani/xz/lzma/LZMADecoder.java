@@ -24,6 +24,7 @@ public final class LZMADecoder extends LZMACoder {
         reset();
     }
 
+    @Override
     public void reset() {
         super.reset();
         literalDecoder.reset();

@@ -26,6 +26,7 @@ public final class X86 implements SimpleFilter {
         pos = startPos + 5;
     }
 
+    @Override
     public int code(byte[] buf, int off, int len) {
         int prevPos = off - 1;
         int end = off + len - 5;

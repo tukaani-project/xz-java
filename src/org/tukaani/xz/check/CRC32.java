@@ -12,10 +12,12 @@ public class CRC32 extends Check {
         name = "CRC32";
     }
 
+    @Override
     public void update(byte[] buf, int off, int len) {
         state.update(buf, off, len);
     }
 
+    @Override
     public byte[] finish() {
         long value = state.getValue();
         byte[] buf = { (byte)(value),

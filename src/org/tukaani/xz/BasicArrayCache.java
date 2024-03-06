@@ -128,6 +128,7 @@ public class BasicArrayCache extends ArrayCache {
          * Returns true if the map is full and the least recently used stack
          * should be removed.
          */
+        @Override
         protected boolean removeEldestEntry(
                 Map.Entry<Integer, CyclicStack<Reference<T>>> eldest) {
             return size() > STACKS_MAX;
@@ -229,6 +230,7 @@ public class BasicArrayCache extends ArrayCache {
      *                          array will be zero; if false, the contents
      *                          of the returned array is undefined
      */
+    @Override
     public byte[] getByteArray(int size, boolean fillWithZeros) {
         byte[] array = getArray(byteArrayCache, size);
 
@@ -246,6 +248,7 @@ public class BasicArrayCache extends ArrayCache {
      * <p>
      * Small arrays aren't cached and will be ignored by this method.
      */
+    @Override
     public void putArray(byte[] array) {
         putArray(byteArrayCache, array, array.length);
     }
@@ -253,6 +256,7 @@ public class BasicArrayCache extends ArrayCache {
     /**
      * This is like getByteArray but for int arrays.
      */
+    @Override
     public int[] getIntArray(int size, boolean fillWithZeros) {
         int[] array = getArray(intArrayCache, size);
 
@@ -270,6 +274,7 @@ public class BasicArrayCache extends ArrayCache {
      * <p>
      * Small arrays aren't cached and will be ignored by this method.
      */
+    @Override
     public void putArray(int[] array) {
         putArray(intArrayCache, array, array.length);
     }

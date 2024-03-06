@@ -191,6 +191,7 @@ public class LZMA2InputStream extends InputStream {
      *
      * @throws      IOException may be thrown by <code>in</code>
      */
+    @Override
     public int read() throws IOException {
         return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
@@ -219,6 +220,7 @@ public class LZMA2InputStream extends InputStream {
      *
      * @throws      IOException may be thrown by <code>in</code>
      */
+    @Override
     public int read(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -355,6 +357,7 @@ public class LZMA2InputStream extends InputStream {
      * @return      the number of uncompressed bytes that can be read
      *              without blocking
      */
+    @Override
     public int available() throws IOException {
         if (in == null)
             throw new XZIOException("Stream closed");
@@ -382,6 +385,7 @@ public class LZMA2InputStream extends InputStream {
      *
      * @throws  IOException if thrown by <code>in.close()</code>
      */
+    @Override
     public void close() throws IOException {
         if (in != null) {
             putArraysToCache();

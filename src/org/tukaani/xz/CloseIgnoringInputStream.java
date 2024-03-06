@@ -39,5 +39,6 @@ public class CloseIgnoringInputStream extends FilterInputStream {
     /**
      * This does nothing (doesn't call {@code in.close()}).
      */
+    @Override
     public void close() {}
 }

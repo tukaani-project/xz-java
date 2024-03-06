@@ -51,6 +51,7 @@ public final class RangeDecoderFromBuffer extends RangeDecoder {
         return pos == buf.length && code == 0;
     }
 
+    @Override
     public void normalize() throws IOException {
         if ((range & TOP_MASK) == 0) {
             try {

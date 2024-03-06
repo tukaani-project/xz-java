@@ -42,10 +42,12 @@ class SimpleInputStream extends InputStream {
         this.simpleFilter = simpleFilter;
     }
 
+    @Override
     public int read() throws IOException {
         return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
 
+    @Override
     public int read(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -111,6 +113,7 @@ class SimpleInputStream extends InputStream {
         }
     }
 
+    @Override
     public int available() throws IOException {
         if (in == null)
             throw new XZIOException("Stream closed");
@@ -121,6 +124,7 @@ class SimpleInputStream extends InputStream {
         return filtered;
     }
 
+    @Override
     public void close() throws IOException {
         if (in != null) {
             try {

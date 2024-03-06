@@ -27,6 +27,7 @@ public final class RangeDecoderFromStream extends RangeDecoder {
         return code == 0;
     }
 
+    @Override
     public void normalize() throws IOException {
         if ((range & TOP_MASK) == 0) {
             code = (code << SHIFT_BITS) | inData.readUnsignedByte();

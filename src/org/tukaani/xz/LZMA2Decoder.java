@@ -20,10 +20,12 @@ class LZMA2Decoder extends LZMA2Coder implements FilterDecoder {
         dictSize <<= (props[0] >>> 1) + 11;
     }
 
+    @Override
     public int getMemoryUsage() {
         return LZMA2InputStream.getMemoryUsage(dictSize);
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new LZMA2InputStream(in, dictSize, null, arrayCache);
     }

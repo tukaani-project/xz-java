@@ -188,6 +188,7 @@ public abstract class LZMAEncoder extends LZMACoder {
         return lz;
     }
 
+    @Override
     public void reset() {
         super.reset();
         literalEncoder.reset();
@@ -674,6 +675,7 @@ public abstract class LZMAEncoder extends LZMACoder {
             prices = new int[posStates][lenSymbols];
         }
 
+        @Override
         void reset() {
             super.reset();
 

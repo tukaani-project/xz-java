@@ -39,6 +39,7 @@ final class LZMAEncoderFast extends LZMAEncoder {
         return smallDist < (bigDist >>> 7);
     }
 
+    @Override
     int getNextSymbol() {
         // Get the matches for the next byte unless readAhead indicates
         // that we already got the new matches during the previous call

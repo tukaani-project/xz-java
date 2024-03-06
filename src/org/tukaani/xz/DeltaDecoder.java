@@ -17,10 +17,12 @@ class DeltaDecoder extends DeltaCoder implements FilterDecoder {
         distance = (props[0] & 0xFF) + 1;
     }
 
+    @Override
     public int getMemoryUsage() {
         return 1;
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new DeltaInputStream(in, distance);
     }

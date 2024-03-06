@@ -27,18 +27,22 @@ class LZMA2Encoder extends LZMA2Coder implements FilterEncoder {
         this.options = (LZMA2Options)options.clone();
     }
 
+    @Override
     public long getFilterID() {
         return FILTER_ID;
     }
 
+    @Override
     public byte[] getFilterProps() {
         return props;
     }
 
+    @Override
     public boolean supportsFlushing() {
         return true;
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return options.getOutputStream(out, arrayCache);

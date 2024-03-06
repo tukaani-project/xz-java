@@ -30,10 +30,12 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
         }
     }
 
+    @Override
     public int getMemoryUsage() {
         return SimpleInputStream.getMemoryUsage();
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         SimpleFilter simpleFilter = null;
 

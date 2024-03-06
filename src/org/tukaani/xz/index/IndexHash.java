@@ -27,6 +27,7 @@ public class IndexHash extends IndexBase {
         }
     }
 
+    @Override
     public void add(long unpaddedSize, long uncompressedSize)
             throws XZIOException {
         super.add(unpaddedSize, uncompressedSize);

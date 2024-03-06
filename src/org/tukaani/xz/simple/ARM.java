@@ -15,6 +15,7 @@ public final class ARM implements SimpleFilter {
         pos = startPos + 8;
     }
 
+    @Override
     public int code(byte[] buf, int off, int len) {
         int end = off + len - 4;
         int i;

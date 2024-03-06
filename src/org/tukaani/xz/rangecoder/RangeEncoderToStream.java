@@ -16,6 +16,7 @@ public final class RangeEncoderToStream extends RangeEncoder {
         reset();
     }
 
+    @Override
     void writeByte(int b) throws IOException {
         out.write(b);
     }

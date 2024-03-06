@@ -13,6 +13,7 @@ public final class RISCVEncoder implements SimpleFilter {
         pos = startPos;
     }
 
+    @Override
     public int code(byte[] buf, int off, int len) {
         int end = off + len - 8;
         int i;
