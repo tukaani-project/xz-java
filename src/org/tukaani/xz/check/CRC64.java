@@ -1,12 +1,7 @@
-/*
- * CRC64
- *
- * Authors: Brett Okken <brett.okken.os@gmail.com>
- *          Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Brett Okken <brett.okken.os@gmail.com>
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz.check;
 

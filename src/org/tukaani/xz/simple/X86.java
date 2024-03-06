@@ -1,15 +1,11 @@
-/*
- * BCJ filter for x86 instructions
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <http://7-zip.org/>
 
 package org.tukaani.xz.simple;
 
+// BCJ filter for x86 instructions
 public final class X86 implements SimpleFilter {
     private static final boolean[] MASK_TO_ALLOWED_STATUS
             = {true, true, true, false, true, false, false, false};

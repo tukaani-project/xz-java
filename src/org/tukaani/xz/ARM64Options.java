@@ -1,11 +1,6 @@
-/*
- * ARM64Options
- *
- * Author: Jia Tan <jiat0218@gmail.com>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Jia Tan <jiat0218@gmail.com>
 
 package org.tukaani.xz;
 
