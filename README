@@ -18,9 +18,9 @@ Introduction
 
         https://xz.tukaani.org/xz-for-java/
 
-    The source code is compatible with Java 5 and later (except
+    The source code is compatible with Java 8 and later (except
     module-info.java which is Java 9 or later). However, the default
-    build options require OpenJDK 11 or later, and create Java 7
+    build options require OpenJDK 11 or later, and create Java 8
     compatible binaries.
 
 Building with Apache Ant
@@ -56,10 +56,11 @@ Building with Apache Ant
         When it is commented, module-info.java won't be built and
         xz.jar won't be a modular JAR.
 
-    If you are using OpenJDK version older than 7:
+    If you are using OpenJDK version older than 8:
 
-        In build.properties, set "sourcever = 5" or "sourcever = 6"
-        to be compatible with Java 5 or 6.
+        These versions are no longer supported. Try XZ for Java 1.9
+        which is Java 5 compatible and only requires editing
+        build.properties to build.
 
 Building without Apache Ant
 
