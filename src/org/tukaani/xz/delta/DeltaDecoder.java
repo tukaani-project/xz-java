@@ -10,10 +10,26 @@ public class DeltaDecoder extends DeltaCoder {
     }
 
     public void decode(byte[] buf, int off, int len) {
-        int end = off + len;
-        for (int i = off; i < end; ++i) {
-            buf[i] += history[(distance + pos) & DISTANCE_MASK];
-            history[pos-- & DISTANCE_MASK] = buf[i];
+        int i=0;
+        // first process from history buffer
+        for (int j = Math.min(len, distance); i < j; ++i) {
+            buf[off + i] += history[i];
+        }
+        
+        // then process rest just within buf
+        for ( ; i<len; ++i) {
+            buf[off + i] += buf[off + i - distance];
+        }
+
+        // finally, populate the history buffer
+        if (len >= distance) {
+            System.arraycopy(buf, off + len - distance, history, 0, distance);
+        } else {
+            assert i == len;
+            // copy from end of buffer to beginning
+            System.arraycopy(history, i, history, 0, distance - i);
+            // now copy all of in to the end of the buffer
+            System.arraycopy(buf, off, history, distance - i, len);
         }
     }
 }
