@@ -38,6 +38,13 @@
         </developer>
     </developers>
 
+    <developers>
+        <developer>
+            <name>Jia Tan</name>
+            <email>jiat0218@gmail.com</email>
+        </developer>
+    </developers>
+
     <contributors>
         <contributor>
             <!-- According to Maven docs, it's good to only list those people
