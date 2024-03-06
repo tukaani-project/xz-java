@@ -13,8 +13,8 @@ abstract class DeltaCoder {
 
     DeltaCoder(int distance) {
         if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
-            throw new IllegalArgumentException("invalid distance: " + 
-                    distance);
+            throw new IllegalArgumentException("Invalid distance: " +
+                                               distance);
 
         this.distance = distance;
         this.history = new byte[distance];

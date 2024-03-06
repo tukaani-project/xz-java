@@ -10,24 +10,30 @@ public class DeltaEncoder extends DeltaCoder {
     }
 
     public void encode(byte[] in, int in_off, int len, byte[] out) {
-        int i=0;
-        // first deal with comparisons to the history buffer
-        for (int j=Math.min(len, distance); i<j; ++i) {
-            out[i] = (byte) (in[in_off + i] - history[i]);
+        int i = 0;
+
+        // First deal with comparisons to the history buffer.
+        for (int j = Math.min(len, distance); i < j; ++i) {
+            out[i] = (byte)(in[in_off + i] - history[i]);
         }
-        // now fill the history buffer with the final (distance) bytes in source
+
+        // Now fill the history buffer with the last "distance" number of
+        // bytes from the input buffer.
         if (len >= distance) {
-            System.arraycopy(in, in_off + len - distance, history, 0, distance);
+            System.arraycopy(in, in_off + len - distance, history, 0,
+                             distance);
         } else {
             assert i == len;
-            // copy from end of history buffer to beginning
+
+            // Copy from the end of the history buffer to the beginning.
             System.arraycopy(history, i, history, 0, distance - i);
-            // now copy all of "in" to end of history buffer
+
+            // Copy all of "in" to the end of the history buffer.
             System.arraycopy(in, in_off, history, distance - i, len);
         }
 
         for ( ; i < len; ++i) {
-            out[i] = (byte) (in[in_off + i] - in[in_off + i - distance]);
+            out[i] = (byte)(in[in_off + i] - in[in_off + i - distance]);
         }
     }
 }
