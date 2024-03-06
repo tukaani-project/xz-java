@@ -1,0 +1,14 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files:
+    .gitignore
+    AUTHORS
+    NEWS
+    README
+    THANKS
+    fileset-misc.txt
+    fileset-src.txt
+    fileset-src9.txt
+    maven/README
+Copyright: The XZ for Java authors and contributors
+License: 0BSD
