@@ -21,7 +21,8 @@ final class LegacyArrayMismatch implements ArrayMismatch {
      * {@inheritDoc}
      */
     @Override
-    public int mismatch(byte[] bytes, int aFromIndex, int bFromIndex, int length) {
+    public int mismatch(byte[] bytes, int aFromIndex, int bFromIndex,
+            int length) {
         int i = 0;
         for (int j = length - 7; i < j; i += 8) {
             if (bytes[aFromIndex + i] != bytes[bFromIndex + i])

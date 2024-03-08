@@ -15,6 +15,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.nio.ByteOrder;
+import java.util.function.LongToIntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,8 +31,7 @@ final class UnsafeLongArrayMismatch implements ArrayMismatch {
 
     /**
      * <p>
-     * This is bound to
-     * {@code sun.misc.Unsafe.getLong(Object, long)}.
+     * This is bound to {@code sun.misc.Unsafe.getLong(Object, long)}.
      * </p>
      */
     static final MethodHandle GET_PRIMITIVE;
@@ -48,75 +48,72 @@ final class UnsafeLongArrayMismatch implements ArrayMismatch {
         MethodHandle getPrimitive = null;
         try {
             Class<?> unsafeClazz = Class.forName("sun.misc.Unsafe", true, null);
-            Constructor<?> unsafeConstructor = unsafeClazz.getDeclaredConstructor();
+            Constructor<?> unsafeConstructor = unsafeClazz
+                    .getDeclaredConstructor();
             unsafeConstructor.setAccessible(true);
             Object unsafe = unsafeConstructor.newInstance();
-    
-            arrayBaseOffset = unsafeClazz.getField("ARRAY_BYTE_BASE_OFFSET").getLong(null);
+
+            arrayBaseOffset = unsafeClazz.getField("ARRAY_BYTE_BASE_OFFSET")
+                    .getLong(null);
 
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
 
-            MethodHandle virtualGetInt = lookup.findVirtual(unsafeClazz, "getLong",
+            MethodHandle virtualGetInt = lookup.findVirtual(unsafeClazz,
+                    "getLong",
                     methodType(long.class, Object.class, long.class));
             getPrimitive = virtualGetInt.bindTo(unsafe);
 
             // do a test read to confirm unsafe is actually functioning
-            long val = (long) getPrimitive.invokeExact((Object) new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 }, arrayBaseOffset + 0L);
+            long val = (long) getPrimitive.invokeExact(
+                    (Object) new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                    arrayBaseOffset + 0L);
             if (val != 0) {
                 throw new IllegalStateException("invalid value: " + val);
             }
         } catch (Throwable t) {
             getPrimitive = null;
-            final Logger logger = Logger.getLogger(UnsafeLongArrayMismatch.class.getName());
-            logger.log(Level.FINE, "failed trying to load sun.misc.Unsafe and related method handles", t);
+            final Logger logger = Logger
+                    .getLogger(UnsafeLongArrayMismatch.class.getName());
+            logger.log(Level.FINE,
+                    "failed trying to load sun.misc.Unsafe and related method handles",
+                    t);
         }
         GET_PRIMITIVE = getPrimitive;
         ARRAY_BASE_OFFSET = arrayBaseOffset;
     }
 
     /**
-     * The method this is bound to at runtime is depends native byte order of the system.
+     * The method this is bound to at runtime is depends native byte order of
+     * the system.
      * <p>
      * Will be bound to either {@link Long#numberOfLeadingZeros(long)} or
      * {@link Long#numberOfTrailingZeros(long)} depending on
      * {@link ByteOrder#nativeOrder()}.
      * </p>
-     * 
-     * NOTE: With java 8 this can be replaced with a LongToIntFunction lambda. It will have no performance
-     * impacts, but will be easier to read.
      */
-    private static final MethodHandle LEADING_ZEROS;
-
-    static {
-        MethodHandle leadingZeros = null;
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            leadingZeros = lookup.findStatic(Long.class,
-                    ByteOrder.BIG_ENDIAN == ByteOrder.nativeOrder() ? "numberOfLeadingZeros"
-                            : "numberOfTrailingZeros",
-                    methodType(int.class, long.class));
-        } catch (Throwable t) {
-            leadingZeros = null;
-            final Logger logger = Logger.getLogger(UnsafeLongArrayMismatch.class.getName());
-            logger.log(Level.FINE, "failed trying to load MethodHandle to find leading zeros", t);
-        }
-        LEADING_ZEROS = leadingZeros;
-    }
+    private static final LongToIntFunction LEADING_ZEROS = ByteOrder.BIG_ENDIAN == ByteOrder
+            .nativeOrder() ? Long::numberOfLeadingZeros
+                    : Long::numberOfTrailingZeros;
 
     UnsafeLongArrayMismatch() {
         if (LEADING_ZEROS == null) {
-            throw new IllegalStateException("could not create MethodHandle to calculate leading zeros");
+            throw new IllegalStateException(
+                    "could not create MethodHandle to calculate leading zeros");
         }
         if (GET_PRIMITIVE == null) {
-            throw new IllegalStateException("could not load Unsafe and related method handles");
+            throw new IllegalStateException(
+                    "could not load Unsafe and related method handles");
         }
     }
 
     @Override
-    public int mismatch(byte[] a, int aFromIndex, int bFromIndex, int length) throws Throwable {
-        // it is important to check the indexes prior to making the Unsafe calls,
-        // as Unsafe does not validate and could result in SIGSEGV if out of bounds
-        if (aFromIndex < 0 || bFromIndex < 0 || Math.max(aFromIndex, bFromIndex) > a.length - length) {
+    public int mismatch(byte[] a, int aFromIndex, int bFromIndex, int length)
+            throws Throwable {
+        // it is important to check the indexes prior to making the Unsafe
+        // calls, as Unsafe does not validate and could result in SIGSEGV if
+        // out of bounds
+        if (aFromIndex < 0 || bFromIndex < 0
+                || Math.max(aFromIndex, bFromIndex) > a.length - length) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
@@ -125,11 +122,12 @@ final class UnsafeLongArrayMismatch implements ArrayMismatch {
             final long aVal = getLong(a, aFromIndex + i);
             final long bVal = getLong(a, bFromIndex + i);
             if (aVal != bVal) {
-                // this returns a value where bits which match are 0 and bits which differ are 1
+                // this returns a value where bits which match are 0 and bits
+                // which differ are 1
                 final long diff = aVal ^ bVal;
-                // the first (in native byte order) bit which differs tells us which byte
-                // differed
-                final int leadingZeros = (int) LEADING_ZEROS.invokeExact(diff);
+                // the first (in native byte order) bit which differs tells us
+                // which byte differed
+                final int leadingZeros = LEADING_ZEROS.applyAsInt(diff);
                 return i + (leadingZeros >>> 3);
             }
         }
@@ -162,9 +160,12 @@ final class UnsafeLongArrayMismatch implements ArrayMismatch {
     }
 
     /**
-     * Reads <i>long</i> value in native byte order from <i>bytes</i> starting at <i>index</i>.
+     * Reads <i>long</i> value in native byte order from <i>bytes</i> starting
+     * at <i>index</i>.
      */
-    private static final long getLong(byte[] bytes, int index) throws Throwable {
-        return (long) GET_PRIMITIVE.invokeExact((Object) bytes, ARRAY_BASE_OFFSET + index);
+    private static final long getLong(byte[] bytes, int index)
+            throws Throwable {
+        return (long) GET_PRIMITIVE.invokeExact((Object) bytes,
+                ARRAY_BASE_OFFSET + index);
     }
 }
