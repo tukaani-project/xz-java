@@ -1,16 +1,12 @@
-/*
- * BCJ filter for little endian ARM64 instructions
- *
- * Authors: Jia Tan <jiat0218@gmail.com>
- *          Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Jia Tan <jiat0218@gmail.com>
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.simple;
 
+// BCJ filter for ARM64 instructions
 public final class ARM64 implements SimpleFilter {
     private final boolean isEncoder;
     private int pos;
@@ -20,6 +16,7 @@ public final class ARM64 implements SimpleFilter {
         pos = startPos;
     }
 
+    @Override
     public int code(byte[] buf, int off, int len) {
         int end = off + len - 4;
         int i;

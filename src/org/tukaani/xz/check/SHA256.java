@@ -1,11 +1,6 @@
-/*
- * SHA256
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz.check;
 
@@ -18,10 +13,12 @@ public class SHA256 extends Check {
         sha256 = java.security.MessageDigest.getInstance("SHA-256");
     }
 
+    @Override
     public void update(byte[] buf, int off, int len) {
         sha256.update(buf, off, len);
     }
 
+    @Override
     public byte[] finish() {
         byte[] buf = sha256.digest();
         sha256.reset();

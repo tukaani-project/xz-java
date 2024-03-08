@@ -1,18 +1,14 @@
-/*
- * Binary Tree match finder with 2-, 3-, and 4-byte hashing
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.lz;
 
 import org.tukaani.xz.ArrayCache;
 import org.tukaani.xz.common.ArrayUtil;
 
+// Binary Tree match finder with 2-, 3-, and 4-byte hashing
 final class BT4 extends LZEncoder {
     private final Hash234 hash;
     private final int[] tree;

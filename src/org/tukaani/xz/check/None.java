@@ -1,11 +1,6 @@
-/*
- * None
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz.check;
 
@@ -15,8 +10,10 @@ public class None extends Check {
         name = "None";
     }
 
+    @Override
     public void update(byte[] buf, int off, int len) {}
 
+    @Override
     public byte[] finish() {
         byte[] empty = new byte[0];
         return empty;

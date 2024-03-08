@@ -1,11 +1,6 @@
-/*
- * LZMA2Decoder
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -25,10 +20,12 @@ class LZMA2Decoder extends LZMA2Coder implements FilterDecoder {
         dictSize <<= (props[0] >>> 1) + 11;
     }
 
+    @Override
     public int getMemoryUsage() {
         return LZMA2InputStream.getMemoryUsage(dictSize);
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         return new LZMA2InputStream(in, dictSize, null, arrayCache);
     }

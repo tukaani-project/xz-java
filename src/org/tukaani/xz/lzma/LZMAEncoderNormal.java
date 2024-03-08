@@ -1,12 +1,7 @@
-/*
- * LZMAEncoderNormal
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.lzma;
 
@@ -55,6 +50,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             opts[i] = new Optimum();
     }
 
+    @Override
     public void reset() {
         optCur = 0;
         optEnd = 0;
@@ -98,6 +94,7 @@ final class LZMAEncoderNormal extends LZMAEncoder {
         return optCur;
     }
 
+    @Override
     int getNextSymbol() {
         // If there are pending symbols from an earlier call to this
         // function, return those symbols first.

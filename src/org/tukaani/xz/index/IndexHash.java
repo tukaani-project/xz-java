@@ -1,11 +1,6 @@
-/*
- * IndexHash
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz.index;
 
@@ -32,6 +27,7 @@ public class IndexHash extends IndexBase {
         }
     }
 
+    @Override
     public void add(long unpaddedSize, long uncompressedSize)
             throws XZIOException {
         super.add(unpaddedSize, uncompressedSize);

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-    Author: Lasse Collin <lasse.collin@tukaani.org>
-
-    This file has been put into the public domain.
-    You can do whatever you want with this file.
--->
+<!-- SPDX-License-Identifier: 0BSD -->
+<!-- SPDX-FileCopyrightText: The XZ for Java authors and contributors -->
+<!-- SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org> -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -25,8 +21,7 @@
 
     <licenses>
         <license>
-            <name>Public Domain</name>
-            <comments>You can do whatever you want with this package.</comments>
+            <name>0BSD</name>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -43,6 +38,13 @@
         </developer>
     </developers>
 
+    <developers>
+        <developer>
+            <name>Jia Tan</name>
+            <email>jiat0218@gmail.com</email>
+        </developer>
+    </developers>
+
     <contributors>
         <contributor>
             <!-- According to Maven docs, it's good to only list those people
@@ -51,7 +53,7 @@
                  marked as a <contributor> even though XZ for Java simply
                  couldn't exist without Igor Pavlov's code. -->
             <name>Igor Pavlov</name>
-            <url>http://7-zip.org/</url>
+            <url>https://7-zip.org/</url>
         </contributor>
 
         <contributor>

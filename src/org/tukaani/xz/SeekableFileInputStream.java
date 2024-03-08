@@ -1,11 +1,6 @@
-/*
- * SeekableFileInputStream
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -51,6 +46,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
     /**
      * Calls {@link RandomAccessFile#read() randomAccessFile.read()}.
      */
+    @Override
     public int read() throws IOException {
         return randomAccessFile.read();
     }
@@ -58,6 +54,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
     /**
      * Calls {@link RandomAccessFile#read(byte[]) randomAccessFile.read(buf)}.
      */
+    @Override
     public int read(byte[] buf) throws IOException {
         return randomAccessFile.read(buf);
     }
@@ -67,6 +64,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
      * {@link RandomAccessFile#read(byte[],int,int)
      *        randomAccessFile.read(buf, off, len)}.
      */
+    @Override
     public int read(byte[] buf, int off, int len) throws IOException {
         return randomAccessFile.read(buf, off, len);
     }
@@ -74,6 +72,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
     /**
      * Calls {@link RandomAccessFile#close() randomAccessFile.close()}.
      */
+    @Override
     public void close() throws IOException {
         randomAccessFile.close();
     }
@@ -81,6 +80,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
     /**
      * Calls {@link RandomAccessFile#length() randomAccessFile.length()}.
      */
+    @Override
     public long length() throws IOException {
         return randomAccessFile.length();
     }
@@ -89,6 +89,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
      * Calls {@link RandomAccessFile#getFilePointer()
                     randomAccessFile.getFilePointer()}.
      */
+    @Override
     public long position() throws IOException {
         return randomAccessFile.getFilePointer();
     }
@@ -96,6 +97,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
     /**
      * Calls {@link RandomAccessFile#seek(long) randomAccessFile.seek(long)}.
      */
+    @Override
     public void seek(long pos) throws IOException {
         randomAccessFile.seek(pos);
     }

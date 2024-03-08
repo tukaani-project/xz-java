@@ -1,12 +1,7 @@
-/*
- * LZMAOutputStream
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz;
 
@@ -228,11 +223,13 @@ public class LZMAOutputStream extends FinishableOutputStream {
         return currentUncompressedSize;
     }
 
+    @Override
     public void write(int b) throws IOException {
         tempBuf[0] = (byte)b;
         write(tempBuf, 0, 1);
     }
 
+    @Override
     public void write(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -266,6 +263,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
     /**
      * Flushing isn't supported and will throw XZIOException.
      */
+    @Override
     public void flush() throws IOException {
         throw new XZIOException("LZMAOutputStream does not support flushing");
     }
@@ -273,6 +271,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
     /**
      * Finishes the stream without closing the underlying OutputStream.
      */
+    @Override
     public void finish() throws IOException {
         if (!finished) {
             if (exception != null)
@@ -309,6 +308,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
     /**
      * Finishes the stream and closes the underlying OutputStream.
      */
+    @Override
     public void close() throws IOException {
         if (out != null) {
             try {

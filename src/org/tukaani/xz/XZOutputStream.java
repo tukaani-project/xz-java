@@ -1,11 +1,6 @@
-/*
- * XZOutputStream
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -353,6 +348,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
+    @Override
     public void write(int b) throws IOException {
         tempBuf[0] = (byte)b;
         write(tempBuf, 0, 1);
@@ -382,6 +378,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
+    @Override
     public void write(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -474,6 +471,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
+    @Override
     public void flush() throws IOException {
         if (exception != null)
             throw exception;
@@ -518,6 +516,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
+    @Override
     public void finish() throws IOException {
         if (!finished) {
             // This checks for pending exceptions so we don't need to
@@ -551,6 +550,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      IOException may be thrown by the underlying output stream
      */
+    @Override
     public void close() throws IOException {
         if (out != null) {
             // If finish() throws an exception, it stores the exception to

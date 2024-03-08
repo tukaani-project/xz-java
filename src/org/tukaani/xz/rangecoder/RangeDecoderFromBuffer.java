@@ -1,12 +1,7 @@
-/*
- * RangeDecoderFromBuffer
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.rangecoder;
 
@@ -56,6 +51,7 @@ public final class RangeDecoderFromBuffer extends RangeDecoder {
         return pos == buf.length && code == 0;
     }
 
+    @Override
     public void normalize() throws IOException {
         if ((range & TOP_MASK) == 0) {
             try {

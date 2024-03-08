@@ -1,11 +1,6 @@
-/*
- * LZMA2Encoder
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -32,18 +27,22 @@ class LZMA2Encoder extends LZMA2Coder implements FilterEncoder {
         this.options = (LZMA2Options)options.clone();
     }
 
+    @Override
     public long getFilterID() {
         return FILTER_ID;
     }
 
+    @Override
     public byte[] getFilterProps() {
         return props;
     }
 
+    @Override
     public boolean supportsFlushing() {
         return true;
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         return options.getOutputStream(out, arrayCache);

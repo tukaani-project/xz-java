@@ -1,12 +1,7 @@
-/*
- * LZMAEncoder
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.lzma;
 
@@ -193,6 +188,7 @@ public abstract class LZMAEncoder extends LZMACoder {
         return lz;
     }
 
+    @Override
     public void reset() {
         super.reset();
         literalEncoder.reset();
@@ -679,6 +675,7 @@ public abstract class LZMAEncoder extends LZMACoder {
             prices = new int[posStates][lenSymbols];
         }
 
+        @Override
         void reset() {
             super.reset();
 

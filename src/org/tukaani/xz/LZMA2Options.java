@@ -1,11 +1,6 @@
-/*
- * LZMA2Options
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -523,12 +518,14 @@ public class LZMA2Options extends FilterOptions {
         return depthLimit;
     }
 
+    @Override
     public int getEncoderMemoryUsage() {
         return (mode == MODE_UNCOMPRESSED)
                ? UncompressedLZMA2OutputStream.getMemoryUsage()
                : LZMA2OutputStream.getMemoryUsage(this);
     }
 
+    @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
         if (mode == MODE_UNCOMPRESSED)
@@ -552,6 +549,7 @@ public class LZMA2Options extends FilterOptions {
      * {@link LZMA2InputStream#getMemoryUsage} directly to get raw decoder
      * memory requirements.
      */
+    @Override
     public int getDecoderMemoryUsage() {
         // Round the dictionary size up to the next 2^n or 2^n + 2^(n-1).
         int d = dictSize - 1;
@@ -563,15 +561,18 @@ public class LZMA2Options extends FilterOptions {
         return LZMA2InputStream.getMemoryUsage(d + 1);
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache)
             throws IOException {
         return new LZMA2InputStream(in, dictSize, presetDict, arrayCache);
     }
 
+    @Override
     FilterEncoder getFilterEncoder() {
         return new LZMA2Encoder(this);
     }
 
+    @Override
     public Object clone() {
         try {
             return super.clone();

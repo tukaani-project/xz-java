@@ -1,11 +1,6 @@
-/*
- * CRC32
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz.check;
 
@@ -17,10 +12,12 @@ public class CRC32 extends Check {
         name = "CRC32";
     }
 
+    @Override
     public void update(byte[] buf, int off, int len) {
         state.update(buf, off, len);
     }
 
+    @Override
     public byte[] finish() {
         long value = state.getValue();
         byte[] buf = { (byte)(value),

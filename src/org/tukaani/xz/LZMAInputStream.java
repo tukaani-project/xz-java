@@ -1,12 +1,7 @@
-/*
- * LZMAInputStream
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz;
 
@@ -653,6 +648,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      IOException may be thrown by <code>in</code>
      */
+    @Override
     public int read() throws IOException {
         return read(tempBuf, 0, 1) == -1 ? -1 : (tempBuf[0] & 0xFF);
     }
@@ -680,6 +676,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      IOException may be thrown by <code>in</code>
      */
+    @Override
     public int read(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -779,6 +776,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws  IOException if thrown by <code>in.close()</code>
      */
+    @Override
     public void close() throws IOException {
         if (in != null) {
             putArraysToCache();

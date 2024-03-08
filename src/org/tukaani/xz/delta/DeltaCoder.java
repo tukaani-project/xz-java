@@ -1,27 +1,23 @@
-/*
- * DeltaCoder
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Brett Okken <brett.okken.os@gmail.com>
 
 package org.tukaani.xz.delta;
 
 abstract class DeltaCoder {
     static final int DISTANCE_MIN = 1;
     static final int DISTANCE_MAX = 256;
-    static final int DISTANCE_MASK = DISTANCE_MAX - 1;
 
     final int distance;
-    final byte[] history = new byte[DISTANCE_MAX];
-    int pos = 0;
+    final byte[] history;
 
     DeltaCoder(int distance) {
         if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid distance: " +
+                                               distance);
 
         this.distance = distance;
+        this.history = new byte[distance];
     }
 }

@@ -1,11 +1,6 @@
-/*
- * BCJDecoder
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -35,10 +30,12 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
         }
     }
 
+    @Override
     public int getMemoryUsage() {
         return SimpleInputStream.getMemoryUsage();
     }
 
+    @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
         SimpleFilter simpleFilter = null;
 
@@ -56,6 +53,8 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
             simpleFilter = new SPARC(false, startOffset);
         else if (filterID == ARM64_FILTER_ID)
             simpleFilter = new ARM64(false, startOffset);
+        else if (filterID == RISCV_FILTER_ID)
+            simpleFilter = new RISCVDecoder(startOffset);
         else
             assert false;
 

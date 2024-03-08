@@ -1,12 +1,7 @@
-/*
- * LZMA2OutputStream
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz;
 
@@ -82,11 +77,13 @@ class LZMA2OutputStream extends FinishableOutputStream {
         props = (options.getPb() * 5 + options.getLp()) * 9 + options.getLc();
     }
 
+    @Override
     public void write(int b) throws IOException {
         tempBuf[0] = (byte)b;
         write(tempBuf, 0, 1);
     }
 
+    @Override
     public void write(byte[] buf, int off, int len) throws IOException {
         if (off < 0 || len < 0 || off + len < 0 || off + len > buf.length)
             throw new IndexOutOfBoundsException();
@@ -217,6 +214,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
         rc = null;
     }
 
+    @Override
     public void flush() throws IOException {
         if (exception != null)
             throw exception;
@@ -239,6 +237,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
         }
     }
 
+    @Override
     public void finish() throws IOException {
         if (!finished) {
             writeEndMarker();
@@ -252,6 +251,7 @@ class LZMA2OutputStream extends FinishableOutputStream {
         }
     }
 
+    @Override
     public void close() throws IOException {
         if (out != null) {
             if (!finished) {

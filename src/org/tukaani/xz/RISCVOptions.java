@@ -5,31 +5,34 @@
 package org.tukaani.xz;
 
 import java.io.InputStream;
-import org.tukaani.xz.simple.SPARC;
+import org.tukaani.xz.simple.RISCVEncoder;
+import org.tukaani.xz.simple.RISCVDecoder;
 
 /**
- * BCJ filter for SPARC.
+ * BCJ filter for RISC-V instructions.
+ *
+ * @since 1.10
  */
-public class SPARCOptions extends BCJOptions {
-    private static final int ALIGNMENT = 4;
+public class RISCVOptions extends BCJOptions {
+    private static final int ALIGNMENT = 2;
 
-    public SPARCOptions() {
+    public RISCVOptions() {
         super(ALIGNMENT);
     }
 
     @Override
     public FinishableOutputStream getOutputStream(FinishableOutputStream out,
                                                   ArrayCache arrayCache) {
-        return new SimpleOutputStream(out, new SPARC(true, startOffset));
+        return new SimpleOutputStream(out, new RISCVEncoder(startOffset));
     }
 
     @Override
     public InputStream getInputStream(InputStream in, ArrayCache arrayCache) {
-        return new SimpleInputStream(in, new SPARC(false, startOffset));
+        return new SimpleInputStream(in, new RISCVDecoder(startOffset));
     }
 
     @Override
     FilterEncoder getFilterEncoder() {
-        return new BCJEncoder(this, BCJCoder.SPARC_FILTER_ID);
+        return new BCJEncoder(this, BCJCoder.RISCV_FILTER_ID);
     }
 }

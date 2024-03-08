@@ -1,11 +1,6 @@
-/*
- * CountingInputStream
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -24,6 +19,7 @@ class CountingInputStream extends CloseIgnoringInputStream {
         super(in);
     }
 
+    @Override
     public int read() throws IOException {
         int ret = in.read();
         if (ret != -1 && size >= 0)
@@ -32,6 +28,7 @@ class CountingInputStream extends CloseIgnoringInputStream {
         return ret;
     }
 
+    @Override
     public int read(byte[] b, int off, int len) throws IOException {
         int ret = in.read(b, off, len);
         if (ret > 0 && size >= 0)

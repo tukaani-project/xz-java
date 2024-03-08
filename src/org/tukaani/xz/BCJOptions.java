@@ -1,11 +1,6 @@
-/*
- * BCJOptions
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -38,14 +33,17 @@ abstract class BCJOptions extends FilterOptions {
         return startOffset;
     }
 
+    @Override
     public int getEncoderMemoryUsage() {
         return SimpleOutputStream.getMemoryUsage();
     }
 
+    @Override
     public int getDecoderMemoryUsage() {
         return SimpleInputStream.getMemoryUsage();
     }
 
+    @Override
     public Object clone() {
         try {
             return super.clone();

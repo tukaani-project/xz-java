@@ -1,11 +1,6 @@
-/*
- * CountingOutputStream
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -28,22 +23,26 @@ class CountingOutputStream extends FinishableOutputStream {
         this.out = out;
     }
 
+    @Override
     public void write(int b) throws IOException {
         out.write(b);
         if (size >= 0)
             ++size;
     }
 
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         out.write(b, off, len);
         if (size >= 0)
             size += len;
     }
 
+    @Override
     public void flush() throws IOException {
         out.flush();
     }
 
+    @Override
     public void close() throws IOException {
         out.close();
     }

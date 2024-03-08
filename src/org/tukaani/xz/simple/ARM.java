@@ -1,15 +1,11 @@
-/*
- * BCJ filter for little endian ARM instructions
- *
- * Authors: Lasse Collin <lasse.collin@tukaani.org>
- *          Igor Pavlov <http://7-zip.org/>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
+// SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.simple;
 
+// BCJ filter for little endian ARM instructions
 public final class ARM implements SimpleFilter {
     private final boolean isEncoder;
     private int pos;
@@ -19,6 +15,7 @@ public final class ARM implements SimpleFilter {
         pos = startPos + 8;
     }
 
+    @Override
     public int code(byte[] buf, int off, int len) {
         int end = off + len - 4;
         int i;

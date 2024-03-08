@@ -1,11 +1,6 @@
-/*
- * ResettableArrayCache
- *
- * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
- */
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: The XZ for Java authors and contributors
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -43,6 +38,7 @@ public class ResettableArrayCache extends ArrayCache {
         }
     }
 
+    @Override
     public byte[] getByteArray(int size, boolean fillWithZeros) {
         byte[] array = arrayCache.getByteArray(size, fillWithZeros);
 
@@ -55,6 +51,7 @@ public class ResettableArrayCache extends ArrayCache {
         return array;
     }
 
+    @Override
     public void putArray(byte[] array) {
         if (byteArrays != null) {
             // The array is more likely to be near the end of the list so
@@ -69,6 +66,7 @@ public class ResettableArrayCache extends ArrayCache {
         }
     }
 
+    @Override
     public int[] getIntArray(int size, boolean fillWithZeros) {
         int[] array = arrayCache.getIntArray(size, fillWithZeros);
 
@@ -81,6 +79,7 @@ public class ResettableArrayCache extends ArrayCache {
         return array;
     }
 
+    @Override
     public void putArray(int[] array) {
         if (intArrays != null) {
             synchronized(intArrays) {
