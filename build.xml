@@ -59,25 +59,11 @@
             <not><isset property="sourcever9"/></not>
         </condition>
 
-        <!-- Regular Java 9 files excluding module-info.java: -->
-        <javac srcdir="." sourcepath="${src_dir}"
-               destdir="${classes9_dir}"
-               classpath="${classes_dir}"
-               includeAntRuntime="false" debug="${debug}"
-               release="${sourcever9}"
-               includesfile="fileset-src9.txt"
-               excludes="${exclude_java9} **/module-info.java">
-            <compilerarg compiler="modern" line="-Xlint"/>
-        </javac>
-
-        <!-- module-info.java needs special treatment because it wants to
-             be on the source path and also see source files from the
-             package being exported. -->
         <javac srcdir="." sourcepath="${src9_dir}:${src_dir}"
                destdir="${classes9_dir}"
                includeAntRuntime="false" debug="${debug}"
                release="${sourcever9}"
-               includes="src9/module-info.java"
+               includesfile="fileset-src9.txt"
                excludes="${exclude_java9}">
             <compilerarg compiler="modern" line="-Xlint"/>
         </javac>
