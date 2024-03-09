@@ -117,10 +117,9 @@ public final class ArrayUtil {
      */
     public static int mismatch(byte[] bytes, int aFromIndex, int bFromIndex,
             int length) {
+        assert length > 0;
         try {
-            return length > 0
-                    ? IMPL.mismatch(bytes, aFromIndex, bFromIndex, length)
-                    : 0;
+            return IMPL.mismatch(bytes, aFromIndex, bFromIndex, length);
         } catch (RuntimeException e) {
             throw e;
         } catch (Error e) {
@@ -150,8 +149,9 @@ public final class ArrayUtil {
      */
     public static int checkFirstMismatch(byte[] bytes, int aFromIndex,
             int bFromIndex, int length) {
+        assert length > 0;
         try {
-            return length > 0 && bytes[aFromIndex] == bytes[bFromIndex]
+            return bytes[aFromIndex] == bytes[bFromIndex]
                     ? IMPL.mismatch(bytes, aFromIndex + 1, bFromIndex + 1,
                             length - 1) + 1
                     : 0;

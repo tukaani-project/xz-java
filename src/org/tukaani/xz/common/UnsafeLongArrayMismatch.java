@@ -96,10 +96,6 @@ final class UnsafeLongArrayMismatch implements ArrayMismatch {
                     : Long::numberOfTrailingZeros;
 
     UnsafeLongArrayMismatch() {
-        if (LEADING_ZEROS == null) {
-            throw new IllegalStateException(
-                    "could not create MethodHandle to calculate leading zeros");
-        }
         if (GET_PRIMITIVE == null) {
             throw new IllegalStateException(
                     "could not load Unsafe and related method handles");
