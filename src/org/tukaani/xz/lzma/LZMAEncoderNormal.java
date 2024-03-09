@@ -449,10 +449,10 @@ final class LZMAEncoderNormal extends LZMAEncoder {
             if (rep == 0)
                 startLen = len + 1;
 
-            int len2Limit = Math.min(niceLen, avail - len - 1);
-            if (len2Limit >= MATCH_LEN_MIN) {
+            int matchLimit = avail - len - 1;
+            if (matchLimit >= MATCH_LEN_MIN) {
                 int len2 = lz.getMatchLen(len + 1, opts[optCur].reps[rep],
-                        len2Limit);
+                        Math.min(niceLen, matchLimit));
 
                 if (len2 >= MATCH_LEN_MIN) {
                     // Rep
@@ -530,11 +530,9 @@ final class LZMAEncoderNormal extends LZMAEncoder {
                 continue;
 
             // Try match + literal + rep0. First get the length of the rep0.
-            int len2Limit = Math.min(niceLen, avail - len - 1);
-            if (len2Limit >= MATCH_LEN_MIN) {
-
-                int len2 = lz.getMatchLen(len + 1, dist, len2Limit);
-
+            int matchLimit = avail - len - 1;
+            if (matchLimit >= MATCH_LEN_MIN) {
+                int len2 = lz.getMatchLen(len + 1, dist, Math.min(niceLen, matchLimit));
                 if (len2 >= MATCH_LEN_MIN) {
                     nextState.set(opts[optCur].state);
                     nextState.updateMatch();
