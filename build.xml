@@ -51,6 +51,7 @@
                includesfile="fileset-src.txt"
                excludes="**/package-info.java">
             <compilerarg compiler="modern" line="-Xlint -Xlint:-options"/>
+            <compilerarg compiler="modern" line="-implicit:none"/>
         </javac>
 
         <!-- Build Java 9 files only if sourcever9 is set: -->
@@ -66,6 +67,7 @@
                includesfile="fileset-src9.txt"
                excludes="${exclude_java9}">
             <compilerarg compiler="modern" line="-Xlint"/>
+            <compilerarg compiler="modern" line="-implicit:none"/>
         </javac>
     </target>
 
