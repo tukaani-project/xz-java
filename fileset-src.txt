@@ -88,6 +88,7 @@ src/org/tukaani/xz/lz/Hash234.java
 src/org/tukaani/xz/lz/LZDecoder.java
 src/org/tukaani/xz/lz/LZEncoder.java
 src/org/tukaani/xz/lz/Matches.java
+src/org/tukaani/xz/lz/MatchLength.java
 src/org/tukaani/xz/lzma/LZMACoder.java
 src/org/tukaani/xz/lzma/LZMADecoder.java
 src/org/tukaani/xz/lzma/LZMAEncoder.java
