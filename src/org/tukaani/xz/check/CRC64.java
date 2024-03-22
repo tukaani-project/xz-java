@@ -5,6 +5,8 @@
 
 package org.tukaani.xz.check;
 
+import org.tukaani.xz.common.ByteArrayView;
+
 public class CRC64 extends Check {
     private static final long[][] TABLE = new long[4][256];
 
@@ -54,13 +56,9 @@ public class CRC64 extends Check {
 
     @Override
     public byte[] finish() {
-        long value = ~crc;
-        crc = -1;
-
         byte[] buf = new byte[8];
-        for (int i = 0; i < buf.length; ++i)
-            buf[i] = (byte)(value >> (i * 8));
-
+        ByteArrayView.setLongLE(buf, 0, ~crc);
+        crc = -1;
         return buf;
     }
 }

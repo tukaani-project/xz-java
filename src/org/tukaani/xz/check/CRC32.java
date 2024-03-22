@@ -4,6 +4,8 @@
 
 package org.tukaani.xz.check;
 
+import org.tukaani.xz.common.ByteArrayView;
+
 public class CRC32 extends Check {
     private final java.util.zip.CRC32 state = new java.util.zip.CRC32();
 
@@ -19,11 +21,8 @@ public class CRC32 extends Check {
 
     @Override
     public byte[] finish() {
-        long value = state.getValue();
-        byte[] buf = { (byte)(value),
-                       (byte)(value >>> 8),
-                       (byte)(value >>> 16),
-                       (byte)(value >>> 24) };
+        byte[] buf = new byte[4];
+        ByteArrayView.setIntLE(buf, 0, (int)state.getValue());
         state.reset();
         return buf;
     }
