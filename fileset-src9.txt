@@ -1,2 +1,3 @@
 src9/module-info.java
+src9/org/tukaani/xz/check/CRC64.java
 src9/org/tukaani/xz/common/ByteArrayView.java
