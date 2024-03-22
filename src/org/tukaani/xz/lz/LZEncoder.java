@@ -136,7 +136,10 @@ public abstract class LZEncoder {
               int niceLen, int matchLenMax, ArrayCache arrayCache) {
         bufSize = getBufSize(dictSize, extraSizeBefore, extraSizeAfter,
                              matchLenMax);
-        buf = arrayCache.getByteArray(bufSize, false);
+
+        // MatchLength.getLen might read and ignore extra bytes
+        // at the end of the buffer.
+        buf = arrayCache.getByteArray(bufSize + MatchLength.EXTRA_SIZE, false);
 
         keepSizeBefore = extraSizeBefore + dictSize;
         keepSizeAfter = extraSizeAfter + matchLenMax;
