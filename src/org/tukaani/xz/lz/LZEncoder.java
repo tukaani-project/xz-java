@@ -329,13 +329,7 @@ public abstract class LZEncoder {
      * @return      length of the match; it is in the range [0, lenLimit]
      */
     public int getMatchLen(int dist, int lenLimit) {
-        int backPos = readPos - dist - 1;
-        int len = 0;
-
-        while (len < lenLimit && buf[readPos + len] == buf[backPos + len])
-            ++len;
-
-        return len;
+        return MatchLength.getLen(buf, readPos, dist + 1, 0, lenLimit);
     }
 
     /**
@@ -348,14 +342,8 @@ public abstract class LZEncoder {
      * @return      length of the match; it is in the range [0, lenLimit]
      */
     public int getMatchLen(int forward, int dist, int lenLimit) {
-        int curPos = readPos + forward;
-        int backPos = curPos - dist - 1;
-        int len = 0;
-
-        while (len < lenLimit && buf[curPos + len] == buf[backPos + len])
-            ++len;
-
-        return len;
+        return MatchLength.getLen(buf, readPos + forward, dist + 1,
+                                  0, lenLimit);
     }
 
     /**

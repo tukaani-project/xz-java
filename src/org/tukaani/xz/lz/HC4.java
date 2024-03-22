@@ -134,10 +134,8 @@ final class HC4 extends LZEncoder {
 
         // If a match was found, see how long it is.
         if (matches.count > 0) {
-            while (lenBest < matchLenLimit && buf[readPos + lenBest - delta2]
-                                              == buf[readPos + lenBest])
-                ++lenBest;
-
+            lenBest = MatchLength.getLen(buf, readPos, delta2,
+                                         lenBest, matchLenLimit);
             matches.len[matches.count - 1] = lenBest;
 
             // Return if it is long enough (niceLen or reached the end of
@@ -171,10 +169,8 @@ final class HC4 extends LZEncoder {
             if (buf[readPos + lenBest - delta] == buf[readPos + lenBest]
                     && buf[readPos - delta] == buf[readPos]) {
                 // Calculate the length of the match.
-                int len = 0;
-                while (++len < matchLenLimit)
-                    if (buf[readPos + len - delta] != buf[readPos + len])
-                        break;
+                int len = MatchLength.getLen(buf, readPos, delta,
+                                             1, matchLenLimit);
 
                 // Use the match if and only if it is better than the longest
                 // match found so far.

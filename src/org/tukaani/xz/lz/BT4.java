@@ -116,10 +116,8 @@ final class BT4 extends LZEncoder {
 
         // If a match was found, see how long it is.
         if (matches.count > 0) {
-            while (lenBest < matchLenLimit && buf[readPos + lenBest - delta2]
-                                              == buf[readPos + lenBest])
-                ++lenBest;
-
+            lenBest = MatchLength.getLen(buf, readPos, delta2,
+                                         lenBest, matchLenLimit);
             matches.len[matches.count - 1] = lenBest;
 
             // Return if it is long enough (niceLen or reached the end of
@@ -159,9 +157,8 @@ final class BT4 extends LZEncoder {
             int len = Math.min(len0, len1);
 
             if (buf[readPos + len - delta] == buf[readPos + len]) {
-                while (++len < matchLenLimit)
-                    if (buf[readPos + len - delta] != buf[readPos + len])
-                        break;
+                len = MatchLength.getLen(buf, readPos, delta,
+                                         len + 1, matchLenLimit);
 
                 if (len > lenBest) {
                     lenBest = len;
@@ -217,13 +214,13 @@ final class BT4 extends LZEncoder {
                 // No need to look for longer matches than niceLenLimit
                 // because we only are updating the tree, not returning
                 // matches found to the caller.
-                do {
-                    if (++len == niceLenLimit) {
-                        tree[ptr1] = tree[pair];
-                        tree[ptr0] = tree[pair + 1];
-                        return;
-                    }
-                } while (buf[readPos + len - delta] == buf[readPos + len]);
+                len = MatchLength.getLen(buf, readPos, delta,
+                                         len + 1, niceLenLimit);
+                if (len == niceLenLimit) {
+                    tree[ptr1] = tree[pair];
+                    tree[ptr0] = tree[pair + 1];
+                    return;
+                }
             }
 
             if ((buf[readPos + len - delta] & 0xFF)
