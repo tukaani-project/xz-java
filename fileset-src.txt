@@ -67,6 +67,7 @@ src/org/tukaani/xz/check/CRC64.java
 src/org/tukaani/xz/check/Check.java
 src/org/tukaani/xz/check/None.java
 src/org/tukaani/xz/check/SHA256.java
+src/org/tukaani/xz/common/ByteArrayView.java
 src/org/tukaani/xz/common/DecoderUtil.java
 src/org/tukaani/xz/common/EncoderUtil.java
 src/org/tukaani/xz/common/StreamFlags.java
