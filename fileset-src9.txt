@@ -1,3 +1,7 @@
 src9/module-info.java
 src9/org/tukaani/xz/check/CRC64.java
 src9/org/tukaani/xz/common/ByteArrayView.java
+src9/org/tukaani/xz/lz/BasicMatchLengthFinder.java
+src9/org/tukaani/xz/lz/MatchLength.java
+src9/org/tukaani/xz/lz/MatchLengthFinder.java
+src9/org/tukaani/xz/lz/UnalignedLongLEMatchLengthFinder.java
