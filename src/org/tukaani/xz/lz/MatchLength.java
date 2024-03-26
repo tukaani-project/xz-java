@@ -4,6 +4,7 @@
 
 package org.tukaani.xz.lz;
 
+// See the version in the src9 directory for documentation.
 final class MatchLength {
     static final int EXTRA_SIZE = 0;
 
