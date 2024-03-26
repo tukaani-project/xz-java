@@ -17,15 +17,36 @@ final class MatchLength {
     private static final MatchLengthFinder matchLengthFinder;
 
     static {
-        String arch = System.getProperty("os.arch");
+        // The autodetection can be overridden with a system property.
+        String prop = System.getProperty("org.tukaani.xz.MatchLengthFinder");
 
-        // Big endian ARM64 might be rare but endianness check is cheap.
-        if (arch != null
-                && arch.matches("^(amd64|x86_64|aarch64)$")
-                && ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
-            matchLengthFinder = new UnalignedLongLEMatchLengthFinder();
-        } else {
-            matchLengthFinder = new BasicMatchLengthFinder();
+        if (prop == null) {
+            String arch = System.getProperty("os.arch");
+
+            // Big endian ARM64 might be rare but endianness check is cheap.
+            if (arch != null
+                    && arch.matches("^(amd64|x86_64|aarch64)$")
+                    && ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
+                prop = "UnalignedLongLE";
+            } else {
+                prop = "Basic";
+            }
+        }
+
+        switch (prop) {
+            case "Basic":
+                matchLengthFinder = new BasicMatchLengthFinder();
+                break;
+
+            case "UnalignedLongLE":
+                matchLengthFinder = new UnalignedLongLEMatchLengthFinder();
+                break;
+
+            default:
+                throw new Error("Unsupported value '" + prop +
+                                "' in the system property " +
+                                "org.tukaani.xz.MatchLengthFinder. " +
+                                "Supported values: Basic, UnalignedLongLE");
         }
 
         EXTRA_SIZE = matchLengthFinder.getExtraSize();
