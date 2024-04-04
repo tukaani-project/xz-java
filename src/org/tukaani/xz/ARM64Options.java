@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: 0BSD
 // SPDX-FileCopyrightText: The XZ for Java authors and contributors
-// SPDX-FileContributor: Jia Tan <jiat0218@gmail.com>
+// SPDX-FileContributor: Jia Tan
 
 package org.tukaani.xz;
 

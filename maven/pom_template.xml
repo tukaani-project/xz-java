@@ -38,13 +38,6 @@
         </developer>
     </developers>
 
-    <developers>
-        <developer>
-            <name>Jia Tan</name>
-            <email>jiat0218@gmail.com</email>
-        </developer>
-    </developers>
-
     <contributors>
         <contributor>
             <!-- According to Maven docs, it's good to only list those people
@@ -59,6 +52,10 @@
         <contributor>
             <name>Brett Okken</name>
             <email>brett.okken.os@gmail.com</email>
+        </contributor>
+
+        <contributor>
+            <name>Jia Tan</name>
         </contributor>
     </contributors>
 

@@ -30,7 +30,7 @@
  * see also {@link org.tukaani.xz.SingleXZInputStream}.
  *
  * <h2>Authors</h2>
- * XZ for Java is developed and maintained by Lasse Collin and Jia Tan.
+ * XZ for Java is developed and maintained by Lasse Collin.
  * <p>
  * Major parts of XZ for Java are based on code written by
  * Igor Pavlov in the <a href="https://7-zip.org/sdk.html">LZMA SDK</a>.
@@ -38,6 +38,7 @@
  * Other authors:
  * <ul>
  * <li>Brett Okken
+ * <li>Jia Tan
  * </ul>
  * <p>
  * Many people have contributed improvements or reported bugs.
