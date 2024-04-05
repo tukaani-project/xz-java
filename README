@@ -80,8 +80,9 @@ Demo programs
 
         java -jar build/jar/XZDecDemo.jar foo.txt.xz
 
-Reporting bugs
+Contact information
 
-    Report bugs to <xz@tukaani.org> or visit the IRC channel
-    #tukaani on Libera Chat to talk to the maintainers.
+    Email: Lasse Collin <lasse.collin@tukaani.org>
+    IRC: Larhzu on #tukaani on Libera Chat
+    GitHub: https://github.com/tukaani-project/xz-java
 
