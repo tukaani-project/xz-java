@@ -313,6 +313,11 @@ public class LZMAInputStream extends InputStream {
         if (memoryLimit != -1 && memoryNeeded > memoryLimit)
             throw new MemoryLimitException(memoryNeeded, memoryLimit);
 
+        // While rare, .lzma files with known uncompressed size and EOPM
+        // are valid and do exist. Such files were diagnosed as corrupt
+        // before XZ for Java 1.10, and similarly by XZ Utils before 5.2.6.
+        relaxedEndCondition = true;
+
         initialize(in, uncompSize, propsByte, dictSize, null, arrayCache);
     }
 
