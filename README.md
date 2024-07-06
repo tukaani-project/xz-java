@@ -29,7 +29,7 @@ that building the documentation will download a small file named
 "element-list" or "package-list" from Oracle to enable linking to
 the documentation of the standard Java classes.
 
-**If you are using Ant older than 1.9.8:**
+### 1. If you are using Ant older than 1.9.8
 
 Edit build.xml and remove the release attributes from <javac>
 tags, that is, remove all occurrences of these two lines:
@@ -42,20 +42,20 @@ release="${sourcever9}"
 The downside of the above is that then `-source` and `-target`
 options will be used instead of `--release`.
 
-**If you are using OpenJDK version older than 11:**
+### 2. If you are using OpenJDK version older than 11
 
 Adjust extdoc_url and extdoc_file to point to an older URL
 and to use "package-list" instead of "element-list". This
 modification isn't required if the documentation won't be
 built.
 
-**If you are using OpenJDK version older than 9:**
+### 3. If you are using OpenJDK version older than 9
 
 Comment the sourcever9 line in the file build.properties.
 When it is commented, `module-info.java` won't be built and
 xz.jar won't be a modular JAR.
 
-**If you are using OpenJDK version older than 8:**
+### 4. If you are using OpenJDK version older than 8
 
 These versions are no longer supported. Try XZ for Java 1.9
 which is Java 5 compatible and only requires editing
