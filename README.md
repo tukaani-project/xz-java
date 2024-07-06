@@ -2,8 +2,8 @@
 
 ## Introduction
 
-This aims to be a complete implementation of XZ data compression
-in pure Java. Features:
+This aims to be a complete implementation of [XZ](https://github.com/tukaani-project/xz) data compression
+in pure **Java**. Features:
 
 - Full support for the .xz file format specification version 1.2.0
 - Single-threaded streamed compression and decompression
@@ -17,8 +17,8 @@ For the latest source code, see the project home page:
         https://tukaani.org/xz/java.html
 
 The source code is compatible with Java 8 and later (except
-module-info.java which is Java 9 or later). However, the default
-build options require OpenJDK 11 or later, and create Java 8
+`module-info.java` which is Java 9 or later). However, the default
+build options require **OpenJDK 11** or later, and create Java 8
 compatible binaries.
 
 ## Building with Apache Ant
@@ -52,7 +52,7 @@ built.
 **If you are using OpenJDK version older than 9:**
 
 Comment the sourcever9 line in the file build.properties.
-When it is commented, module-info.java won't be built and
+When it is commented, `module-info.java` won't be built and
 xz.jar won't be a modular JAR.
 
 **If you are using OpenJDK version older than 8:**
