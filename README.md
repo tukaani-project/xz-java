@@ -12,9 +12,7 @@ in pure **Java**. Features:
 
 Threading is planned but it is unknown when it will be implemented.
 
-For the latest source code, see the project home page:
-
-        https://tukaani.org/xz/java.html
+For the latest source code, see the project home page: [tukaani.org](https://tukaani.org/xz/java.html)
 
 The source code is compatible with Java 8 and later (except
 `module-info.java` which is Java 9 or later). However, the default
