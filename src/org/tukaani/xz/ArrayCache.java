@@ -50,6 +50,9 @@ package org.tukaani.xz;
  * If no {@code ArrayCache} is specified when constructing a compressor or
  * decompressor, the default {@code ArrayCache} implementation is used.
  * See {@link #getDefaultCache()} and {@link #setDefaultCache(ArrayCache)}.
+ * Since 1.10, the default can also be set using the system property
+ * {@code org.tukaani.xz.ArrayCache}. Supported values are {@code Dummy}
+ * (the default) and {@code Basic} (to use {@code BasicArrayCache}).
  * <p>
  * This is a class instead of an interface because it's possible that in the
  * future we may want to cache other array types too. New methods can be
@@ -69,7 +72,29 @@ public class ArrayCache {
      * Global default {@code ArrayCache} that is used when no other cache has
      * been specified.
      */
-    private static volatile ArrayCache defaultCache = dummyCache;
+    private static volatile ArrayCache defaultCache;
+
+    static {
+        String cacheType = System.getProperty("org.tukaani.xz.ArrayCache");
+        if (cacheType == null)
+            cacheType = "Dummy";
+
+        switch (cacheType) {
+            case "Dummy":
+                defaultCache = dummyCache;
+                break;
+
+            case "Basic":
+                defaultCache = BasicArrayCache.getInstance();
+                break;
+
+            default:
+                throw new Error("Unsupported value '" + cacheType +
+                                "' in the system property " +
+                                "org.tukaani.xz.ArrayCache. " +
+                                "Supported values: Dummy, Basic");
+        }
+    }
 
     /**
      * Returns a statically-allocated {@code ArrayCache} instance.
