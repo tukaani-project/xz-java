@@ -5,6 +5,8 @@
 
 package org.tukaani.xz.simple;
 
+import org.tukaani.xz.common.ByteArrayView;
+
 // BCJ filter for x86 instructions
 public final class X86 implements SimpleFilter {
     private static final boolean[] MASK_TO_ALLOWED_STATUS
@@ -54,10 +56,7 @@ public final class X86 implements SimpleFilter {
             prevPos = i;
 
             if (test86MSByte(buf[i + 4])) {
-                int src = (buf[i + 1] & 0xFF)
-                          | ((buf[i + 2] & 0xFF) << 8)
-                          | ((buf[i + 3] & 0xFF) << 16)
-                          | ((buf[i + 4] & 0xFF) << 24);
+                int src = ByteArrayView.getIntLE(buf, i + 1);
                 int dest;
                 while (true) {
                     if (isEncoder)

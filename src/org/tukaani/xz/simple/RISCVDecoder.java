@@ -4,6 +4,8 @@
 
 package org.tukaani.xz.simple;
 
+import org.tukaani.xz.common.ByteArrayView;
+
 // BCJ filter decoder for RISC-V instructions
 //
 // See the comments in RISCVEncoder.java. Most of them aren't duplicated here.
@@ -66,10 +68,7 @@ public final class RISCVDecoder implements SimpleFilter {
                     // AUIPC's rd doesn't equal x0 or x2.
 
                     // Check if it is a "fake" AUIPC+inst2 pair.
-                    inst2 = (buf[i + 4] & 0xFF)
-                            | ((buf[i + 5] & 0xFF) << 8)
-                            | ((buf[i + 6] & 0xFF) << 16)
-                            | ((buf[i + 7] & 0xFF) << 24);
+                    inst2 = ByteArrayView.getIntLE(buf, i + 4);
 
                     if ((((inst << 8) ^ inst2) & 0xF8003) != 3) {
                         i += 6 - 2;
@@ -96,10 +95,7 @@ public final class RISCVDecoder implements SimpleFilter {
                     }
 
                     // Decode the "real" pair.
-                    int addr = ((buf[i + 4] & 0xFF) << 24)
-                               | ((buf[i + 5] & 0xFF) << 16)
-                               | ((buf[i + 6] & 0xFF) << 8)
-                               | (buf[i + 7] & 0xFF);
+                    int addr = ByteArrayView.getIntBE(buf, i + 4);
 
                     addr -= pos + i - off;
 
@@ -118,15 +114,8 @@ public final class RISCVDecoder implements SimpleFilter {
                 }
 
                 // Both decoder branches write in little endian order.
-                buf[i] = (byte)inst;
-                buf[i + 1] = (byte)(inst >>> 8);
-                buf[i + 2] = (byte)(inst >>> 16);
-                buf[i + 3] = (byte)(inst >>> 24);
-
-                buf[i + 4] = (byte)inst2;
-                buf[i + 5] = (byte)(inst2 >>> 8);
-                buf[i + 6] = (byte)(inst2 >>> 16);
-                buf[i + 7] = (byte)(inst2 >>> 24);
+                ByteArrayView.setIntLE(buf, i, inst);
+                ByteArrayView.setIntLE(buf, i + 4, inst2);
 
                 i += 8 - 2;
             }

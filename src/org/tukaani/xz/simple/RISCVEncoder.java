@@ -4,6 +4,8 @@
 
 package org.tukaani.xz.simple;
 
+import org.tukaani.xz.common.ByteArrayView;
+
 // BCJ filter encoder for RISC-V instructions
 public final class RISCVEncoder implements SimpleFilter {
     private int pos;
@@ -92,10 +94,7 @@ public final class RISCVEncoder implements SimpleFilter {
                     // AUIPC's rd doesn't equal x0 or x2.
 
                     // Check if AUIPC+inst2 are a pair.
-                    int inst2 = (buf[i + 4] & 0xFF)
-                                | ((buf[i + 5] & 0xFF) << 8)
-                                | ((buf[i + 6] & 0xFF) << 16)
-                                | ((buf[i + 7] & 0xFF) << 24);
+                    int inst2 = ByteArrayView.getIntLE(buf, i + 4);
 
                     // This checks two conditions at once:
                     //    - AUIPC rd == inst2 rs1.
@@ -169,17 +168,11 @@ public final class RISCVEncoder implements SimpleFilter {
                     //   [31:12]  The lowest 20 bits of inst2
                     inst = 0x17 | (2 << 7) | (inst2 << 12);
 
-                    buf[i] = (byte)inst;
-                    buf[i + 1] = (byte)(inst >>> 8);
-                    buf[i + 2] = (byte)(inst >>> 16);
-                    buf[i + 3] = (byte)(inst >>> 24);
+                    ByteArrayView.setIntLE(buf, i, inst);
 
                     // The second 32 bits store the absolute
                     // address in big endian order.
-                    buf[i + 4] = (byte)(addr >>> 24);
-                    buf[i + 5] = (byte)(addr >>> 16);
-                    buf[i + 6] = (byte)(addr >>> 8);
-                    buf[i + 7] = (byte)addr;
+                    ByteArrayView.setIntBE(buf, i + 4, addr);
                 } else {
                     // AUIPC's rd equals x0 or x2.
                     //
@@ -243,10 +236,7 @@ public final class RISCVEncoder implements SimpleFilter {
                         continue;
                     }
 
-                    final int fakeAddr = (buf[i + 4] & 0xFF)
-                                         | ((buf[i + 5] & 0xFF) << 8)
-                                         | ((buf[i + 6] & 0xFF) << 16)
-                                         | ((buf[i + 7] & 0xFF) << 24);
+                    final int fakeAddr = ByteArrayView.getIntLE(buf, i + 4);
 
                     // Construct the second 32 bits:
                     //   [19:0]   Upper 20 bits from AUIPC
@@ -259,15 +249,8 @@ public final class RISCVEncoder implements SimpleFilter {
                     //   [31:12] The highest 20 bits of fakeAddr
                     inst = 0x17 | (fakeRs1 << 7) | (fakeAddr & 0xFFFFF000);
 
-                    buf[i] = (byte)inst;
-                    buf[i + 1] = (byte)(inst >>> 8);
-                    buf[i + 2] = (byte)(inst >>> 16);
-                    buf[i + 3] = (byte)(inst >>> 24);
-
-                    buf[i + 4] = (byte)fakeInst2;
-                    buf[i + 5] = (byte)(fakeInst2 >>> 8);
-                    buf[i + 6] = (byte)(fakeInst2 >>> 16);
-                    buf[i + 7] = (byte)(fakeInst2 >>> 24);
+                    ByteArrayView.setIntLE(buf, i, inst);
+                    ByteArrayView.setIntLE(buf, i + 4, fakeInst2);
                 }
 
                 i += 8 - 2;
