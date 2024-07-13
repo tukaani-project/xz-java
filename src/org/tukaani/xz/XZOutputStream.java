@@ -32,7 +32,7 @@ import org.tukaani.xz.index.IndexEncoder;
  * <p>
  * Using the x86 BCJ filter together with LZMA2 to compress x86 executables
  * and printing the memory usage information before creating the
- * XZOutputStream:
+ * {@code XZOutputStream}:
  * <blockquote><pre>
  * X86Options x86 = new X86Options();
  * LZMA2Options lzma2 = new LZMA2Options();
@@ -72,7 +72,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Creates a new XZ compressor using one filter and CRC64 as
      * the integrity check. This constructor is equivalent to passing
-     * a single-member FilterOptions array to
+     * a single-member {@code FilterOptions} array to
      * {@code XZOutputStream(OutputStream, FilterOptions[])}.
      *
      * @param       out         output stream to which the compressed data
@@ -94,7 +94,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Creates a new XZ compressor using one filter and CRC64 as
      * the integrity check. This constructor is equivalent to passing
-     * a single-member FilterOptions array to
+     * a single-member {@code FilterOptions} array to
      * {@code XZOutputStream(OutputStream, FilterOptions[], ArrayCache)}.
      *
      * @param       out         output stream to which the compressed data
@@ -121,7 +121,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Creates a new XZ compressor using one filter and the specified
      * integrity check type. This constructor is equivalent to
-     * passing a single-member FilterOptions array to
+     * passing a single-member {@code FilterOptions} array to
      * {@code XZOutputStream(OutputStream, FilterOptions[], int)}.
      *
      * @param       out         output stream to which the compressed data
@@ -146,7 +146,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Creates a new XZ compressor using one filter and the specified
      * integrity check type. This constructor is equivalent to
-     * passing a single-member FilterOptions array to
+     * passing a single-member {@code FilterOptions} array to
      * {@code XZOutputStream(OutputStream, FilterOptions[], int, ArrayCache)}.
      *
      * @param       out         output stream to which the compressed data
@@ -281,8 +281,8 @@ public class XZOutputStream extends FinishableOutputStream {
 
     /**
      * Updates the filter chain with a single filter.
-     * This is equivalent to passing a single-member FilterOptions array
-     * to {@code updateFilters(FilterOptions[])}.
+     * This is equivalent to passing a single-member {@code FilterOptions}
+     * array to {@code updateFilters(FilterOptions[])}.
      *
      * @param       filterOptions
      *                          new filter to use
@@ -372,7 +372,7 @@ public class XZOutputStream extends FinishableOutputStream {
      *
      * @throws      XZIOException
      *                          {@code finish()} or {@code close()}
-     *                          was already called and len &gt; 0
+     *                          was already called and {@code len > 0}
      *
      * @throws      IOException may be thrown by the underlying output stream
      */

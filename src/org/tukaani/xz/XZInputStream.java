@@ -32,11 +32,10 @@ import org.tukaani.xz.common.DecoderUtil;
  * a file created with the highest preset level will need, and only a few
  * people use settings other than the predefined presets.
  * <p>
- * It is possible to specify a memory usage limit for
- * {@code XZInputStream}. If decompression requires more memory than
- * the specified limit, MemoryLimitException will be thrown when reading
- * from the stream. For example, the following sets the memory usage limit
- * to 100&nbsp;MiB:
+ * It is possible to specify a memory usage limit for {@code XZInputStream}.
+ * If decompression requires more memory than the specified limit,
+ * {@code MemoryLimitException} will be thrown when reading from the stream.
+ * For example, the following sets the memory usage limit to 100&nbsp;MiB:
  * <blockquote><pre>
  * InputStream infile = new FileInputStream("foo.xz");
  * XZInputStream inxz = new XZInputStream(infile, 100 * 1024);
