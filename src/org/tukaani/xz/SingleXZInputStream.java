@@ -27,10 +27,10 @@ import org.tukaani.xz.check.Check;
  * <p>
  * If you are decompressing complete XZ streams and your application knows
  * exactly how much uncompressed data there should be, it is good to try
- * reading one more byte by calling {@code read()} and checking
- * that it returns {@code -1}. This way the decompressor will parse the
- * file footers and verify the integrity checks, giving the caller more
- * confidence that the uncompressed data is valid.
+ * reading one more byte by calling {@code read()} and checking that it
+ * returns {@code -1}. This way the decompressor will parse the file footers
+ * and verify the integrity checks, giving the caller more confidence that
+ * the uncompressed data is valid.
  *
  * @see XZInputStream
  */
@@ -135,8 +135,7 @@ public class SingleXZInputStream extends InputStream {
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @throws      XZFormatException
      *                          input is not in the XZ format
@@ -171,8 +170,7 @@ public class SingleXZInputStream extends InputStream {
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
@@ -218,16 +216,14 @@ public class SingleXZInputStream extends InputStream {
      *   way.</li>
      * </ul>
      * <p>
-     * {@code verifyCheck} only affects the integrity check of
-     * the actual compressed data. The CRC32 fields in the headers
-     * are always verified.
+     * {@code verifyCheck} only affects the integrity check of the actual
+     * compressed data. The CRC32 fields in the headers are always verified.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
@@ -269,8 +265,7 @@ public class SingleXZInputStream extends InputStream {
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
@@ -496,9 +491,8 @@ public class SingleXZInputStream extends InputStream {
     /**
      * Closes the stream and optionally calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
-     * If {@code close(false)} has been called, a further
-     * call of {@code close(true)} does nothing (it doesn't call
-     * {@code in.close()}).
+     * If {@code close(false)} has been called, a further call of
+     * {@code close(true)} does nothing (it doesn't call {@code in.close()}).
      * <p>
      * If you don't want to close the underlying {@code InputStream},
      * there is usually no need to worry about closing this stream either;
@@ -508,9 +502,9 @@ public class SingleXZInputStream extends InputStream {
      * closing the underlying {@code InputStream}.
      * <p>
      * Note that if you successfully reach the end of the stream
-     * ({@code read} returns {@code -1}), the arrays are
-     * automatically put back to the cache by that {@code read} call. In
-     * this situation {@code close(false)} is redundant (but harmless).
+     * ({@code read} returns {@code -1}), the arrays are automatically
+     * put back to the cache by that {@code read} call. In this
+     * situation {@code close(false)} is redundant (but harmless).
      *
      * @throws  IOException if thrown by {@code in.close()}
      *

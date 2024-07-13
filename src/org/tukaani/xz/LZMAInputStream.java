@@ -65,9 +65,8 @@ public class LZMAInputStream extends InputStream {
      * Gets approximate decompressor memory requirements as kibibytes for
      * the given dictionary size and LZMA properties byte (lc, lp, and pb).
      *
-     * @param       dictSize    LZMA dictionary size as bytes, should be
-     *                          in the range [{@code 0},
-     *                          {@code DICT_SIZE_MAX}]
+     * @param       dictSize    LZMA dictionary size as bytes, should be in
+     *                          the range [{@code 0}, {@code DICT_SIZE_MAX}]
      *
      * @param       propsByte   LZMA properties byte that encodes the values
      *                          of lc, lp, and pb
@@ -75,9 +74,8 @@ public class LZMAInputStream extends InputStream {
      * @return      approximate memory requirements as kibibytes (KiB)
      *
      * @throws      UnsupportedOptionsException
-     *                          if {@code dictSize} is outside
-     *                          the range [{@code 0},
-     *                          {@code DICT_SIZE_MAX}]
+     *                          if {@code dictSize} is outside the
+     *                          range [{@code 0}, {@code DICT_SIZE_MAX}]
      *
      * @throws      CorruptedInputException
      *                          if {@code propsByte} is invalid
@@ -103,9 +101,8 @@ public class LZMAInputStream extends InputStream {
      * Gets approximate decompressor memory requirements as kibibytes for
      * the given dictionary size, lc, and lp. Note that pb isn't needed.
      *
-     * @param       dictSize    LZMA dictionary size as bytes, must be
-     *                          in the range [{@code 0},
-     *                          {@code DICT_SIZE_MAX}]
+     * @param       dictSize    LZMA dictionary size as bytes, must be in
+     *                          the range [{@code 0}, {@code DICT_SIZE_MAX}]
      *
      * @param       lc          number of literal context bits, must be
      *                          in the range [0, 8]
@@ -226,8 +223,7 @@ public class LZMAInputStream extends InputStream {
      *                          note at the top of this page
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @throws      CorruptedInputException
      *                          file is corrupt or perhaps not in
@@ -264,8 +260,7 @@ public class LZMAInputStream extends InputStream {
      *                          note at the top of this page
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *

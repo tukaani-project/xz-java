@@ -228,9 +228,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
     /**
      * Creates a new seekable XZ decompressor without a memory usage limit.
      * <p>
-     * This is identical to
-     * {@code SeekableXZInputStream(SeekableInputStream)} except that
-     * this also takes the {@code arrayCache} argument.
+     * This is identical to {@code SeekableXZInputStream(SeekableInputStream)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          seekable input stream containing one or more
      *                          XZ Streams; the whole input stream is used
@@ -270,8 +269,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @throws      XZFormatException
      *                          input is not in the XZ format
@@ -312,8 +310,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
@@ -371,8 +368,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
@@ -421,8 +417,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or {@code -1} to impose no
-     *                          memory usage limit
+     *                          or {@code -1} to impose no memory usage limit
      *
      * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
@@ -901,9 +896,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
     /**
      * Closes the stream and optionally calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
-     * If {@code close(false)} has been called, a further
-     * call of {@code close(true)} does nothing (it doesn't call
-     * {@code in.close()}).
+     * If {@code close(false)} has been called, a further call of
+     * {@code close(true)} does nothing (it doesn't call {@code in.close()}).
      * <p>
      * If you don't want to close the underlying {@code InputStream},
      * there is usually no need to worry about closing this stream either;
@@ -913,9 +907,9 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * closing the underlying {@code InputStream}.
      * <p>
      * Note that if you successfully reach the end of the stream
-     * ({@code read} returns {@code -1}), the arrays are
-     * automatically put back to the cache by that {@code read} call. In
-     * this situation {@code close(false)} is redundant (but harmless).
+     * ({@code read} returns {@code -1}), the arrays are automatically
+     * put back to the cache by that {@code read} call. In this
+     * situation {@code close(false)} is redundant (but harmless).
      *
      * @throws  IOException if thrown by {@code in.close()}
      *
@@ -966,8 +960,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * to read at least one byte.
      * <p>
      * Seeking past the end of the stream is possible. In that case
-     * {@code read} will return {@code -1} to indicate
-     * the end of the stream.
+     * {@code read} will return {@code -1} to indicate the end of the stream.
      *
      * @param       pos         new uncompressed read position
      *

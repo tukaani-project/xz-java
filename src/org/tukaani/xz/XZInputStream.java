@@ -46,11 +46,10 @@ import org.tukaani.xz.common.DecoderUtil;
  * <p>
  * If you are decompressing complete files and your application knows
  * exactly how much uncompressed data there should be, it is good to try
- * reading one more byte by calling {@code read()} and checking
- * that it returns {@code -1}. This way the decompressor will parse the
- * file footers and verify the integrity checks, giving the caller more
- * confidence that the uncompressed data is valid. (This advice seems to
- * apply to
+ * reading one more byte by calling {@code read()} and checking that it
+ * returns {@code -1}. This way the decompressor will parse the file footers
+ * and verify the integrity checks, giving the caller more confidence that
+ * the uncompressed data is valid. (This advice seems to  apply to
  * {@link java.util.zip.GZIPInputStream java.util.zip.GZIPInputStream} too.)
  *
  * @see SingleXZInputStream
@@ -221,9 +220,8 @@ public class XZInputStream extends InputStream {
      *   way.</li>
      * </ul>
      * <p>
-     * {@code verifyCheck} only affects the integrity check of
-     * the actual compressed data. The CRC32 fields in the headers
-     * are always verified.
+     * {@code verifyCheck} only affects the integrity check of the actual
+     * compressed data. The CRC32 fields in the headers are always verified.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
@@ -488,9 +486,8 @@ public class XZInputStream extends InputStream {
     /**
      * Closes the stream and optionally calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
-     * If {@code close(false)} has been called, a further
-     * call of {@code close(true)} does nothing (it doesn't call
-     * {@code in.close()}).
+     * If {@code close(false)} has been called, a further call of
+     * {@code close(true)} does nothing (it doesn't call {@code in.close()}).
      * <p>
      * If you don't want to close the underlying {@code InputStream},
      * there is usually no need to worry about closing this stream either;
@@ -500,9 +497,9 @@ public class XZInputStream extends InputStream {
      * closing the underlying {@code InputStream}.
      * <p>
      * Note that if you successfully reach the end of the stream
-     * ({@code read} returns {@code -1}), the arrays are
-     * automatically put back to the cache by that {@code read} call. In
-     * this situation {@code close(false)} is redundant (but harmless).
+     * ({@code read} returns {@code -1}), the arrays are automatically
+     * put back to the cache by that {@code read} call. In this
+     * situation {@code close(false)} is redundant (but harmless).
      *
      * @throws  IOException if thrown by {@code in.close()}
      *

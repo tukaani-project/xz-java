@@ -23,8 +23,8 @@ import org.tukaani.xz.index.IndexEncoder;
  * XZOutputStream outxz = new XZOutputStream(outfile, new LZMA2Options());
  * </pre></blockquote>
  * <p>
- * Using the preset level {@code 8} for LZMA2 (the default
- * is {@code 6}) and SHA-256 instead of CRC64 for integrity checking:
+ * Using the preset level {@code 8} for LZMA2 (the default is {@code 6})
+ * and SHA-256 instead of CRC64 for integrity checking:
  * <blockquote><pre>
  * XZOutputStream outxz = new XZOutputStream(outfile, new LZMA2Options(8),
  *                                           XZ.CHECK_SHA256);
