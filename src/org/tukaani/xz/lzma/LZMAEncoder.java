@@ -161,7 +161,7 @@ public abstract class LZMAEncoder extends LZMACoder {
      * Repeated match: <code>back</code> is in the range [0, 3] and
      * the return value is the length of the repeated match.
      * <p>
-     * Normal match: <code>back - REPS<code> (<code>back - 4</code>)
+     * Normal match: {@code back - REPS} (<code>back - 4</code>)
      * is the distance of the match and the return value is the length
      * of the match.
      */

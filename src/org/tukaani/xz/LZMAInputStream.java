@@ -416,8 +416,8 @@ public class LZMAInputStream extends InputStream {
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
      * header) from <code>in</code> optionally with a preset dictionary.
      * <p>
-     * This is identical to <code>LZMAInputStream(InputStream, long, byte, int,
-     * byte[])</code> except that this also takes the <code>arrayCache</code>
+     * This is identical to {@code LZMAInputStream(InputStream, long, byte,
+     * int, byte[])} except that this also takes the <code>arrayCache</code>
      * argument.
      *
      * @param       in          input stream from which LZMA-compressed
@@ -504,8 +504,8 @@ public class LZMAInputStream extends InputStream {
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
      * header) from <code>in</code> optionally with a preset dictionary.
      * <p>
-     * This is identical to <code>LZMAInputStream(InputStream, long, int, int,
-     * int, int, byte[])</code> except that this also takes the
+     * This is identical to {@code LZMAInputStream(InputStream, long, int,
+     * int, int, int, byte[])} except that this also takes the
      * <code>arrayCache</code> argument.
      *
      * @param       in          input stream from which LZMA-compressed

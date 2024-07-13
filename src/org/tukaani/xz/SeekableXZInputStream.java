@@ -617,8 +617,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * <p>
      * The returned value has a bit set for every check type that is present.
      * For example, if CRC64 and SHA-256 were used, the return value is
-     * <code>(1&nbsp;&lt;&lt;&nbsp;XZ.CHECK_CRC64)
-     * | (1&nbsp;&lt;&lt;&nbsp;XZ.CHECK_SHA256)</code>.
+     * {@code (1 << XZ.CHECK_CRC64) | (1 << XZ.CHECK_SHA256)}.
      */
     public int getCheckTypes() {
         return checkTypes;
@@ -668,8 +667,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Gets the uncompressed start position of the given Block.
      *
      * @throws  IndexOutOfBoundsException if
-     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
-     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *          {@code blockNumber < 0} or
+     *          {@code blockNumber >= getBlockCount()}.
      *
      * @since 1.3
      */
@@ -682,8 +681,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Gets the uncompressed size of the given Block.
      *
      * @throws  IndexOutOfBoundsException if
-     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
-     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *          {@code blockNumber < 0} or
+     *          {@code blockNumber >= getBlockCount()}.
      *
      * @since 1.3
      */
@@ -698,8 +697,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * This information is rarely useful to the users of this class.
      *
      * @throws  IndexOutOfBoundsException if
-     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
-     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *          {@code blockNumber < 0} or
+     *          {@code blockNumber >= getBlockCount()}.
      *
      * @since 1.3
      */
@@ -714,8 +713,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * the compression ratio of the specific Block.
      *
      * @throws  IndexOutOfBoundsException if
-     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
-     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *          {@code blockNumber < 0} or
+     *          {@code blockNumber >= getBlockCount()}.
      *
      * @since 1.3
      */
@@ -728,8 +727,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Gets integrity check type (Check ID) of the given Block.
      *
      * @throws  IndexOutOfBoundsException if
-     *          <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
-     *          <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>.
+     *          {@code blockNumber < 0} or
+     *          {@code blockNumber >= getBlockCount()}.
      *
      * @see #getCheckTypes()
      *
@@ -745,8 +744,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * uncompressed position.
      *
      * @throws  IndexOutOfBoundsException if
-     *          <code>pos&nbsp;&lt;&nbsp;0</code> or
-     *          <code>pos&nbsp;&gt;=&nbsp;length()</code>.
+     *          {@code pos < 0} or
+     *          {@code pos >= length()}.
      *
      * @since 1.3
      */
@@ -992,8 +991,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Seeks to the beginning of the given XZ Block.
      *
      * @throws      XZIOException
-     *              if <code>blockNumber&nbsp;&lt;&nbsp;0</code> or
-     *              <code>blockNumber&nbsp;&gt;=&nbsp;getBlockCount()</code>,
+     *              if {@code blockNumber < 0} or
+     *              {@code blockNumber >= getBlockCount()},
      *              or if stream has been closed
      *
      * @since 1.3

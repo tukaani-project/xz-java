@@ -147,8 +147,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * Creates a new XZ compressor using one filter and the specified
      * integrity check type. This constructor is equivalent to
      * passing a single-member FilterOptions array to
-     * <code>XZOutputStream(OutputStream, FilterOptions[], int,
-     * ArrayCache)</code>.
+     * {@code XZOutputStream(OutputStream, FilterOptions[], int, ArrayCache)}.
      *
      * @param       out         output stream to which the compressed data
      *                          will be written
@@ -199,8 +198,7 @@ public class XZOutputStream extends FinishableOutputStream {
     /**
      * Creates a new XZ compressor using 1-4 filters and CRC64 as
      * the integrity check. This constructor is equivalent
-     * <code>XZOutputStream(out, filterOptions, XZ.CHECK_CRC64,
-     * arrayCache)</code>.
+     * {@code XZOutputStream(out, filterOptions, XZ.CHECK_CRC64, arrayCache)}.
      *
      * @param       out         output stream to which the compressed data
      *                          will be written

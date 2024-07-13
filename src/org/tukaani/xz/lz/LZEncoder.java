@@ -306,7 +306,7 @@ public abstract class LZEncoder {
      * <p>
      * The current byte is at <code>0</code>, the previous byte
      * at <code>1</code> etc. To get a byte at zero-based distance,
-     * use <code>getByte(dist + 1)<code>.
+     * use {@code getByte(dist + 1)}.
      * <p>
      * This function is equivalent to <code>getByte(0, backward)</code>.
      */
