@@ -38,7 +38,6 @@
  * Other authors:
  * <ul>
  * <li>Brett Okken
- * <li>Jia Tan
  * </ul>
  * <p>
  * Many people have contributed improvements or reported bugs.
