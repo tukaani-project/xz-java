@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: 0BSD
 // SPDX-FileCopyrightText: The XZ for Java authors and contributors
-// SPDX-FileContributor: Jia Tan
 // SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 // SPDX-FileContributor: Igor Pavlov <https://7-zip.org/>
 
 package org.tukaani.xz.simple;
 
-// BCJ filter for ARM64 instructions
+import org.tukaani.xz.common.ByteArrayView;
+
+// BCJ filter for ARM64 (AArch64) instructions
 public final class ARM64 implements SimpleFilter {
     private final boolean isEncoder;
     private int pos;
@@ -22,111 +23,66 @@ public final class ARM64 implements SimpleFilter {
         int i;
 
         for (i = off; i <= end; i += 4) {
-            // Handle BL instruction:
-            //
-            // Convert the full 26 bit immediate, do not ignore any bits
-            // for possible false positives. The full range +/-128 MiB gives
-            // important compression ratio improvements for large files,
-            // but suffers slightly on small files if the filter is applied
-            // also to non-executable data sections.
-            if ((buf[i + 3] & 0xFC) == 0x94) {
-                int src = ((buf[i + 3] & 0x03) << 24)
-                          | ((buf[i + 2] & 0xFF) << 16)
-                          | ((buf[i + 1] & 0xFF) << 8)
-                          | (buf[i] & 0xFF);
+            // Only the highest byte is needed to identify the BL and ADRP
+            // instructions.
+            int instr = buf[i + 3];
 
-                // Instead of shifting the immediate, we shift the program
-                // counter so we do not have to shift the destination value
-                // back by 2.
-                final int pc = (pos + i - off) >>> 2;
-
-                int dest;
-                if (isEncoder)
-                    dest = src + pc;
-                else
-                    dest = src - pc;
-
-                buf[i + 3] = (byte)(0x94 | ((dest >>> 24) & 0x3));
-                buf[i + 2] = (byte)(dest >>> 16);
-                buf[i + 1] = (byte)(dest >>> 8);
-                buf[i] = (byte)dest;
-
-            } else if ((buf[i + 3] & 0x9F) == 0x90) {
-                // Handle ADRP instruction:
-                int instruction = ((buf[i + 3] & 0xFF) << 24)
-                                  | ((buf[i + 2] & 0xFF) << 16)
-                                  | ((buf[i + 1] & 0xFF) << 8)
-                                  | (buf[i] & 0xFF);
-
-                // The ADRP instruction in AArch64:
-                // Bits 0 - 4: Destination register.
-                // Bits 5 - 23: High bits of immediate.
-                // Bits 24 - 28: Op code.
-                // Bits 29 - 30: Low bits of immediate.
-                // Bit 31: Op code.
+            if ((instr & 0xFC) == 0x94) {
+                // BL instruction:
+                // The full 26-bit immediate is converted.
+                // The range is +/-128 MiB.
                 //
-                // When an ADRP instruction is executed, the immediate is
-                // shifted left by 12 and the bottom 12 bits are then masked
-                // out. The immediate is added to the program counter, then
-                // stored in the destination register.
-                final int src = ((instruction >>> 29) & 3)
-                                | ((instruction >>> 3) & 0x001FFFFC);
+                // Using the full range helps quite a lot with big
+                // executables. Smaller range would reduce false positives
+                // in non-code sections of the input though so this is
+                // a compromise that slightly favors big files. With the
+                // full range, only six bits of the 32 need to match to
+                // trigger a conversion.
+                instr = ByteArrayView.getIntLE(buf, i);
 
-                // Ignore the ADRP instruction if the highest 3 bits in the
-                // immediate are not all the same. This limits the address
-                // range to +/-512 MiB which is large enough for a majority
-                // of real-world ARM64 executable code. Limiting the range
-                // reduces false positives when the filter is applied on
-                // non-ARM64 data where a byte sequence looks like an ADRP
-                // instruction with a very large immediate value.
+                int pc = (pos + i - off) >>> 2;
+                if (!isEncoder)
+                    pc = -pc;
+
+                instr = 0x94000000 | ((instr + pc) & 0x03FFFFFF);
+                ByteArrayView.setIntLE(buf, i, instr);
+
+            } else if ((instr & 0x9F) == 0x90) {
+                // ADRP instruction:
+                // Only values in the range +/-512 MiB are converted.
                 //
-                // This addition is an optimization to avoid the need for two
-                // checks for accepted +/- range. The more readable code
-                // would check if any of the four highest bits (3 ignored and
-                // 1 sign bit) are set and if so, they all must be set which
-                // would indicate a negative immediate. The readable version:
+                // Using less than the full +/-4 GiB range reduces false
+                // positives on non-code sections of the input while being
+                // excellent for executables up to 512 MiB. The positive
+                // effect of ADRP conversion is smaller than that of BL
+                // but it also doesn't hurt so much in non-code sections
+                // of input because, with +/-512 MiB range, nine bits of 32
+                // need to match to trigger a conversion (two 10-bit match
+                // choices = 9 bits).
+                instr = ByteArrayView.getIntLE(buf, i);
+                int src = ((instr >>> 29) & 3) | ((instr >>> 3) & 0x001FFFFC);
+
+                // With the addition only one branch is needed to
+                // check the +/- range. This is usually false when
+                // processing ARM64 code so branch prediction will
+                // handle it well in terms of performance.
+                //
                 // if ((src & 0x001E0000) != 0
-                //     && (src & 0x001E0000 != 0x001E0000))
-                //     continue;
-                //
-                // 0x001C0000 has the highest 3 bits set in the immediate.
-                // 0x00020000 has the 17th bit set.
-                // If this addition results in any of the 3 highest bits set:
-                // - The src already had one or more of the 4 highest bits
-                //   set, but not all of them set (too large positive).
-                // - The src was a very large negative so the addition did
-                //   not flip the 3 highest bits in the immediate.
+                //  && (src & 0x001E0000) != 0x001E0000)
                 if (((src + 0x00020000) & 0x001C0000) != 0)
                     continue;
 
-                final int pc = (pos + i - off) >>> 12;
+                int pc = (pos + i - off) >>> 12;
+                if (!isEncoder)
+                    pc = -pc;
 
-                int dest;
-                if (isEncoder)
-                    dest = src + pc;
-                else
-                    dest = src - pc;
+                int dest = src + pc;
 
-                // Clear out all bits except for the opcode and original
-                // destination register.
-                instruction &= 0x9000001F;
-
-                // Shift the new low bits back to bits 29 - 30.
-                instruction |= (dest & 3) << 29;
-
-                // Shift the new high bits back to bits 5 - 20.
-                // AND out bits 21-23.
-                instruction |= (dest & 0x0003FFFC) << 3;
-
-                // If the immediate is negative (17th bit set before shifting)
-                // ensure bits 21-23 (after shifting) are set. This ensures
-                // proper sign extension.
-                instruction |= (0 - (dest & 0x00020000)) & 0x00E00000;
-
-                buf[i + 3] = (byte)(instruction >>> 24);
-                buf[i + 2] = (byte)(instruction >>> 16);
-                buf[i + 1] = (byte)(instruction >>> 8);
-                buf[i] = (byte)(instruction);
+                instr &= 0x9000001F;
+                instr |= (dest & 3) << 29;
+                instr |= (dest & 0x0003FFFC) << 3;
+                instr |= (-(dest & 0x00020000)) & 0x00E00000;
+                ByteArrayView.setIntLE(buf, i, instr);
             }
         }
 

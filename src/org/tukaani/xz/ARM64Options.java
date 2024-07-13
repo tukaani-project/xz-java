@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: 0BSD
 // SPDX-FileCopyrightText: The XZ for Java authors and contributors
-// SPDX-FileContributor: Jia Tan
+// SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org>
 
 package org.tukaani.xz;
 
@@ -8,7 +8,7 @@ import java.io.InputStream;
 import org.tukaani.xz.simple.ARM64;
 
 /**
- * BCJ filter for ARM64 instructions.
+ * BCJ filter for ARM64 (AArch64) instructions.
  *
  * @since 1.10
  */
