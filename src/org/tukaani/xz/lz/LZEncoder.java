@@ -102,7 +102,7 @@ public abstract class LZEncoder {
      *                          after current position + matchLenMax
      *
      * @param       niceLen     if a match of at least {@code niceLen}
-     *                          bytes is found, be happy with it and don't
+     *                          bytes is found, be happy with it and
      *                          stop looking for longer matches
      *
      * @param       matchLenMax don't test for matches longer than
