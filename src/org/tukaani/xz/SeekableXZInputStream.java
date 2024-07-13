@@ -57,11 +57,11 @@ import org.tukaani.xz.index.BlockInfo;
  * positions (and only at these positions to get better compression ratio).
  * <p>
  * liblzma in XZ Utils supports starting a new Block with
- * <code>LZMA_FULL_FLUSH</code>. XZ Utils 5.1.1alpha added threaded
+ * {@code LZMA_FULL_FLUSH}. XZ Utils 5.1.1alpha added threaded
  * compression which creates multi-Block .xz files. XZ Utils 5.1.1alpha
- * also added the option <code>--block-size=SIZE</code> to the xz command
+ * also added the option {@code --block-size=SIZE} to the xz command
  * line tool. XZ Utils 5.1.2alpha added a partial implementation of
- * <code>--block-list=SIZES</code> which allows specifying sizes of
+ * {@code --block-list=SIZES} which allows specifying sizes of
  * individual Blocks.
  *
  * <h2>Example: getting the uncompressed size of a .xz file</h2>
@@ -102,7 +102,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * Memory usage of the IndexDecoders.
-     * <code>memoryLimit + indexMemoryUsage</code> equals the original
+     * {@code memoryLimit + indexMemoryUsage} equals the original
      * memory usage limit that was passed to the constructor.
      */
     private int indexMemoryUsage = 0;
@@ -137,13 +137,13 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * Size and position information about the current Block.
-     * If there are no Blocks, all values will be <code>-1</code>.
+     * If there are no Blocks, all values will be {@code -1}.
      */
     private final BlockInfo curBlockInfo;
 
     /**
      * Temporary (and cached) information about the Block whose information
-     * is queried via <code>getBlockPos</code> and related functions.
+     * is queried via {@code getBlockPos} and related functions.
      */
     private final BlockInfo queriedBlockInfo;
 
@@ -174,14 +174,14 @@ public class SeekableXZInputStream extends SeekableInputStream {
     private long seekPos;
 
     /**
-     * True when <code>seek(long)</code> has been called but the actual
+     * True when {@code seek(long)} has been called but the actual
      * seeking hasn't been done yet.
      */
     private boolean seekNeeded = false;
 
     /**
      * True when end of the file was reached. This can be cleared by
-     * calling <code>seek(long)</code>.
+     * calling {@code seek(long)}.
      */
     private boolean endReached = false;
 
@@ -214,11 +214,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      EOFException
      *                          less than 6 bytes of input was available
-     *                          from <code>in</code>, or (unlikely) the size
+     *                          from {@code in}, or (unlikely) the size
      *                          of the underlying stream got smaller while
      *                          this was reading from it
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public SeekableXZInputStream(SeekableInputStream in)
             throws IOException {
@@ -229,8 +229,8 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Creates a new seekable XZ decompressor without a memory usage limit.
      * <p>
      * This is identical to
-     * <code>SeekableXZInputStream(SeekableInputStream)</code> except that
-     * this also takes the <code>arrayCache</code> argument.
+     * {@code SeekableXZInputStream(SeekableInputStream)} except that
+     * this also takes the {@code arrayCache} argument.
      *
      * @param       in          seekable input stream containing one or more
      *                          XZ Streams; the whole input stream is used
@@ -249,11 +249,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      EOFException
      *                          less than 6 bytes of input was available
-     *                          from <code>in</code>, or (unlikely) the size
+     *                          from {@code in}, or (unlikely) the size
      *                          of the underlying stream got smaller while
      *                          this was reading from it
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -270,7 +270,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
      * @throws      XZFormatException
@@ -289,11 +289,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      EOFException
      *                          less than 6 bytes of input was available
-     *                          from <code>in</code>, or (unlikely) the size
+     *                          from {@code in}, or (unlikely) the size
      *                          of the underlying stream got smaller while
      *                          this was reading from it
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public SeekableXZInputStream(SeekableInputStream in, int memoryLimit)
             throws IOException {
@@ -305,14 +305,14 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * memory usage limit.
      * <p>
      * This is identical to
-     * <code>SeekableXZInputStream(SeekableInputStream,int)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * {@code SeekableXZInputStream(SeekableInputStream,int)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          seekable input stream containing one or more
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
      * @param       arrayCache  cache to be used for allocating large arrays
@@ -333,11 +333,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      EOFException
      *                          less than 6 bytes of input was available
-     *                          from <code>in</code>, or (unlikely) the size
+     *                          from {@code in}, or (unlikely) the size
      *                          of the underlying stream got smaller while
      *                          this was reading from it
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -363,7 +363,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *   way.</li>
      * </ul>
      * <p>
-     * <code>verifyCheck</code> only affects the integrity check of
+     * {@code verifyCheck} only affects the integrity check of
      * the actual compressed data. The CRC32 fields in the headers
      * are always verified.
      *
@@ -371,12 +371,12 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
-     * @param       verifyCheck if <code>true</code>, the integrity checks
+     * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
-     *                          be set to <code>false</code>
+     *                          be set to {@code false}
      *
      * @throws      XZFormatException
      *                          input is not in the XZ format
@@ -394,11 +394,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      EOFException
      *                          less than 6 bytes of input was available
-     *                          from <code>in</code>, or (unlikely) the size
+     *                          from {@code in}, or (unlikely) the size
      *                          of the underlying stream got smaller while
      *                          this was reading from it
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.6
      */
@@ -414,19 +414,19 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * of integrity checks.
      * <p>
      * This is identical to
-     * <code>SeekableXZInputStream(SeekableInputStream,int,boolean)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * {@code SeekableXZInputStream(SeekableInputStream,int,boolean)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          seekable input stream containing one or more
      *                          XZ Streams; the whole input stream is used
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
-     * @param       verifyCheck if <code>true</code>, the integrity checks
+     * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
-     *                          be set to <code>false</code>
+     *                          be set to {@code false}
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
@@ -446,11 +446,11 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      EOFException
      *                          less than 6 bytes of input was available
-     *                          from <code>in</code>, or (unlikely) the size
+     *                          from {@code in}, or (unlikely) the size
      *                          of the underlying stream got smaller while
      *                          this was reading from it
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -757,7 +757,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
     /**
      * Decompresses the next byte from this input stream.
      *
-     * @return      the next decompressed byte, or <code>-1</code>
+     * @return      the next decompressed byte, or {@code -1}
      *              to indicate the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -766,7 +766,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      XZIOException if the stream has been closed
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read() throws IOException {
@@ -776,24 +776,24 @@ public class SeekableXZInputStream extends SeekableInputStream {
     /**
      * Decompresses into an array of bytes.
      * <p>
-     * If <code>len</code> is zero, no bytes are read and <code>0</code>
-     * is returned. Otherwise this will try to decompress <code>len</code>
-     * bytes of uncompressed data. Less than <code>len</code> bytes may
+     * If {@code len} is zero, no bytes are read and {@code 0}
+     * is returned. Otherwise this will try to decompress {@code len}
+     * bytes of uncompressed data. Less than {@code len} bytes may
      * be read only in the following situations:
      * <ul>
      *   <li>The end of the compressed data was reached successfully.</li>
      *   <li>An error is detected after at least one but less than
-     *       <code>len</code> bytes have already been successfully
-     *       decompressed. The next call with non-zero <code>len</code>
+     *       {@code len} bytes have already been successfully
+     *       decompressed. The next call with non-zero {@code len}
      *       will immediately throw the pending exception.</li>
      *   <li>An exception is thrown.</li>
      * </ul>
      *
      * @param       buf         target buffer for uncompressed data
-     * @param       off         start offset in <code>buf</code>
+     * @param       off         start offset in {@code buf}
      * @param       len         maximum number of uncompressed bytes to read
      *
-     * @return      number of bytes read, or <code>-1</code> to indicate
+     * @return      number of bytes read, or {@code -1} to indicate
      *              the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -802,7 +802,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      *
      * @throws      XZIOException if the stream has been closed
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read(byte[] buf, int off, int len) throws IOException {
@@ -864,7 +864,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
      * Returns the number of uncompressed bytes that can be read
      * without blocking. The value is returned with an assumption
      * that the compressed input data will be valid. If the compressed
-     * data is corrupt, <code>CorruptedInputException</code> may get
+     * data is corrupt, {@code CorruptedInputException} may get
      * thrown before the number of bytes claimed to be available have
      * been read from this input stream.
      *
@@ -886,12 +886,12 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
-     * Closes the stream and calls <code>in.close()</code>.
+     * Closes the stream and calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
      * <p>
-     * This is equivalent to <code>close(true)</code>.
+     * This is equivalent to {@code close(true)}.
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      */
     @Override
     public void close() throws IOException {
@@ -899,25 +899,25 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
-     * Closes the stream and optionally calls <code>in.close()</code>.
+     * Closes the stream and optionally calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
-     * If <code>close(false)</code> has been called, a further
-     * call of <code>close(true)</code> does nothing (it doesn't call
-     * <code>in.close()</code>).
+     * If {@code close(false)} has been called, a further
+     * call of {@code close(true)} does nothing (it doesn't call
+     * {@code in.close()}).
      * <p>
-     * If you don't want to close the underlying <code>InputStream</code>,
+     * If you don't want to close the underlying {@code InputStream},
      * there is usually no need to worry about closing this stream either;
      * it's fine to do nothing and let the garbage collector handle it.
-     * However, if you are using {@link ArrayCache}, <code>close(false)</code>
+     * However, if you are using {@link ArrayCache}, {@code close(false)}
      * can be useful to put the allocated arrays back to the cache without
-     * closing the underlying <code>InputStream</code>.
+     * closing the underlying {@code InputStream}.
      * <p>
      * Note that if you successfully reach the end of the stream
-     * (<code>read</code> returns <code>-1</code>), the arrays are
-     * automatically put back to the cache by that <code>read</code> call. In
-     * this situation <code>close(false)</code> is redundant (but harmless).
+     * ({@code read} returns {@code -1}), the arrays are
+     * automatically put back to the cache by that {@code read} call. In
+     * this situation {@code close(false)} is redundant (but harmless).
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      *
      * @since 1.7
      */
@@ -962,17 +962,17 @@ public class SeekableXZInputStream extends SeekableInputStream {
     /**
      * Seeks to the specified absolute uncompressed position in the stream.
      * This only stores the new position, so this function itself is always
-     * very fast. The actual seek is done when <code>read</code> is called
+     * very fast. The actual seek is done when {@code read} is called
      * to read at least one byte.
      * <p>
      * Seeking past the end of the stream is possible. In that case
-     * <code>read</code> will return <code>-1</code> to indicate
+     * {@code read} will return {@code -1} to indicate
      * the end of the stream.
      *
      * @param       pos         new uncompressed read position
      *
      * @throws      XZIOException
-     *                          if <code>pos</code> is negative, or
+     *                          if {@code pos} is negative, or
      *                          if stream has been closed
      */
     @Override
@@ -1012,7 +1012,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
     }
 
     /**
-     * Does the actual seeking. This is also called when <code>read</code>
+     * Does the actual seeking. This is also called when {@code read}
      * needs a new Block to decode.
      */
     private void seek() throws IOException {
@@ -1113,7 +1113,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * Locates the given Block and stores information about it
-     * to <code>info</code>.
+     * to {@code info}.
      */
     private void locateBlockByNumber(BlockInfo info, int blockNumber) {
         // Validate.
@@ -1138,7 +1138,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * Initializes a new BlockInputStream. This is a helper function for
-     * <code>seek()</code>.
+     * {@code seek()}.
      */
     private void initBlockDecoder() throws IOException {
         try {

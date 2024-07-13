@@ -15,7 +15,7 @@ public abstract class FilterOptions implements Cloneable {
     /**
      * Gets how much memory the encoder will need with
      * the given filter chain. This function simply calls
-     * <code>getEncoderMemoryUsage()</code> for every filter
+     * {@code getEncoderMemoryUsage()} for every filter
      * in the array and returns the sum of the returned values.
      */
     public static int getEncoderMemoryUsage(FilterOptions[] options) {
@@ -30,7 +30,7 @@ public abstract class FilterOptions implements Cloneable {
     /**
      * Gets how much memory the decoder will need with
      * the given filter chain. This function simply calls
-     * <code>getDecoderMemoryUsage()</code> for every filter
+     * {@code getDecoderMemoryUsage()} for every filter
      * in the array and returns the sum of the returned values.
      */
     public static int getDecoderMemoryUsage(FilterOptions[] options) {

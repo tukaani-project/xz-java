@@ -40,8 +40,8 @@ public class DeltaInputStream extends InputStream {
      *                          is read
      *
      * @param       distance    delta calculation distance, must be in the
-     *                          range [<code>DISTANCE_MIN</code>,
-     *                          <code>DISTANCE_MAX</code>]
+     *                          range [{@code DISTANCE_MIN},
+     *                          {@code DISTANCE_MAX}]
      */
     public DeltaInputStream(InputStream in, int distance) {
         // Check for null because otherwise null isn't detect
@@ -56,10 +56,10 @@ public class DeltaInputStream extends InputStream {
     /**
      * Decode the next byte from this input stream.
      *
-     * @return      the next decoded byte, or <code>-1</code> to indicate
-     *              the end of input on the input stream <code>in</code>
+     * @return      the next decoded byte, or {@code -1} to indicate
+     *              the end of input on the input stream {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read() throws IOException {
@@ -69,20 +69,20 @@ public class DeltaInputStream extends InputStream {
     /**
      * Decode into an array of bytes.
      * <p>
-     * This calls <code>in.read(buf, off, len)</code> and defilters the
+     * This calls {@code in.read(buf, off, len)} and defilters the
      * returned data.
      *
      * @param       buf         target buffer for decoded data
-     * @param       off         start offset in <code>buf</code>
+     * @param       off         start offset in {@code buf}
      * @param       len         maximum number of bytes to read
      *
-     * @return      number of bytes read, or <code>-1</code> to indicate
-     *              the end of the input stream <code>in</code>
+     * @return      number of bytes read, or {@code -1} to indicate
+     *              the end of the input stream {@code in}
      *
      * @throws      XZIOException if the stream has been closed
      *
      * @throws      IOException may be thrown by underlaying input
-     *                          stream <code>in</code>
+     *                          stream {@code in}
      */
     @Override
     public int read(byte[] buf, int off, int len) throws IOException {
@@ -111,9 +111,9 @@ public class DeltaInputStream extends InputStream {
     }
 
     /**
-     * Calls <code>in.available()</code>.
+     * Calls {@code in.available()}.
      *
-     * @return      the value returned by <code>in.available()</code>
+     * @return      the value returned by {@code in.available()}
      */
     @Override
     public int available() throws IOException {
@@ -127,10 +127,10 @@ public class DeltaInputStream extends InputStream {
     }
 
     /**
-     * Closes the stream and calls <code>in.close()</code>.
+     * Closes the stream and calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      */
     @Override
     public void close() throws IOException {

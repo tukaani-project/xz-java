@@ -24,7 +24,7 @@ import org.tukaani.xz.lzma.LZMADecoder;
  * cases where it is desired that this class won't read any bytes past
  * the end of the LZMA stream.
  * <p>
- * Even when using <code>BufferedInputStream</code>, the performance tends
+ * Even when using {@code BufferedInputStream}, the performance tends
  * to be worse (maybe 10-20&nbsp;% slower) than with {@link LZMA2InputStream}
  * or {@link XZInputStream} (when the .xz file contains LZMA2-compressed data).
  *
@@ -66,8 +66,8 @@ public class LZMAInputStream extends InputStream {
      * the given dictionary size and LZMA properties byte (lc, lp, and pb).
      *
      * @param       dictSize    LZMA dictionary size as bytes, should be
-     *                          in the range [<code>0</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          in the range [{@code 0},
+     *                          {@code DICT_SIZE_MAX}]
      *
      * @param       propsByte   LZMA properties byte that encodes the values
      *                          of lc, lp, and pb
@@ -75,12 +75,12 @@ public class LZMAInputStream extends InputStream {
      * @return      approximate memory requirements as kibibytes (KiB)
      *
      * @throws      UnsupportedOptionsException
-     *                          if <code>dictSize</code> is outside
-     *                          the range [<code>0</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          if {@code dictSize} is outside
+     *                          the range [{@code 0},
+     *                          {@code DICT_SIZE_MAX}]
      *
      * @throws      CorruptedInputException
-     *                          if <code>propsByte</code> is invalid
+     *                          if {@code propsByte} is invalid
      */
     public static int getMemoryUsage(int dictSize, byte propsByte)
             throws UnsupportedOptionsException, CorruptedInputException {
@@ -104,8 +104,8 @@ public class LZMAInputStream extends InputStream {
      * the given dictionary size, lc, and lp. Note that pb isn't needed.
      *
      * @param       dictSize    LZMA dictionary size as bytes, must be
-     *                          in the range [<code>0</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          in the range [{@code 0},
+     *                          {@code DICT_SIZE_MAX}]
      *
      * @param       lc          number of literal context bits, must be
      *                          in the range [0, 8]
@@ -159,7 +159,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @param       in          input stream from which .lzma data is read;
      *                          it might be a good idea to wrap it in
-     *                          <code>BufferedInputStream</code>, see the
+     *                          {@code BufferedInputStream}, see the
      *                          note at the top of this page
      *
      * @throws      CorruptedInputException
@@ -174,7 +174,7 @@ public class LZMAInputStream extends InputStream {
      *                          file is truncated or perhaps not in
      *                          the .lzma format at all
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public LZMAInputStream(InputStream in) throws IOException {
         this(in, -1);
@@ -184,12 +184,12 @@ public class LZMAInputStream extends InputStream {
      * Creates a new .lzma file format decompressor without
      * a memory usage limit.
      * <p>
-     * This is identical to <code>LZMAInputStream(InputStream)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * This is identical to {@code LZMAInputStream(InputStream)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          input stream from which .lzma data is read;
      *                          it might be a good idea to wrap it in
-     *                          <code>BufferedInputStream</code>, see the
+     *                          {@code BufferedInputStream}, see the
      *                          note at the top of this page
      *
      *
@@ -207,7 +207,7 @@ public class LZMAInputStream extends InputStream {
      *                          file is truncated or perhaps not in
      *                          the .lzma format at all
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -222,11 +222,11 @@ public class LZMAInputStream extends InputStream {
      *
      * @param       in          input stream from which .lzma data is read;
      *                          it might be a good idea to wrap it in
-     *                          <code>BufferedInputStream</code>, see the
+     *                          {@code BufferedInputStream}, see the
      *                          note at the top of this page
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
      * @throws      CorruptedInputException
@@ -244,7 +244,7 @@ public class LZMAInputStream extends InputStream {
      *                          file is truncated or perhaps not in
      *                          the .lzma format at all
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public LZMAInputStream(InputStream in, int memoryLimit)
             throws IOException {
@@ -255,16 +255,16 @@ public class LZMAInputStream extends InputStream {
      * Creates a new .lzma file format decompressor with an optional
      * memory usage limit.
      * <p>
-     * This is identical to <code>LZMAInputStream(InputStream, int)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * This is identical to {@code LZMAInputStream(InputStream, int)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          input stream from which .lzma data is read;
      *                          it might be a good idea to wrap it in
-     *                          <code>BufferedInputStream</code>, see the
+     *                          {@code BufferedInputStream}, see the
      *                          note at the top of this page
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
      * @param       arrayCache  cache to be used for allocating large arrays
@@ -284,7 +284,7 @@ public class LZMAInputStream extends InputStream {
      *                          file is truncated or perhaps not in
      *                          the .lzma format at all
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -323,7 +323,7 @@ public class LZMAInputStream extends InputStream {
 
     /**
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
-     * header) from <code>in</code>.
+     * header) from {@code in}.
      * <p>
      * The caller needs to know if the "end of payload marker (EOPM)" alias
      * "end of stream marker (EOS marker)" alias "end marker" present.
@@ -355,10 +355,10 @@ public class LZMAInputStream extends InputStream {
      *                          position bits (lp), and position bits (pb)
      *
      * @param       dictSize    dictionary size as bytes, must be in the range
-     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *                          [{@code 0}, {@code DICT_SIZE_MAX}]
      *
      * @throws      CorruptedInputException
-     *                          if <code>propsByte</code> is invalid or
+     *                          if {@code propsByte} is invalid or
      *                          the first input byte is not 0x00
      *
      * @throws      UnsupportedOptionsException
@@ -375,7 +375,7 @@ public class LZMAInputStream extends InputStream {
 
     /**
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
-     * header) from <code>in</code> optionally with a preset dictionary.
+     * header) from {@code in} optionally with a preset dictionary.
      *
      * @param       in          input stream from which LZMA-compressed
      *                          data is read
@@ -388,13 +388,13 @@ public class LZMAInputStream extends InputStream {
      *                          position bits (lp), and position bits (pb)
      *
      * @param       dictSize    dictionary size as bytes, must be in the range
-     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *                          [{@code 0}, {@code DICT_SIZE_MAX}]
      *
-     * @param       presetDict  preset dictionary or <code>null</code>
+     * @param       presetDict  preset dictionary or {@code null}
      *                          to use no preset dictionary
      *
      * @throws      CorruptedInputException
-     *                          if <code>propsByte</code> is invalid or
+     *                          if {@code propsByte} is invalid or
      *                          the first input byte is not 0x00
      *
      * @throws      UnsupportedOptionsException
@@ -403,7 +403,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      EOFException file is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public LZMAInputStream(InputStream in, long uncompSize, byte propsByte,
                            int dictSize, byte[] presetDict)
@@ -414,10 +414,10 @@ public class LZMAInputStream extends InputStream {
 
     /**
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
-     * header) from <code>in</code> optionally with a preset dictionary.
+     * header) from {@code in} optionally with a preset dictionary.
      * <p>
      * This is identical to {@code LZMAInputStream(InputStream, long, byte,
-     * int, byte[])} except that this also takes the <code>arrayCache</code>
+     * int, byte[])} except that this also takes the {@code arrayCache}
      * argument.
      *
      * @param       in          input stream from which LZMA-compressed
@@ -431,15 +431,15 @@ public class LZMAInputStream extends InputStream {
      *                          position bits (lp), and position bits (pb)
      *
      * @param       dictSize    dictionary size as bytes, must be in the range
-     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *                          [{@code 0}, {@code DICT_SIZE_MAX}]
      *
-     * @param       presetDict  preset dictionary or <code>null</code>
+     * @param       presetDict  preset dictionary or {@code null}
      *                          to use no preset dictionary
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
      * @throws      CorruptedInputException
-     *                          if <code>propsByte</code> is invalid or
+     *                          if {@code propsByte} is invalid or
      *                          the first input byte is not 0x00
      *
      * @throws      UnsupportedOptionsException
@@ -448,7 +448,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      EOFException file is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -462,7 +462,7 @@ public class LZMAInputStream extends InputStream {
 
     /**
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
-     * header) from <code>in</code> optionally with a preset dictionary.
+     * header) from {@code in} optionally with a preset dictionary.
      *
      * @param       in          input stream from which LZMA-compressed
      *                          data is read
@@ -480,9 +480,9 @@ public class LZMAInputStream extends InputStream {
      *                          in the range [0, 4]
      *
      * @param       dictSize    dictionary size as bytes, must be in the range
-     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *                          [{@code 0}, {@code DICT_SIZE_MAX}]
      *
-     * @param       presetDict  preset dictionary or <code>null</code>
+     * @param       presetDict  preset dictionary or {@code null}
      *                          to use no preset dictionary
      *
      * @throws      CorruptedInputException
@@ -490,7 +490,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      EOFException file is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public LZMAInputStream(InputStream in, long uncompSize,
                            int lc, int lp, int pb,
@@ -502,11 +502,11 @@ public class LZMAInputStream extends InputStream {
 
     /**
      * Creates a new input stream that decompresses raw LZMA data (no .lzma
-     * header) from <code>in</code> optionally with a preset dictionary.
+     * header) from {@code in} optionally with a preset dictionary.
      * <p>
      * This is identical to {@code LZMAInputStream(InputStream, long, int,
      * int, int, int, byte[])} except that this also takes the
-     * <code>arrayCache</code> argument.
+     * {@code arrayCache} argument.
      *
      * @param       in          input stream from which LZMA-compressed
      *                          data is read
@@ -524,9 +524,9 @@ public class LZMAInputStream extends InputStream {
      *                          in the range [0, 4]
      *
      * @param       dictSize    dictionary size as bytes, must be in the range
-     *                          [<code>0</code>, <code>DICT_SIZE_MAX</code>]
+     *                          [{@code 0}, {@code DICT_SIZE_MAX}]
      *
-     * @param       presetDict  preset dictionary or <code>null</code>
+     * @param       presetDict  preset dictionary or {@code null}
      *                          to use no preset dictionary
      *
      * @param       arrayCache  cache to be used for allocating large arrays
@@ -536,7 +536,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      EOFException file is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -616,8 +616,8 @@ public class LZMAInputStream extends InputStream {
      * This feature was intrudced in XZ for Java 1.9 but it was more relaxed
      * than it needed to be. It didn't actually check if the EOS marker was
      * present, which made error detection slightly weaker than it needed
-     * to be. It also meant that after <code>read</code> had returned
-     * <code>-1</code>, the input position might not have been at
+     * to be. It also meant that after {@code read} had returned
+     * {@code -1}, the input position might not have been at
      * the end of the stream (too little input may have been read).
      * These problems were fixed in XZ for Java 1.10.
      * <p>
@@ -634,11 +634,11 @@ public class LZMAInputStream extends InputStream {
     /**
      * Decompresses the next byte from this input stream.
      * <p>
-     * Reading lots of data with <code>read()</code> from this input stream
-     * may be inefficient. Wrap it in <code>java.io.BufferedInputStream</code>
+     * Reading lots of data with {@code read()} from this input stream
+     * may be inefficient. Wrap it in {@code java.io.BufferedInputStream}
      * if you need to read lots of data one byte at a time.
      *
-     * @return      the next decompressed byte, or <code>-1</code>
+     * @return      the next decompressed byte, or {@code -1}
      *              to indicate the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -648,7 +648,7 @@ public class LZMAInputStream extends InputStream {
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read() throws IOException {
@@ -658,16 +658,16 @@ public class LZMAInputStream extends InputStream {
     /**
      * Decompresses into an array of bytes.
      * <p>
-     * If <code>len</code> is zero, no bytes are read and <code>0</code>
-     * is returned. Otherwise this will block until <code>len</code>
+     * If {@code len} is zero, no bytes are read and {@code 0}
+     * is returned. Otherwise this will block until {@code len}
      * bytes have been decompressed, the end of the LZMA stream is reached,
      * or an exception is thrown.
      *
      * @param       buf         target buffer for uncompressed data
-     * @param       off         start offset in <code>buf</code>
+     * @param       off         start offset in {@code buf}
      * @param       len         maximum number of uncompressed bytes to read
      *
-     * @return      number of bytes read, or <code>-1</code> to indicate
+     * @return      number of bytes read, or {@code -1} to indicate
      *              the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -676,7 +676,7 @@ public class LZMAInputStream extends InputStream {
      *
      * @throws      EOFException compressed input is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read(byte[] buf, int off, int len) throws IOException {
@@ -825,10 +825,10 @@ public class LZMAInputStream extends InputStream {
     }
 
     /**
-     * Closes the stream and calls <code>in.close()</code>.
+     * Closes the stream and calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      */
     @Override
     public void close() throws IOException {

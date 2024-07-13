@@ -62,8 +62,8 @@ public class LZMA2InputStream extends InputStream {
      * the given dictionary size.
      *
      * @param       dictSize    LZMA2 dictionary size as bytes, must be
-     *                          in the range [<code>DICT_SIZE_MIN</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          in the range [{@code DICT_SIZE_MIN},
+     *                          {@code DICT_SIZE_MAX}]
      *
      * @return      approximate memory requirements as kibibytes (KiB)
      */
@@ -88,7 +88,7 @@ public class LZMA2InputStream extends InputStream {
 
     /**
      * Creates a new input stream that decompresses raw LZMA2 data
-     * from <code>in</code>.
+     * from {@code in}.
      * <p>
      * The caller needs to know the dictionary size used when compressing;
      * the dictionary size isn't stored as part of a raw LZMA2 stream.
@@ -106,8 +106,8 @@ public class LZMA2InputStream extends InputStream {
      *                          data is read
      *
      * @param       dictSize    LZMA2 dictionary size as bytes, must be
-     *                          in the range [<code>DICT_SIZE_MIN</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          in the range [{@code DICT_SIZE_MIN},
+     *                          {@code DICT_SIZE_MAX}]
      */
     public LZMA2InputStream(InputStream in, int dictSize) {
         this(in, dictSize, null);
@@ -116,7 +116,7 @@ public class LZMA2InputStream extends InputStream {
     /**
      * Creates a new LZMA2 decompressor using a preset dictionary.
      * <p>
-     * This is like <code>LZMA2InputStream(InputStream, int)</code> except
+     * This is like {@code LZMA2InputStream(InputStream, int)} except
      * that the dictionary may be initialized using a preset dictionary.
      * If a preset dictionary was used when compressing the data, the
      * same preset dictionary must be provided when decompressing.
@@ -125,10 +125,10 @@ public class LZMA2InputStream extends InputStream {
      *                          data is read
      *
      * @param       dictSize    LZMA2 dictionary size as bytes, must be
-     *                          in the range [<code>DICT_SIZE_MIN</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          in the range [{@code DICT_SIZE_MIN},
+     *                          {@code DICT_SIZE_MAX}]
      *
-     * @param       presetDict  preset dictionary or <code>null</code>
+     * @param       presetDict  preset dictionary or {@code null}
      *                          to use no preset dictionary
      */
     public LZMA2InputStream(InputStream in, int dictSize, byte[] presetDict) {
@@ -139,17 +139,17 @@ public class LZMA2InputStream extends InputStream {
      * Creates a new LZMA2 decompressor using a preset dictionary
      * and array cache.
      * <p>
-     * This is like <code>LZMA2InputStream(InputStream, int, byte[])</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * This is like {@code LZMA2InputStream(InputStream, int, byte[])}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          input stream from which LZMA2-compressed
      *                          data is read
      *
      * @param       dictSize    LZMA2 dictionary size as bytes, must be
-     *                          in the range [<code>DICT_SIZE_MIN</code>,
-     *                          <code>DICT_SIZE_MAX</code>]
+     *                          in the range [{@code DICT_SIZE_MIN},
+     *                          {@code DICT_SIZE_MAX}]
      *
-     * @param       presetDict  preset dictionary or <code>null</code>
+     * @param       presetDict  preset dictionary or {@code null}
      *                          to use no preset dictionary
      *
      * @param       arrayCache  cache to be used for allocating large arrays
@@ -175,11 +175,11 @@ public class LZMA2InputStream extends InputStream {
     /**
      * Decompresses the next byte from this input stream.
      * <p>
-     * Reading lots of data with <code>read()</code> from this input stream
-     * may be inefficient. Wrap it in <code>java.io.BufferedInputStream</code>
+     * Reading lots of data with {@code read()} from this input stream
+     * may be inefficient. Wrap it in {@code java.io.BufferedInputStream}
      * if you need to read lots of data one byte at a time.
      *
-     * @return      the next decompressed byte, or <code>-1</code>
+     * @return      the next decompressed byte, or {@code -1}
      *              to indicate the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -189,7 +189,7 @@ public class LZMA2InputStream extends InputStream {
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read() throws IOException {
@@ -199,16 +199,16 @@ public class LZMA2InputStream extends InputStream {
     /**
      * Decompresses into an array of bytes.
      * <p>
-     * If <code>len</code> is zero, no bytes are read and <code>0</code>
-     * is returned. Otherwise this will block until <code>len</code>
+     * If {@code len} is zero, no bytes are read and {@code 0}
+     * is returned. Otherwise this will block until {@code len}
      * bytes have been decompressed, the end of the LZMA2 stream is reached,
      * or an exception is thrown.
      *
      * @param       buf         target buffer for uncompressed data
-     * @param       off         start offset in <code>buf</code>
+     * @param       off         start offset in {@code buf}
      * @param       len         maximum number of uncompressed bytes to read
      *
-     * @return      number of bytes read, or <code>-1</code> to indicate
+     * @return      number of bytes read, or {@code -1} to indicate
      *              the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -218,7 +218,7 @@ public class LZMA2InputStream extends InputStream {
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read(byte[] buf, int off, int len) throws IOException {
@@ -343,7 +343,7 @@ public class LZMA2InputStream extends InputStream {
      * Returns the number of uncompressed bytes that can be read
      * without blocking. The value is returned with an assumption
      * that the compressed input data will be valid. If the compressed
-     * data is corrupt, <code>CorruptedInputException</code> may get
+     * data is corrupt, {@code CorruptedInputException} may get
      * thrown before the number of bytes claimed to be available have
      * been read from this input stream.
      * <p>
@@ -352,7 +352,7 @@ public class LZMA2InputStream extends InputStream {
      * will then be the number of uncompressed bytes remaining from that
      * chunk. The return value can also be non-zero in the middle of
      * an uncompressed chunk, but then the return value depends also on
-     * the <code>available()</code> method of the underlying InputStream.
+     * the {@code available()} method of the underlying InputStream.
      *
      * @return      the number of uncompressed bytes that can be read
      *              without blocking
@@ -380,10 +380,10 @@ public class LZMA2InputStream extends InputStream {
     }
 
     /**
-     * Closes the stream and calls <code>in.close()</code>.
+     * Closes the stream and calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      */
     @Override
     public void close() throws IOException {

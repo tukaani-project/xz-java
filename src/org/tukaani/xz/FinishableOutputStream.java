@@ -16,7 +16,7 @@ public abstract class FinishableOutputStream extends OutputStream {
      * Finish the stream without closing the underlying stream.
      * No more data may be written to the stream after finishing.
      * <p>
-     * The <code>finish</code> method of <code>FinishableOutputStream</code>
+     * The {@code finish} method of {@code FinishableOutputStream}
      * does nothing. Subclasses should override it if they need finishing
      * support, which is the case, for example, with compressors.
      *

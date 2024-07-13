@@ -9,8 +9,8 @@ import java.io.IOException;
 
 /**
  * Counts the number of bytes read from an input stream.
- * The <code>close()</code> method does nothing, that is, the underlying
- * <code>InputStream</code> isn't closed.
+ * The {@code close()} method does nothing, that is, the underlying
+ * {@code InputStream} isn't closed.
  */
 class CountingInputStream extends CloseIgnoringInputStream {
     private long size = 0;

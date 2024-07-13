@@ -13,8 +13,8 @@ import org.tukaani.xz.lzma.LZMAEncoder;
  * LZMA2 compression options.
  * <p>
  * While this allows setting the LZMA2 compression options in detail,
- * often you only need <code>LZMA2Options()</code> or
- * <code>LZMA2Options(int)</code>.
+ * often you only need {@code LZMA2Options()} or
+ * {@code LZMA2Options(int)}.
  */
 public class LZMA2Options extends FilterOptions {
     /**
@@ -99,12 +99,12 @@ public class LZMA2Options extends FilterOptions {
     public static final int MODE_NORMAL = LZMAEncoder.MODE_NORMAL;
 
     /**
-     * Minimum value for <code>niceLen</code> is 8.
+     * Minimum value for {@code niceLen} is 8.
      */
     public static final int NICE_LEN_MIN = 8;
 
     /**
-     * Maximum value for <code>niceLen</code> is 273.
+     * Maximum value for {@code niceLen} is 273.
      */
     public static final int NICE_LEN_MAX = 273;
 
@@ -136,7 +136,7 @@ public class LZMA2Options extends FilterOptions {
 
     /**
      * Creates new LZMA2 options and sets them to the default values.
-     * This is equivalent to <code>LZMA2Options(PRESET_DEFAULT)</code>.
+     * This is equivalent to {@code LZMA2Options(PRESET_DEFAULT)}.
      */
     public LZMA2Options() {
         try {
@@ -151,7 +151,7 @@ public class LZMA2Options extends FilterOptions {
      * Creates new LZMA2 options and sets them to the given preset.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>preset</code> is not supported
+     *                          {@code preset} is not supported
      */
     public LZMA2Options(int preset) throws UnsupportedOptionsException {
         setPreset(preset);
@@ -180,7 +180,7 @@ public class LZMA2Options extends FilterOptions {
      * <p>
      * The presets 0-3 are fast presets with medium compression.
      * The presets 4-6 are fairly slow presets with high compression.
-     * The default preset (<code>PRESET_DEFAULT</code>) is 6.
+     * The default preset ({@code PRESET_DEFAULT}) is 6.
      * <p>
      * The presets 7-9 are like the preset 6 but use bigger dictionaries
      * and have higher compressor and decompressor memory requirements.
@@ -189,7 +189,7 @@ public class LZMA2Options extends FilterOptions {
      * presets 7, 8, or 9, respectively.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>preset</code> is not supported
+     *                          {@code preset} is not supported
      */
     public void setPreset(int preset) throws UnsupportedOptionsException {
         if (preset < 0 || preset > 9)
@@ -227,7 +227,7 @@ public class LZMA2Options extends FilterOptions {
      * recommended.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>dictSize</code> is not supported
+     *                          {@code dictSize} is not supported
      */
     public void setDictSize(int dictSize) throws UnsupportedOptionsException {
         if (dictSize < DICT_SIZE_MIN)
@@ -278,12 +278,12 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Sets the number of literal context bits and literal position bits.
      * <p>
-     * The sum of <code>lc</code> and <code>lp</code> is limited to 4.
+     * The sum of {@code lc} and {@code lp} is limited to 4.
      * Trying to exceed it will throw an exception. This function lets
      * you change both at the same time.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>lc</code> and <code>lp</code>
+     *                          {@code lc} and {@code lp}
      *                          are invalid
      */
     public void setLcLp(int lc, int lp) throws UnsupportedOptionsException {
@@ -304,23 +304,23 @@ public class LZMA2Options extends FilterOptions {
      * That is, literals are simply 8-bit bytes that are encoded one at
      * a time.
      * <p>
-     * The literal coding makes an assumption that the highest <code>lc</code>
+     * The literal coding makes an assumption that the highest {@code lc}
      * bits of the previous uncompressed byte correlate with the next byte.
      * For example, in typical English text, an upper-case letter is often
      * followed by a lower-case letter, and a lower-case letter is usually
      * followed by another lower-case letter. In the US-ASCII character set,
      * the highest three bits are 010 for upper-case letters and 011 for
-     * lower-case letters. When <code>lc</code> is at least 3, the literal
+     * lower-case letters. When {@code lc} is at least 3, the literal
      * coding can take advantage of this property in the  uncompressed data.
      * <p>
      * The default value (3) is usually good. If you want maximum compression,
-     * try <code>setLc(4)</code>. Sometimes it helps a little, and sometimes it
+     * try {@code setLc(4)}. Sometimes it helps a little, and sometimes it
      * makes compression worse. If it makes it worse, test for example
-     * <code>setLc(2)</code> too.
+     * {@code setLc(2)} too.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>lc</code> is invalid, or the sum
-     *                          of <code>lc</code> and <code>lp</code>
+     *                          {@code lc} is invalid, or the sum
+     *                          of {@code lc} and {@code lp}
      *                          exceed LC_LP_MAX
      */
     public void setLc(int lc) throws UnsupportedOptionsException {
@@ -335,8 +335,8 @@ public class LZMA2Options extends FilterOptions {
      * more information about alignment.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>lp</code> is invalid, or the sum
-     *                          of <code>lc</code> and <code>lp</code>
+     *                          {@code lp} is invalid, or the sum
+     *                          of {@code lc} and {@code lp}
      *                          exceed LC_LP_MAX
      */
     public void setLp(int lp) throws UnsupportedOptionsException {
@@ -362,24 +362,24 @@ public class LZMA2Options extends FilterOptions {
      * <p>
      * This affects what kind of alignment in the uncompressed data is
      * assumed in general. The default (2) means four-byte alignment
-     * (2^<code>pb</code> = 2^2 = 4), which is often a good choice when
+     * (2^{@code pb} = 2^2 = 4), which is often a good choice when
      * there's no better guess.
      * <p>
      * When the alignment is known, setting the number of position bits
      * accordingly may reduce the file size a little. For example with text
      * files having one-byte alignment (US-ASCII, ISO-8859-*, UTF-8), using
-     * <code>setPb(0)</code> can improve compression slightly. For UTF-16
-     * text, <code>setPb(1)</code> is a good choice. If the alignment is
-     * an odd number like 3 bytes, <code>setPb(0)</code> might be the best
+     * {@code setPb(0)} can improve compression slightly. For UTF-16
+     * text, {@code setPb(1)} is a good choice. If the alignment is
+     * an odd number like 3 bytes, {@code setPb(0)} might be the best
      * choice.
      * <p>
      * Even though the assumed alignment can be adjusted with
-     * <code>setPb</code> and <code>setLp</code>, LZMA2 still slightly favors
+     * {@code setPb} and {@code setLp}, LZMA2 still slightly favors
      * 16-byte alignment. It might be worth taking into account when designing
      * file formats that are likely to be often compressed with LZMA2.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>pb</code> is invalid
+     *                          {@code pb} is invalid
      */
     public void setPb(int pb) throws UnsupportedOptionsException {
         if (pb < 0 || pb > PB_MAX)
@@ -400,19 +400,19 @@ public class LZMA2Options extends FilterOptions {
      * Sets the compression mode.
      * <p>
      * This specifies the method to analyze the data produced by
-     * a match finder. The default is <code>MODE_FAST</code> for presets
-     * 0-3 and <code>MODE_NORMAL</code> for presets 4-9.
+     * a match finder. The default is {@code MODE_FAST} for presets
+     * 0-3 and {@code MODE_NORMAL} for presets 4-9.
      * <p>
-     * Usually <code>MODE_FAST</code> is used with Hash Chain match finders
-     * and <code>MODE_NORMAL</code> with Binary Tree match finders. This is
+     * Usually {@code MODE_FAST} is used with Hash Chain match finders
+     * and {@code MODE_NORMAL} with Binary Tree match finders. This is
      * also what the presets do.
      * <p>
-     * The special mode <code>MODE_UNCOMPRESSED</code> doesn't try to
+     * The special mode {@code MODE_UNCOMPRESSED} doesn't try to
      * compress the data at all (and doesn't use a match finder) and will
      * simply wrap it in uncompressed LZMA2 chunks.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>mode</code> is not supported
+     *                          {@code mode} is not supported
      */
     public void setMode(int mode) throws UnsupportedOptionsException {
         if (mode < MODE_UNCOMPRESSED || mode > MODE_NORMAL)
@@ -431,13 +431,13 @@ public class LZMA2Options extends FilterOptions {
 
     /**
      * Sets the nice length of matches.
-     * Once a match of at least <code>niceLen</code> bytes is found,
+     * Once a match of at least {@code niceLen} bytes is found,
      * the algorithm stops looking for better matches. Higher values tend
      * to give better compression at the expense of speed. The default
      * depends on the preset.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>niceLen</code> is invalid
+     *                          {@code niceLen} is invalid
      */
     public void setNiceLen(int niceLen) throws UnsupportedOptionsException {
         if (niceLen < NICE_LEN_MIN)
@@ -466,10 +466,10 @@ public class LZMA2Options extends FilterOptions {
      * Match finder has a major effect on compression speed, memory usage,
      * and compression ratio. Usually Hash Chain match finders are faster
      * than Binary Tree match finders. The default depends on the preset:
-     * 0-3 use <code>MF_HC4</code> and 4-9 use <code>MF_BT4</code>.
+     * 0-3 use {@code MF_HC4} and 4-9 use {@code MF_BT4}.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>mf</code> is not supported
+     *                          {@code mf} is not supported
      */
     public void setMatchFinder(int mf) throws UnsupportedOptionsException {
         if (mf != MF_HC4 && mf != MF_BT4)
@@ -489,7 +489,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Sets the match finder search depth limit.
      * <p>
-     * The default is a special value of <code>0</code> which indicates that
+     * The default is a special value of {@code 0} which indicates that
      * the depth limit should be automatically calculated by the selected
      * match finder from the nice length of matches.
      * <p>
@@ -500,7 +500,7 @@ public class LZMA2Options extends FilterOptions {
      * in case it is taking far too long.
      *
      * @throws      UnsupportedOptionsException
-     *                          <code>depthLimit</code> is invalid
+     *                          {@code depthLimit} is invalid
      */
     public void setDepthLimit(int depthLimit)
             throws UnsupportedOptionsException {

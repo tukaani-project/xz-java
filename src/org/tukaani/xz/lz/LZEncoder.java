@@ -101,12 +101,12 @@ public abstract class LZEncoder {
      *                          number of bytes that must be available
      *                          after current position + matchLenMax
      *
-     * @param       niceLen     if a match of at least <code>niceLen</code>
+     * @param       niceLen     if a match of at least {@code niceLen}
      *                          bytes is found, be happy with it and don't
      *                          stop looking for longer matches
      *
      * @param       matchLenMax don't test for matches longer than
-     *                          <code>matchLenMax</code> bytes
+     *                          {@code matchLenMax} bytes
      *
      * @param       mf          match finder ID
      *
@@ -130,7 +130,7 @@ public abstract class LZEncoder {
     }
 
     /**
-     * Creates a new LZEncoder. See <code>getInstance</code>.
+     * Creates a new LZEncoder. See {@code getInstance}.
      */
     LZEncoder(int dictSize, int extraSizeBefore, int extraSizeAfter,
               int niceLen, int matchLenMax, ArrayCache arrayCache) {
@@ -284,8 +284,8 @@ public abstract class LZEncoder {
     /**
      * Get the number of bytes available, including the current byte.
      * <p>
-     * Note that the result is undefined if <code>getMatches</code> or
-     * <code>skip</code> hasn't been called yet and no preset dictionary
+     * Note that the result is undefined if {@code getMatches} or
+     * {@code skip} hasn't been called yet and no preset dictionary
      * is being used.
      */
     public int getAvail() {
@@ -304,11 +304,11 @@ public abstract class LZEncoder {
     /**
      * Gets the byte from the given backward offset.
      * <p>
-     * The current byte is at <code>0</code>, the previous byte
-     * at <code>1</code> etc. To get a byte at zero-based distance,
+     * The current byte is at {@code 0}, the previous byte
+     * at {@code 1} etc. To get a byte at zero-based distance,
      * use {@code getByte(dist + 1)}.
      * <p>
-     * This function is equivalent to <code>getByte(0, backward)</code>.
+     * This function is equivalent to {@code getByte(0, backward)}.
      */
     public int getByte(int backward) {
         return buf[readPos - backward] & 0xFF;
@@ -355,7 +355,7 @@ public abstract class LZEncoder {
      * useless for actual encoding since match finder's results should
      * naturally always be valid if it isn't broken.
      *
-     * @param       matches     return value from <code>getMatches</code>
+     * @param       matches     return value from {@code getMatches}
      *
      * @return      true if matches are valid, false if match finder is broken
      */

@@ -7,7 +7,7 @@ package org.tukaani.xz;
 /**
  * Generic {@link java.io.IOException IOException} specific to this package.
  * The other IOExceptions in this package extend
- * from <code>XZIOException</code>.
+ * from {@code XZIOException}.
  */
 public class XZIOException extends java.io.IOException {
     private static final long serialVersionUID = 3L;

@@ -115,9 +115,9 @@ public class LZMAOutputStream extends FinishableOutputStream {
      *                          is used here as is for LZMA2
      *
      * @param       inputSize   uncompressed size of the data to be compressed;
-     *                          use <code>-1</code> when unknown
+     *                          use {@code -1} when unknown
      *
-     * @throws      IOException may be thrown from <code>out</code>
+     * @throws      IOException may be thrown from {@code out}
      */
     public LZMAOutputStream(OutputStream out, LZMA2Options options,
                             long inputSize)
@@ -129,8 +129,8 @@ public class LZMAOutputStream extends FinishableOutputStream {
      * Creates a new compressor for the legacy .lzma file format.
      * <p>
      * This is identical to
-     * <code>LZMAOutputStream(OutputStream, LZMA2Options, long)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * {@code LZMAOutputStream(OutputStream, LZMA2Options, long)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       out         output stream to which the compressed data
      *                          will be written
@@ -139,11 +139,11 @@ public class LZMAOutputStream extends FinishableOutputStream {
      *                          is used here as is for LZMA2
      *
      * @param       inputSize   uncompressed size of the data to be compressed;
-     *                          use <code>-1</code> when unknown
+     *                          use {@code -1} when unknown
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
-     * @throws      IOException may be thrown from <code>out</code>
+     * @throws      IOException may be thrown from {@code out}
      *
      * @since 1.7
      */
@@ -170,7 +170,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
      * @param       useEndMarker
      *                          if end of stream marker should be written
      *
-     * @throws      IOException may be thrown from <code>out</code>
+     * @throws      IOException may be thrown from {@code out}
      */
     public LZMAOutputStream(OutputStream out, LZMA2Options options,
                             boolean useEndMarker) throws IOException {
@@ -181,8 +181,8 @@ public class LZMAOutputStream extends FinishableOutputStream {
      * Creates a new compressor for raw LZMA (also known as LZMA1) stream.
      * <p>
      * This is identical to
-     * <code>LZMAOutputStream(OutputStream, LZMA2Options, boolean)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * {@code LZMAOutputStream(OutputStream, LZMA2Options, boolean)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       out         output stream to which the compressed data
      *                          will be written
@@ -195,7 +195,7 @@ public class LZMAOutputStream extends FinishableOutputStream {
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
-     * @throws      IOException may be thrown from <code>out</code>
+     * @throws      IOException may be thrown from {@code out}
      *
      * @since 1.7
      */

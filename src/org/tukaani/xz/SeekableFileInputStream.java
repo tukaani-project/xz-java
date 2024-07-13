@@ -37,7 +37,7 @@ public class SeekableFileInputStream extends SeekableInputStream {
 
     /**
      * Creates a new seekable input stream from an existing
-     * <code>RandomAccessFile</code> object.
+     * {@code RandomAccessFile} object.
      */
     public SeekableFileInputStream(RandomAccessFile randomAccessFile) {
         this.randomAccessFile = randomAccessFile;

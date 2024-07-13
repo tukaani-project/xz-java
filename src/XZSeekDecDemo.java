@@ -14,8 +14,8 @@ import org.tukaani.xz.*;
  * difference to XZDecDemo is that this will still use the random access code.
  * <p>
  * If one or more of the offset-length pairs are given,
- * for each pair, <code>length</code> number of bytes are
- * decompressed from <code>offset</code>.
+ * for each pair, {@code length} number of bytes are
+ * decompressed from {@code offset}.
  */
 class XZSeekDecDemo {
     public static void main(String[] args) throws Exception {

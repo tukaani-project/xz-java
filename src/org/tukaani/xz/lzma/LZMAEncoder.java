@@ -17,7 +17,7 @@ public abstract class LZMAEncoder extends LZMACoder {
 
     /**
      * LZMA2 chunk is considered full when its uncompressed size exceeds
-     * <code>LZMA2_UNCOMPRESSED_LIMIT</code>.
+     * {@code LZMA2_UNCOMPRESSED_LIMIT}.
      * <p>
      * A compressed LZMA2 chunk can hold 2 MiB of uncompressed data.
      * A single LZMA symbol may indicate up to MATCH_LEN_MAX bytes
@@ -29,7 +29,7 @@ public abstract class LZMAEncoder extends LZMACoder {
 
     /**
      * LZMA2 chunk is considered full when its compressed size exceeds
-     * <code>LZMA2_COMPRESSED_LIMIT</code>.
+     * {@code LZMA2_COMPRESSED_LIMIT}.
      * <p>
      * The maximum compressed size of a LZMA2 chunk is 64 KiB.
      * A single LZMA symbol might use 20 bytes of space even though
@@ -153,15 +153,15 @@ public abstract class LZMAEncoder extends LZMACoder {
      * <p>
      * There are three types of symbols: literal (a single byte),
      * repeated match, and normal match. The symbol is indicated
-     * by the return value and by the variable <code>back</code>.
+     * by the return value and by the variable {@code back}.
      * <p>
-     * Literal: <code>back == -1</code> and return value is <code>1</code>.
-     * The literal itself needs to be read from <code>lz</code> separately.
+     * Literal: {@code back == -1} and return value is {@code 1}.
+     * The literal itself needs to be read from {@code lz} separately.
      * <p>
-     * Repeated match: <code>back</code> is in the range [0, 3] and
+     * Repeated match: {@code back} is in the range [0, 3] and
      * the return value is the length of the repeated match.
      * <p>
-     * Normal match: {@code back - REPS} (<code>back - 4</code>)
+     * Normal match: {@code back - REPS} ({@code back - 4})
      * is the distance of the match and the return value is the length
      * of the match.
      */
@@ -655,7 +655,7 @@ public abstract class LZMAEncoder extends LZMACoder {
     class LengthEncoder extends LengthCoder {
         /**
          * The prices are updated after at least
-         * <code>PRICE_UPDATE_INTERVAL</code> many lengths
+         * {@code PRICE_UPDATE_INTERVAL} many lengths
          * have been encoded with the same posState.
          */
         private static final int PRICE_UPDATE_INTERVAL = 32; // FIXME?

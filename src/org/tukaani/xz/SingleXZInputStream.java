@@ -21,14 +21,14 @@ import org.tukaani.xz.check.Check;
  * been stored inside some other file format or protocol.
  * <p>
  * Unless you know what you are doing, don't use this class to decompress
- * standalone .xz files. For that purpose, use <code>XZInputStream</code>.
+ * standalone .xz files. For that purpose, use {@code XZInputStream}.
  *
  * <h2>When uncompressed size is known beforehand</h2>
  * <p>
  * If you are decompressing complete XZ streams and your application knows
  * exactly how much uncompressed data there should be, it is good to try
- * reading one more byte by calling <code>read()</code> and checking
- * that it returns <code>-1</code>. This way the decompressor will parse the
+ * reading one more byte by calling {@code read()} and checking
+ * that it returns {@code -1}. This way the decompressor will parse the
  * file footers and verify the integrity checks, giving the caller more
  * confidence that the uncompressed data is valid.
  *
@@ -60,11 +60,11 @@ public class SingleXZInputStream extends InputStream {
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
-     * XZ Stream from <code>in</code> without a memory usage limit.
+     * XZ Stream from {@code in} without a memory usage limit.
      * <p>
      * This constructor reads and parses the XZ Stream Header (12 bytes)
-     * from <code>in</code>. The header of the first Block is not read
-     * until <code>read</code> is called.
+     * from {@code in}. The header of the first Block is not read
+     * until {@code read} is called.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
@@ -81,9 +81,9 @@ public class SingleXZInputStream extends InputStream {
      *
      * @throws      EOFException
      *                          less than 12 bytes of input was available
-     *                          from <code>in</code>
+     *                          from {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public SingleXZInputStream(InputStream in) throws IOException {
         this(in, -1);
@@ -91,10 +91,10 @@ public class SingleXZInputStream extends InputStream {
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
-     * XZ Stream from <code>in</code> without a memory usage limit.
+     * XZ Stream from {@code in} without a memory usage limit.
      * <p>
-     * This is identical to <code>SingleXZInputStream(InputStream)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * This is identical to {@code SingleXZInputStream(InputStream)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
@@ -113,9 +113,9 @@ public class SingleXZInputStream extends InputStream {
      *
      * @throws      EOFException
      *                          less than 12 bytes of input was available
-     *                          from <code>in</code>
+     *                          from {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -126,16 +126,16 @@ public class SingleXZInputStream extends InputStream {
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
-     * XZ Stream from <code>in</code> with an optional memory usage limit.
+     * XZ Stream from {@code in} with an optional memory usage limit.
      * <p>
-     * This is identical to <code>SingleXZInputStream(InputStream)</code>
-     * except that this also takes the <code>memoryLimit</code> argument.
+     * This is identical to {@code SingleXZInputStream(InputStream)}
+     * except that this also takes the {@code memoryLimit} argument.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
      * @throws      XZFormatException
@@ -150,9 +150,9 @@ public class SingleXZInputStream extends InputStream {
      *
      * @throws      EOFException
      *                          less than 12 bytes of input was available
-     *                          from <code>in</code>
+     *                          from {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     public SingleXZInputStream(InputStream in, int memoryLimit)
             throws IOException {
@@ -161,17 +161,17 @@ public class SingleXZInputStream extends InputStream {
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
-     * XZ Stream from <code>in</code> with an optional memory usage limit.
+     * XZ Stream from {@code in} with an optional memory usage limit.
      * <p>
-     * This is identical to <code>SingleXZInputStream(InputStream)</code>
-     * except that this also takes the <code>memoryLimit</code> and
-     * <code>arrayCache</code> arguments.
+     * This is identical to {@code SingleXZInputStream(InputStream)}
+     * except that this also takes the {@code memoryLimit} and
+     * {@code arrayCache} arguments.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
      * @param       arrayCache  cache to be used for allocating large arrays
@@ -188,9 +188,9 @@ public class SingleXZInputStream extends InputStream {
      *
      * @throws      EOFException
      *                          less than 12 bytes of input was available
-     *                          from <code>in</code>
+     *                          from {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -201,11 +201,11 @@ public class SingleXZInputStream extends InputStream {
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
-     * XZ Stream from <code>in</code> with an optional memory usage limit
+     * XZ Stream from {@code in} with an optional memory usage limit
      * and ability to disable verification of integrity checks.
      * <p>
-     * This is identical to <code>SingleXZInputStream(InputStream,int)</code>
-     * except that this also takes the <code>verifyCheck</code> argument.
+     * This is identical to {@code SingleXZInputStream(InputStream,int)}
+     * except that this also takes the {@code verifyCheck} argument.
      * <p>
      * Note that integrity check verification should almost never be disabled.
      * Possible reasons to disable integrity check verification:
@@ -218,7 +218,7 @@ public class SingleXZInputStream extends InputStream {
      *   way.</li>
      * </ul>
      * <p>
-     * <code>verifyCheck</code> only affects the integrity check of
+     * {@code verifyCheck} only affects the integrity check of
      * the actual compressed data. The CRC32 fields in the headers
      * are always verified.
      *
@@ -226,12 +226,12 @@ public class SingleXZInputStream extends InputStream {
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
-     * @param       verifyCheck if <code>true</code>, the integrity checks
+     * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
-     *                          be set to <code>false</code>
+     *                          be set to {@code false}
      *
      * @throws      XZFormatException
      *                          input is not in the XZ format
@@ -245,9 +245,9 @@ public class SingleXZInputStream extends InputStream {
      *
      * @throws      EOFException
      *                          less than 12 bytes of input was available
-     *                          from <code>in</code>
+     *                          from {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.6
      */
@@ -258,23 +258,23 @@ public class SingleXZInputStream extends InputStream {
 
     /**
      * Creates a new XZ decompressor that decompresses exactly one
-     * XZ Stream from <code>in</code> with an optional memory usage limit
+     * XZ Stream from {@code in} with an optional memory usage limit
      * and ability to disable verification of integrity checks.
      * <p>
      * This is identical to
-     * <code>SingleXZInputStream(InputStream,int,boolean)</code>
-     * except that this also takes the <code>arrayCache</code> argument.
+     * {@code SingleXZInputStream(InputStream,int,boolean)}
+     * except that this also takes the {@code arrayCache} argument.
      *
      * @param       in          input stream from which XZ-compressed
      *                          data is read
      *
      * @param       memoryLimit memory usage limit in kibibytes (KiB)
-     *                          or <code>-1</code> to impose no
+     *                          or {@code -1} to impose no
      *                          memory usage limit
      *
-     * @param       verifyCheck if <code>true</code>, the integrity checks
+     * @param       verifyCheck if {@code true}, the integrity checks
      *                          will be verified; this should almost never
-     *                          be set to <code>false</code>
+     *                          be set to {@code false}
      *
      * @param       arrayCache  cache to be used for allocating large arrays
      *
@@ -290,9 +290,9 @@ public class SingleXZInputStream extends InputStream {
      *
      * @throws      EOFException
      *                          less than 12 bytes of input was available
-     *                          from <code>in</code>
+     *                          from {@code in}
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      *
      * @since 1.7
      */
@@ -334,11 +334,11 @@ public class SingleXZInputStream extends InputStream {
     /**
      * Decompresses the next byte from this input stream.
      * <p>
-     * Reading lots of data with <code>read()</code> from this input stream
+     * Reading lots of data with {@code read()} from this input stream
      * may be inefficient. Wrap it in {@link java.io.BufferedInputStream}
      * if you need to read lots of data one byte at a time.
      *
-     * @return      the next decompressed byte, or <code>-1</code>
+     * @return      the next decompressed byte, or {@code -1}
      *              to indicate the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -350,7 +350,7 @@ public class SingleXZInputStream extends InputStream {
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read() throws IOException {
@@ -360,24 +360,24 @@ public class SingleXZInputStream extends InputStream {
     /**
      * Decompresses into an array of bytes.
      * <p>
-     * If <code>len</code> is zero, no bytes are read and <code>0</code>
-     * is returned. Otherwise this will try to decompress <code>len</code>
-     * bytes of uncompressed data. Less than <code>len</code> bytes may
+     * If {@code len} is zero, no bytes are read and {@code 0}
+     * is returned. Otherwise this will try to decompress {@code len}
+     * bytes of uncompressed data. Less than {@code len} bytes may
      * be read only in the following situations:
      * <ul>
      *   <li>The end of the compressed data was reached successfully.</li>
-     *   <li>An error is detected after at least one but less <code>len</code>
+     *   <li>An error is detected after at least one but less {@code len}
      *       bytes have already been successfully decompressed.
-     *       The next call with non-zero <code>len</code> will immediately
+     *       The next call with non-zero {@code len} will immediately
      *       throw the pending exception.</li>
      *   <li>An exception is thrown.</li>
      * </ul>
      *
      * @param       buf         target buffer for uncompressed data
-     * @param       off         start offset in <code>buf</code>
+     * @param       off         start offset in {@code buf}
      * @param       len         maximum number of uncompressed bytes to read
      *
-     * @return      number of bytes read, or <code>-1</code> to indicate
+     * @return      number of bytes read, or {@code -1} to indicate
      *              the end of the compressed stream
      *
      * @throws      CorruptedInputException
@@ -389,7 +389,7 @@ public class SingleXZInputStream extends InputStream {
      * @throws      EOFException
      *                          compressed input is truncated or corrupt
      *
-     * @throws      IOException may be thrown by <code>in</code>
+     * @throws      IOException may be thrown by {@code in}
      */
     @Override
     public int read(byte[] buf, int off, int len) throws IOException {
@@ -462,7 +462,7 @@ public class SingleXZInputStream extends InputStream {
      * Returns the number of uncompressed bytes that can be read
      * without blocking. The value is returned with an assumption
      * that the compressed input data will be valid. If the compressed
-     * data is corrupt, <code>CorruptedInputException</code> may get
+     * data is corrupt, {@code CorruptedInputException} may get
      * thrown before the number of bytes claimed to be available have
      * been read from this input stream.
      *
@@ -481,12 +481,12 @@ public class SingleXZInputStream extends InputStream {
     }
 
     /**
-     * Closes the stream and calls <code>in.close()</code>.
+     * Closes the stream and calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
      * <p>
-     * This is equivalent to <code>close(true)</code>.
+     * This is equivalent to {@code close(true)}.
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      */
     @Override
     public void close() throws IOException {
@@ -494,25 +494,25 @@ public class SingleXZInputStream extends InputStream {
     }
 
     /**
-     * Closes the stream and optionally calls <code>in.close()</code>.
+     * Closes the stream and optionally calls {@code in.close()}.
      * If the stream was already closed, this does nothing.
-     * If <code>close(false)</code> has been called, a further
-     * call of <code>close(true)</code> does nothing (it doesn't call
-     * <code>in.close()</code>).
+     * If {@code close(false)} has been called, a further
+     * call of {@code close(true)} does nothing (it doesn't call
+     * {@code in.close()}).
      * <p>
-     * If you don't want to close the underlying <code>InputStream</code>,
+     * If you don't want to close the underlying {@code InputStream},
      * there is usually no need to worry about closing this stream either;
      * it's fine to do nothing and let the garbage collector handle it.
-     * However, if you are using {@link ArrayCache}, <code>close(false)</code>
+     * However, if you are using {@link ArrayCache}, {@code close(false)}
      * can be useful to put the allocated arrays back to the cache without
-     * closing the underlying <code>InputStream</code>.
+     * closing the underlying {@code InputStream}.
      * <p>
      * Note that if you successfully reach the end of the stream
-     * (<code>read</code> returns <code>-1</code>), the arrays are
-     * automatically put back to the cache by that <code>read</code> call. In
-     * this situation <code>close(false)</code> is redundant (but harmless).
+     * ({@code read} returns {@code -1}), the arrays are
+     * automatically put back to the cache by that {@code read} call. In
+     * this situation {@code close(false)} is redundant (but harmless).
      *
-     * @throws  IOException if thrown by <code>in.close()</code>
+     * @throws  IOException if thrown by {@code in.close()}
      *
      * @since 1.7
      */
