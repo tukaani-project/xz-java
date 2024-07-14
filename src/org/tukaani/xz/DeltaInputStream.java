@@ -81,7 +81,7 @@ public class DeltaInputStream extends InputStream {
      *
      * @throws      XZIOException if the stream has been closed
      *
-     * @throws      IOException may be thrown by underlaying input
+     * @throws      IOException may be thrown by underlying input
      *                          stream {@code in}
      */
     @Override

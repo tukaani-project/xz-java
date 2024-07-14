@@ -357,7 +357,7 @@ public class XZOutputStream extends FinishableOutputStream {
      * The compressors tend to do internal buffering and thus the written
      * data won't be readable from the compressed output immediately.
      * Use {@code flush()} to force everything written so far to
-     * be written to the underlaying output stream, but be aware that
+     * be written to the underlying output stream, but be aware that
      * flushing reduces compression ratio.
      *
      * @param       buf         buffer of bytes to be written

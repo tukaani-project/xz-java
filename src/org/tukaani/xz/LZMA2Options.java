@@ -543,7 +543,7 @@ public class LZMA2Options extends FilterOptions {
      * is not 2^n or 2^n&nbsp;+&nbsp;2^(n-1) bytes. This is because the .xz
      * headers store the dictionary size in such a format and other values
      * are rounded up to the next such value. Such rounding is harmess except
-     * it might waste some memory if an unsual dictionary size is used.
+     * it might waste some memory if an unusual dictionary size is used.
      * <p>
      * If you use raw LZMA2 streams and unusual dictioanary size, call
      * {@link LZMA2InputStream#getMemoryUsage} directly to get raw decoder

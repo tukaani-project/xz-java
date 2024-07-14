@@ -6,7 +6,7 @@ import java.io.*;
 import org.tukaani.xz.*;
 
 /**
- * Compresses a single file from standard input to standard ouput into
+ * Compresses a single file from standard input to standard output into
  * the .xz file format.
  * <p>
  * One optional argument is supported: LZMA2 preset level which is an integer

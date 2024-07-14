@@ -25,7 +25,7 @@ import org.tukaani.xz.index.BlockInfo;
  * class. A typical .xz file has only one Stream, and parsing its Index will
  * need only three or four seeks.
  * <p>
- * To make random access possible, the data in a .xz file must be splitted
+ * To make random access possible, the data in a .xz file must be split
  * into multiple Blocks of reasonable size. Decompression can only start at
  * a Block boundary. When seeking to an uncompressed position that is not at
  * a Block boundary, decompression starts at the beginning of the Block and
@@ -96,7 +96,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
     /**
      * Memory usage limit after the memory usage of the IndexDecoders have
-     * been substracted.
+     * been subtracted.
      */
     private final int memoryLimit;
 
@@ -580,7 +580,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
 
         assert pos == 0;
 
-        // Save it now that indexMemoryUsage has been substracted from it.
+        // Save it now that indexMemoryUsage has been subtracted from it.
         this.memoryLimit = memoryLimit;
 
         // Store the relative offsets of the Streams. This way we don't

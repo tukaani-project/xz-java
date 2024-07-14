@@ -34,7 +34,7 @@ final class BT4 extends LZEncoder {
         hash = new Hash234(dictSize, arrayCache);
         tree = arrayCache.getIntArray(cyclicSize * 2, false);
 
-        // Substracting 1 because the shortest match that this match
+        // Subtracting 1 because the shortest match that this match
         // finder can find is 2 bytes, so there's no need to reserve
         // space for one-byte matches.
         matches = new Matches(niceLen - 1);

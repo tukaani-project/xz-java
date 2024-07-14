@@ -6,7 +6,7 @@ import java.io.*;
 import org.tukaani.xz.*;
 
 /**
- * Compresses a single file from standard input to standard ouput into
+ * Compresses a single file from standard input to standard output into
  * the .lzma file format.
  * <p>
  * NOTE: For most purposes, .lzma is a legacy format and usually you should
