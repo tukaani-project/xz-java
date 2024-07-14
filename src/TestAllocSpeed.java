@@ -4,8 +4,10 @@
 
 /*
  * Usage:
- *   time java -jar build/jar/TestAllocSpeed.jar MODE ITERS THREADS < FILE
+ *   time java -jar build/jar/TestAllocSpeed.jar \
+ *       -Dorg.tukaani.xz.ArrayCache=CACHE_TYPE MODE ITERS THREADS < FILE
  * where
+ *   CACHE_TYPE is "Dummy" (default) or "Basic",
  *   MODE is "true" for compression or "false" for decompression,
  *   ITERS is the number of iterations to done by each thread,
  *   THREADS is the number of threads, and
@@ -16,8 +18,12 @@
  * ArrayCache gets more diverse load.
  *
  * Examples:
- *   time java -jar build/jar/TestAllocSpeed.jar true 1000 4 < README
- *   time java -jar build/jar/TestAllocSpeed.jar false 10000 4 < foo.xz
+ *
+ *   time java -jar build/jar/TestAllocSpeed.jar \
+ *       -Dorg.tukaani.xz.ArrayCache=Basic true 1000 4 < README
+ *
+ *   time java -jar build/jar/TestAllocSpeed.jar \
+ *       -Dorg.tukaani.xz.ArrayCache=Basic false 10000 4 < foo.xz
  */
 
 import java.io.*;
@@ -83,8 +89,6 @@ class TestAllocSpeed implements Runnable {
             throw new Exception("Thread count must be 1-64");
 
         testdataSize = System.in.read(testdata);
-
-        ArrayCache.setDefaultCache(BasicArrayCache.getInstance());
 
         Thread[] threads = new Thread[threadCount];
         for (int i = 0; i < threadCount; ++i) {
