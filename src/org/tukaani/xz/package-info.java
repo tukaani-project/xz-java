@@ -41,7 +41,7 @@
  * </ul>
  * <p>
  * Many people have contributed improvements or reported bugs.
- * Most of these people are mentioned in the file THANKS
+ * Most of these people are mentioned in the file THANKS.md
  * in the source package.
  *
  * <h2>License</h2>
