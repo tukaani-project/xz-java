@@ -1,0 +1,20 @@
+# XZ for Java is compliant with version 3.2 of the REUSE Specification.
+
+version = 1
+
+[[annotations]]
+path = [
+    '.gitattributes',
+    '.gitignore',
+    'AUTHORS',
+    'NEWS',
+    'README',
+    'REUSE.toml',
+    'THANKS',
+    'fileset-src.txt',
+    'fileset-src9.txt',
+    'maven/README',
+]
+precedence = 'closest'
+SPDX-FileCopyrightText = 'The XZ for Java authors and contributors'
+SPDX-License-Identifier = '0BSD'
