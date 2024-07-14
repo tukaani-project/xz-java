@@ -7,7 +7,7 @@ path = [
     '.gitattributes',
     '.gitignore',
     'AUTHORS.md',
-    'NEWS',
+    'NEWS.md',
     'README',
     'REUSE.toml',
     'THANKS.md',
