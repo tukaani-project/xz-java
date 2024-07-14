@@ -8,7 +8,7 @@ path = [
     '.gitignore',
     'AUTHORS.md',
     'NEWS.md',
-    'README',
+    'README.md',
     'REUSE.toml',
     'THANKS.md',
     'fileset-src.txt',

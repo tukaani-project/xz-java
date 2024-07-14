@@ -20,7 +20,7 @@
  * Examples:
  *
  *   time java -jar build/jar/TestAllocSpeed.jar \
- *       -Dorg.tukaani.xz.ArrayCache=Basic true 1000 4 < README
+ *       -Dorg.tukaani.xz.ArrayCache=Basic true 1000 4 < README.md
  *
  *   time java -jar build/jar/TestAllocSpeed.jar \
  *       -Dorg.tukaani.xz.ArrayCache=Basic false 10000 4 < foo.xz
