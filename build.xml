@@ -17,13 +17,15 @@
         <delete dir="extdoc"/>
     </target>
 
-    <target name="dist" description="Creates a source package (.zip)">
+    <target name="dist"
+            description="Creates a source package (.zip) using 'git archive'">
         <mkdir dir="${dist_dir}"/>
-        <zip destfile="${dist_file}">
-            <fileset dir="." includesfile="fileset-misc.txt"/>
-            <fileset dir="." includesfile="fileset-src.txt"/>
-            <fileset dir="." includesfile="fileset-src9.txt"/>
-        </zip>
+        <exec output="${dist_file}" logError="true" failonerror="true"
+              executable="git">
+            <arg value="archive"/>
+            <arg value="--format=zip"/>
+            <arg value="HEAD"/>
+        </exec>
     </target>
 
     <target name="doc"
