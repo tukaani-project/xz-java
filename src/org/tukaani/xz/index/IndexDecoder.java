@@ -14,7 +14,7 @@ import org.tukaani.xz.CorruptedInputException;
 import org.tukaani.xz.MemoryLimitException;
 import org.tukaani.xz.UnsupportedOptionsException;
 
-public class IndexDecoder extends IndexBase {
+public final class IndexDecoder extends IndexBase {
     private final StreamFlags streamFlags;
     private final long streamPadding;
     private final int memoryUsage;
