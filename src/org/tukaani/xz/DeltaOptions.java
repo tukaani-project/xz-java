@@ -21,7 +21,7 @@ import java.io.InputStream;
  * also help with PCM audio, although special-purpose compressors like
  * FLAC will give much smaller result at much better compression speed.
  */
-public class DeltaOptions extends FilterOptions {
+public final class DeltaOptions extends FilterOptions {
     /**
      * Smallest supported delta calculation distance.
      */

@@ -12,7 +12,7 @@ import org.tukaani.xz.simple.ARM64;
  *
  * @since 1.10
  */
-public class ARM64Options extends BCJOptions {
+public final class ARM64Options extends BCJOptions {
     private static final int ALIGNMENT = 4;
 
     public ARM64Options() {
