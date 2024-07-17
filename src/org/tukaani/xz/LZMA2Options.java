@@ -134,13 +134,76 @@ public class LZMA2Options extends FilterOptions {
     private int mf;
     private int depthLimit;
 
+    private static void validateDictSize(int dictSize)
+            throws UnsupportedOptionsException {
+        if (dictSize < DICT_SIZE_MIN)
+            throw new UnsupportedOptionsException(
+                    "LZMA2 dictionary size must be at least 4 KiB: "
+                    + dictSize + " B");
+
+        if (dictSize > DICT_SIZE_MAX)
+            throw new UnsupportedOptionsException(
+                    "LZMA2 dictionary size must not exceed "
+                    + (DICT_SIZE_MAX >> 20) + " MiB: " + dictSize + " B");
+    }
+
+    private static void validateLcLp(int lc, int lp)
+            throws UnsupportedOptionsException {
+        if (lc < 0 || lp < 0 || lc > LC_LP_MAX || lp > LC_LP_MAX
+                || lc + lp > LC_LP_MAX)
+            throw new UnsupportedOptionsException(
+                    "lc + lp must not exceed " + LC_LP_MAX + ": "
+                    + lc + " + " + lp);
+    }
+
+    private static void validatePb(int pb)
+            throws UnsupportedOptionsException {
+        if (pb < 0 || pb > PB_MAX)
+            throw new UnsupportedOptionsException(
+                    "pb must not exceed " + PB_MAX + ": " + pb);
+    }
+
+    private static void validateMode(int mode)
+            throws UnsupportedOptionsException {
+        if (mode < MODE_UNCOMPRESSED || mode > MODE_NORMAL)
+            throw new UnsupportedOptionsException(
+                    "Unsupported compression mode: " + mode);
+    }
+
+    private static void validateNiceLen(int niceLen)
+            throws UnsupportedOptionsException {
+        if (niceLen < NICE_LEN_MIN)
+            throw new UnsupportedOptionsException(
+                    "Minimum nice length of matches is "
+                    + NICE_LEN_MIN + " bytes: " + niceLen);
+
+        if (niceLen > NICE_LEN_MAX)
+            throw new UnsupportedOptionsException(
+                    "Maximum nice length of matches is " + NICE_LEN_MAX
+                    + ": " + niceLen);
+    }
+
+    private static void validateMatchFinder(int mf)
+            throws UnsupportedOptionsException {
+        if (mf != MF_HC4 && mf != MF_BT4)
+            throw new UnsupportedOptionsException(
+                    "Unsupported match finder: " + mf);
+    }
+
+    private static void validateDepthLimit(int depthLimit)
+            throws UnsupportedOptionsException {
+        if (depthLimit < 0)
+            throw new UnsupportedOptionsException(
+                    "Depth limit cannot be negative: " + depthLimit);
+    }
+
     /**
      * Creates new LZMA2 options and sets them to the default values.
      * This is equivalent to {@code LZMA2Options(PRESET_DEFAULT)}.
      */
     public LZMA2Options() {
         try {
-            setPreset(PRESET_DEFAULT);
+            setPresetPrivate(PRESET_DEFAULT);
         } catch (UnsupportedOptionsException e) {
             assert false;
             throw new RuntimeException();
@@ -154,7 +217,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code preset} is not supported
      */
     public LZMA2Options(int preset) throws UnsupportedOptionsException {
-        setPreset(preset);
+        setPresetPrivate(preset);
     }
 
     /**
@@ -166,13 +229,27 @@ public class LZMA2Options extends FilterOptions {
     public LZMA2Options(int dictSize, int lc, int lp, int pb, int mode,
                         int niceLen, int mf, int depthLimit)
             throws UnsupportedOptionsException {
-        setDictSize(dictSize);
-        setLcLp(lc, lp);
-        setPb(pb);
-        setMode(mode);
-        setNiceLen(niceLen);
-        setMatchFinder(mf);
-        setDepthLimit(depthLimit);
+        validateDictSize(dictSize);
+        this.dictSize = dictSize;
+
+        validateLcLp(lc, lp);
+        this.lc = lc;
+        this.lp = lp;
+
+        validatePb(pb);
+        this.pb = pb;
+
+        validateMode(mode);
+        this.mode = mode;
+
+        validateNiceLen(niceLen);
+        this.niceLen = niceLen;
+
+        validateMatchFinder(mf);
+        this.mf = mf;
+
+        validateDepthLimit(depthLimit);
+        this.depthLimit = depthLimit;
     }
 
     /**
@@ -192,6 +269,11 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code preset} is not supported
      */
     public void setPreset(int preset) throws UnsupportedOptionsException {
+        setPresetPrivate(preset);
+    }
+
+    private void setPresetPrivate(int preset)
+            throws UnsupportedOptionsException {
         if (preset < 0 || preset > 9)
             throw new UnsupportedOptionsException(
                     "Unsupported preset: " + preset);
@@ -230,16 +312,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code dictSize} is not supported
      */
     public void setDictSize(int dictSize) throws UnsupportedOptionsException {
-        if (dictSize < DICT_SIZE_MIN)
-            throw new UnsupportedOptionsException(
-                    "LZMA2 dictionary size must be at least 4 KiB: "
-                    + dictSize + " B");
-
-        if (dictSize > DICT_SIZE_MAX)
-            throw new UnsupportedOptionsException(
-                    "LZMA2 dictionary size must not exceed "
-                    + (DICT_SIZE_MAX >> 20) + " MiB: " + dictSize + " B");
-
+        validateDictSize(dictSize);
         this.dictSize = dictSize;
     }
 
@@ -287,12 +360,7 @@ public class LZMA2Options extends FilterOptions {
      *                          are invalid
      */
     public void setLcLp(int lc, int lp) throws UnsupportedOptionsException {
-        if (lc < 0 || lp < 0 || lc > LC_LP_MAX || lp > LC_LP_MAX
-                || lc + lp > LC_LP_MAX)
-            throw new UnsupportedOptionsException(
-                    "lc + lp must not exceed " + LC_LP_MAX + ": "
-                    + lc + " + " + lp);
-
+        validateLcLp(lc, lp);
         this.lc = lc;
         this.lp = lp;
     }
@@ -382,10 +450,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code pb} is invalid
      */
     public void setPb(int pb) throws UnsupportedOptionsException {
-        if (pb < 0 || pb > PB_MAX)
-            throw new UnsupportedOptionsException(
-                    "pb must not exceed " + PB_MAX + ": " + pb);
-
+        validatePb(pb);
         this.pb = pb;
     }
 
@@ -415,10 +480,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code mode} is not supported
      */
     public void setMode(int mode) throws UnsupportedOptionsException {
-        if (mode < MODE_UNCOMPRESSED || mode > MODE_NORMAL)
-            throw new UnsupportedOptionsException(
-                    "Unsupported compression mode: " + mode);
-
+        validateMode(mode);
         this.mode = mode;
     }
 
@@ -440,16 +502,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code niceLen} is invalid
      */
     public void setNiceLen(int niceLen) throws UnsupportedOptionsException {
-        if (niceLen < NICE_LEN_MIN)
-            throw new UnsupportedOptionsException(
-                    "Minimum nice length of matches is "
-                    + NICE_LEN_MIN + " bytes: " + niceLen);
-
-        if (niceLen > NICE_LEN_MAX)
-            throw new UnsupportedOptionsException(
-                    "Maximum nice length of matches is " + NICE_LEN_MAX
-                    + ": " + niceLen);
-
+        validateNiceLen(niceLen);
         this.niceLen = niceLen;
     }
 
@@ -472,10 +525,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code mf} is not supported
      */
     public void setMatchFinder(int mf) throws UnsupportedOptionsException {
-        if (mf != MF_HC4 && mf != MF_BT4)
-            throw new UnsupportedOptionsException(
-                    "Unsupported match finder: " + mf);
-
+        validateMatchFinder(mf);
         this.mf = mf;
     }
 
@@ -504,10 +554,7 @@ public class LZMA2Options extends FilterOptions {
      */
     public void setDepthLimit(int depthLimit)
             throws UnsupportedOptionsException {
-        if (depthLimit < 0)
-            throw new UnsupportedOptionsException(
-                    "Depth limit cannot be negative: " + depthLimit);
-
+        validateDepthLimit(depthLimit);
         this.depthLimit = depthLimit;
     }
 
