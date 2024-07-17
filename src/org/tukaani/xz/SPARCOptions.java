@@ -10,7 +10,7 @@ import org.tukaani.xz.simple.SPARC;
 /**
  * BCJ filter for SPARC.
  */
-public final class SPARCOptions extends BCJOptions {
+public class SPARCOptions extends BCJOptions {
     private static final int ALIGNMENT = 4;
 
     public SPARCOptions() {

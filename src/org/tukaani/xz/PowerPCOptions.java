@@ -10,7 +10,7 @@ import org.tukaani.xz.simple.PowerPC;
 /**
  * BCJ filter for big endian PowerPC instructions.
  */
-public final class PowerPCOptions extends BCJOptions {
+public class PowerPCOptions extends BCJOptions {
     private static final int ALIGNMENT = 4;
 
     public PowerPCOptions() {

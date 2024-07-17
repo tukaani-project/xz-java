@@ -16,7 +16,7 @@ import org.tukaani.xz.lzma.LZMAEncoder;
  * often you only need {@code LZMA2Options()} or
  * {@code LZMA2Options(int)}.
  */
-public final class LZMA2Options extends FilterOptions {
+public class LZMA2Options extends FilterOptions {
     /**
      * Minimum valid compression preset level is 0.
      */

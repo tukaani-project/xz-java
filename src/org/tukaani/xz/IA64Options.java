@@ -10,7 +10,7 @@ import org.tukaani.xz.simple.IA64;
 /**
  * BCJ filter for Itanium (IA-64) instructions.
  */
-public final class IA64Options extends BCJOptions {
+public class IA64Options extends BCJOptions {
     private static final int ALIGNMENT = 16;
 
     public IA64Options() {

@@ -13,7 +13,7 @@ import org.tukaani.xz.simple.RISCVDecoder;
  *
  * @since 1.10
  */
-public final class RISCVOptions extends BCJOptions {
+public class RISCVOptions extends BCJOptions {
     private static final int ALIGNMENT = 2;
 
     public RISCVOptions() {

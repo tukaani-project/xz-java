@@ -10,7 +10,7 @@ import org.tukaani.xz.simple.X86;
 /**
  * BCJ filter for x86 (32-bit and 64-bit) instructions.
  */
-public final class X86Options extends BCJOptions {
+public class X86Options extends BCJOptions {
     private static final int ALIGNMENT = 1;
 
     public X86Options() {
