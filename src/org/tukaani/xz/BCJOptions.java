@@ -17,7 +17,7 @@ abstract class BCJOptions extends FilterOptions {
      * Normally this is useless so you shouldn't use this function.
      * The default value is {@code 0}.
      */
-    public void setStartOffset(int startOffset)
+    public final void setStartOffset(int startOffset)
             throws UnsupportedOptionsException {
         if ((startOffset & (alignment - 1)) != 0)
             throw new UnsupportedOptionsException(
@@ -29,7 +29,7 @@ abstract class BCJOptions extends FilterOptions {
     /**
      * Gets the start offset.
      */
-    public int getStartOffset() {
+    public final int getStartOffset() {
         return startOffset;
     }
 

@@ -191,7 +191,8 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code preset} is not supported
      */
-    public void setPreset(int preset) throws UnsupportedOptionsException {
+    public final void setPreset(int preset)
+            throws UnsupportedOptionsException {
         if (preset < 0 || preset > 9)
             throw new UnsupportedOptionsException(
                     "Unsupported preset: " + preset);
@@ -229,7 +230,8 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code dictSize} is not supported
      */
-    public void setDictSize(int dictSize) throws UnsupportedOptionsException {
+    public final void setDictSize(int dictSize)
+            throws UnsupportedOptionsException {
         if (dictSize < DICT_SIZE_MIN)
             throw new UnsupportedOptionsException(
                     "LZMA2 dictionary size must be at least 4 KiB: "
@@ -246,7 +248,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Gets the dictionary size in bytes.
      */
-    public int getDictSize() {
+    public final int getDictSize() {
         return dictSize;
     }
 
@@ -264,14 +266,14 @@ public class LZMA2Options extends FilterOptions {
      * near the end of the preset dictionary. The preset dictionary used
      * for compression is also needed for decompression.
      */
-    public void setPresetDict(byte[] presetDict) {
+    public final void setPresetDict(byte[] presetDict) {
         this.presetDict = presetDict;
     }
 
     /**
      * Gets the preset dictionary.
      */
-    public byte[] getPresetDict() {
+    public final byte[] getPresetDict() {
         return presetDict;
     }
 
@@ -286,7 +288,8 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code lc} and {@code lp}
      *                          are invalid
      */
-    public void setLcLp(int lc, int lp) throws UnsupportedOptionsException {
+    public final void setLcLp(int lc, int lp)
+            throws UnsupportedOptionsException {
         if (lc < 0 || lp < 0 || lc > LC_LP_MAX || lp > LC_LP_MAX
                 || lc + lp > LC_LP_MAX)
             throw new UnsupportedOptionsException(
@@ -323,7 +326,7 @@ public class LZMA2Options extends FilterOptions {
      *                          of {@code lc} and {@code lp}
      *                          exceed LC_LP_MAX
      */
-    public void setLc(int lc) throws UnsupportedOptionsException {
+    public final void setLc(int lc) throws UnsupportedOptionsException {
         setLcLp(lc, lp);
     }
 
@@ -339,21 +342,21 @@ public class LZMA2Options extends FilterOptions {
      *                          of {@code lc} and {@code lp}
      *                          exceed LC_LP_MAX
      */
-    public void setLp(int lp) throws UnsupportedOptionsException {
+    public final void setLp(int lp) throws UnsupportedOptionsException {
         setLcLp(lc, lp);
     }
 
     /**
      * Gets the number of literal context bits.
      */
-    public int getLc() {
+    public final int getLc() {
         return lc;
     }
 
     /**
      * Gets the number of literal position bits.
      */
-    public int getLp() {
+    public final int getLp() {
         return lp;
     }
 
@@ -381,7 +384,7 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code pb} is invalid
      */
-    public void setPb(int pb) throws UnsupportedOptionsException {
+    public final void setPb(int pb) throws UnsupportedOptionsException {
         if (pb < 0 || pb > PB_MAX)
             throw new UnsupportedOptionsException(
                     "pb must not exceed " + PB_MAX + ": " + pb);
@@ -392,7 +395,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Gets the number of position bits.
      */
-    public int getPb() {
+    public final int getPb() {
         return pb;
     }
 
@@ -414,7 +417,7 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code mode} is not supported
      */
-    public void setMode(int mode) throws UnsupportedOptionsException {
+    public final void setMode(int mode) throws UnsupportedOptionsException {
         if (mode < MODE_UNCOMPRESSED || mode > MODE_NORMAL)
             throw new UnsupportedOptionsException(
                     "Unsupported compression mode: " + mode);
@@ -425,7 +428,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Gets the compression mode.
      */
-    public int getMode() {
+    public final int getMode() {
         return mode;
     }
 
@@ -439,7 +442,8 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code niceLen} is invalid
      */
-    public void setNiceLen(int niceLen) throws UnsupportedOptionsException {
+    public final void setNiceLen(int niceLen)
+            throws UnsupportedOptionsException {
         if (niceLen < NICE_LEN_MIN)
             throw new UnsupportedOptionsException(
                     "Minimum nice length of matches is "
@@ -456,7 +460,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Gets the nice length of matches.
      */
-    public int getNiceLen() {
+    public final int getNiceLen() {
         return niceLen;
     }
 
@@ -471,7 +475,8 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code mf} is not supported
      */
-    public void setMatchFinder(int mf) throws UnsupportedOptionsException {
+    public final void setMatchFinder(int mf)
+            throws UnsupportedOptionsException {
         if (mf != MF_HC4 && mf != MF_BT4)
             throw new UnsupportedOptionsException(
                     "Unsupported match finder: " + mf);
@@ -482,7 +487,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Gets the match finder type.
      */
-    public int getMatchFinder() {
+    public final int getMatchFinder() {
         return mf;
     }
 
@@ -502,7 +507,7 @@ public class LZMA2Options extends FilterOptions {
      * @throws      UnsupportedOptionsException
      *                          {@code depthLimit} is invalid
      */
-    public void setDepthLimit(int depthLimit)
+    public final void setDepthLimit(int depthLimit)
             throws UnsupportedOptionsException {
         if (depthLimit < 0)
             throw new UnsupportedOptionsException(
@@ -514,7 +519,7 @@ public class LZMA2Options extends FilterOptions {
     /**
      * Gets the match finder search depth limit.
      */
-    public int getDepthLimit() {
+    public final int getDepthLimit() {
         return depthLimit;
     }
 
