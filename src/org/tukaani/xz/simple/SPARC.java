@@ -26,17 +26,15 @@ public final class SPARC implements SimpleFilter {
             if ((buf[i] == 0x40 && (buf[i + 1] & 0xC0) == 0x00)
                     || (buf[i] == 0x7F && (buf[i + 1] & 0xC0) == 0xC0)) {
                 int src = ByteArrayView.getIntBE(buf, i);
-                src <<= 2;
 
-                int dest;
-                if (isEncoder)
-                    dest = src + (pos + i - off);
-                else
-                    dest = src - (pos + i - off);
+                int pc = (pos + i - off) >>> 2;
+                if (!isEncoder)
+                    pc = -pc;
 
-                dest >>>= 2;
-                dest = (((0 - ((dest >>> 22) & 1)) << 22) & 0x3FFFFFFF)
-                       | (dest & 0x3FFFFF) | 0x40000000;
+                int dest = src + pc;
+                dest <<= 9;
+                dest >>= 9;
+                dest = 0x40000000 | (dest & 0x3FFFFFFF);
 
                 ByteArrayView.setIntBE(buf, i, dest);
             }
