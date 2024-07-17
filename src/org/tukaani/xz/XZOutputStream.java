@@ -271,7 +271,7 @@ public class XZOutputStream extends FinishableOutputStream {
             throws IOException {
         this.arrayCache = arrayCache;
         this.out = out;
-        updateFilters(filterOptions);
+        setFiltersForNextBlock(filterOptions);
 
         streamFlags.checkType = checkType;
         check = Check.getInstance(checkType);
@@ -319,6 +319,15 @@ public class XZOutputStream extends FinishableOutputStream {
             throw new UnsupportedOptionsException("Changing filter options "
                     + "in the middle of a XZ Block not implemented");
 
+        setFiltersForNextBlock(filterOptions);
+    }
+
+    // This is called from updateFilters and from a constructor.
+    // Since 1.10, the constructor doesn't call the public function
+    // updateFilters because it might lead to this-escape if this class
+    // is extended and updateFilters is overridden.
+    private void setFiltersForNextBlock(FilterOptions[] filterOptions)
+            throws XZIOException {
         if (filterOptions.length < 1 || filterOptions.length > 4)
             throw new UnsupportedOptionsException(
                         "XZ filter chain must be 1-4 filters");
