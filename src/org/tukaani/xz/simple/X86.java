@@ -74,10 +74,11 @@ public final class X86 implements SimpleFilter {
                     src = dest ^ ((1 << (32 - index)) - 1);
                 }
 
-                buf[i + 1] = (byte)dest;
-                buf[i + 2] = (byte)(dest >>> 8);
-                buf[i + 3] = (byte)(dest >>> 16);
-                buf[i + 4] = (byte)(~(((dest >>> 24) & 1) - 1));
+                // Sign extend bit 24 to bits [31:24].
+                dest <<= 7;
+                dest >>= 7;
+
+                ByteArrayView.setIntLE(buf, i + 1, dest);
                 i += 4;
             } else {
                 prevMask = (prevMask << 1) | 1;
