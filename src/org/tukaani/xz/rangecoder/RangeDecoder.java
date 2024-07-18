@@ -20,8 +20,7 @@ public abstract class RangeDecoder extends RangeCoder {
         int bound = (range >>> BIT_MODEL_TOTAL_BITS) * prob;
         int bit;
 
-        // Compare code and bound as if they were unsigned 32-bit integers.
-        if ((code ^ 0x80000000) < (bound ^ 0x80000000)) {
+        if (Integer.compareUnsigned(code, bound) < 0) {
             range = bound;
             probs[index] = (short)(
                     prob + ((BIT_MODEL_TOTAL - prob) >>> MOVE_BITS));
