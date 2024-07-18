@@ -119,32 +119,7 @@ public abstract class LZMAEncoder extends LZMACoder {
         if (dist <= DIST_MODEL_START && dist >= 0)
             return dist;
 
-        int n = dist;
-        int i = 31;
-
-        if ((n & 0xFFFF0000) == 0) {
-            n <<= 16;
-            i = 15;
-        }
-
-        if ((n & 0xFF000000) == 0) {
-            n <<= 8;
-            i -= 8;
-        }
-
-        if ((n & 0xF0000000) == 0) {
-            n <<= 4;
-            i -= 4;
-        }
-
-        if ((n & 0xC0000000) == 0) {
-            n <<= 2;
-            i -= 2;
-        }
-
-        if ((n & 0x80000000) == 0)
-            --i;
-
+        int i = 31 - Integer.numberOfLeadingZeros(dist);
         return (i << 1) + ((dist >>> (i - 1)) & 1);
     }
 
