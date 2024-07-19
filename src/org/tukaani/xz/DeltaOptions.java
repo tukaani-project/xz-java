@@ -50,8 +50,7 @@ public class DeltaOptions extends FilterOptions {
      * Sets the delta distance in bytes. The new distance must be in
      * the range [DISTANCE_MIN, DISTANCE_MAX].
      */
-    public final void setDistance(int distance)
-            throws UnsupportedOptionsException {
+    public void setDistance(int distance) throws UnsupportedOptionsException {
         if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
             throw new UnsupportedOptionsException(
                     "Delta distance must be in the range [" + DISTANCE_MIN
@@ -63,7 +62,7 @@ public class DeltaOptions extends FilterOptions {
     /**
      * Gets the delta distance.
      */
-    public final int getDistance() {
+    public int getDistance() {
         return distance;
     }
 
