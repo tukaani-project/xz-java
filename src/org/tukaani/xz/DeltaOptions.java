@@ -34,14 +34,6 @@ public class DeltaOptions extends FilterOptions {
 
     private int distance = DISTANCE_MIN;
 
-    private static void validateDistance(int distance)
-            throws UnsupportedOptionsException {
-        if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
-            throw new UnsupportedOptionsException(
-                    "Delta distance must be in the range [" + DISTANCE_MIN
-                    + ", " + DISTANCE_MAX + "]: " + distance);
-    }
-
     /**
      * Creates new Delta options and sets the delta distance to 1 byte.
      */
@@ -51,8 +43,7 @@ public class DeltaOptions extends FilterOptions {
      * Creates new Delta options and sets the distance to the given value.
      */
     public DeltaOptions(int distance) throws UnsupportedOptionsException {
-        validateDistance(distance);
-        this.distance = distance;
+        setDistance(distance);
     }
 
     /**
@@ -60,7 +51,11 @@ public class DeltaOptions extends FilterOptions {
      * the range [DISTANCE_MIN, DISTANCE_MAX].
      */
     public void setDistance(int distance) throws UnsupportedOptionsException {
-        validateDistance(distance);
+        if (distance < DISTANCE_MIN || distance > DISTANCE_MAX)
+            throw new UnsupportedOptionsException(
+                    "Delta distance must be in the range [" + DISTANCE_MIN
+                    + ", " + DISTANCE_MAX + "]: " + distance);
+
         this.distance = distance;
     }
 
