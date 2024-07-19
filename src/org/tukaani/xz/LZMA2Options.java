@@ -140,7 +140,7 @@ public class LZMA2Options extends FilterOptions {
      */
     public LZMA2Options() {
         try {
-            setPreset(PRESET_DEFAULT);
+            setPresetImpl(PRESET_DEFAULT);
         } catch (UnsupportedOptionsException e) {
             assert false;
             throw new RuntimeException();
@@ -154,7 +154,7 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code preset} is not supported
      */
     public LZMA2Options(int preset) throws UnsupportedOptionsException {
-        setPreset(preset);
+        setPresetImpl(preset);
     }
 
     /**
@@ -166,13 +166,13 @@ public class LZMA2Options extends FilterOptions {
     public LZMA2Options(int dictSize, int lc, int lp, int pb, int mode,
                         int niceLen, int mf, int depthLimit)
             throws UnsupportedOptionsException {
-        setDictSize(dictSize);
-        setLcLp(lc, lp);
-        setPb(pb);
-        setMode(mode);
-        setNiceLen(niceLen);
-        setMatchFinder(mf);
-        setDepthLimit(depthLimit);
+        setDictSizeImpl(dictSize);
+        setLcLpImpl(lc, lp);
+        setPbImpl(pb);
+        setModeImpl(mode);
+        setNiceLenImpl(niceLen);
+        setMatchFinderImpl(mf);
+        setDepthLimitImpl(depthLimit);
     }
 
     /**
@@ -192,6 +192,10 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code preset} is not supported
      */
     public void setPreset(int preset) throws UnsupportedOptionsException {
+        setPresetImpl(preset);
+    }
+
+    private void setPresetImpl(int preset) throws UnsupportedOptionsException {
         if (preset < 0 || preset > 9)
             throw new UnsupportedOptionsException(
                     "Unsupported preset: " + preset);
@@ -230,6 +234,11 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code dictSize} is not supported
      */
     public void setDictSize(int dictSize) throws UnsupportedOptionsException {
+        setDictSizeImpl(dictSize);
+    }
+
+    private void setDictSizeImpl(int dictSize)
+            throws UnsupportedOptionsException {
         if (dictSize < DICT_SIZE_MIN)
             throw new UnsupportedOptionsException(
                     "LZMA2 dictionary size must be at least 4 KiB: "
@@ -287,6 +296,11 @@ public class LZMA2Options extends FilterOptions {
      *                          are invalid
      */
     public void setLcLp(int lc, int lp) throws UnsupportedOptionsException {
+        setLcLpImpl(lc, lp);
+    }
+
+    private void setLcLpImpl(int lc, int lp)
+            throws UnsupportedOptionsException {
         if (lc < 0 || lp < 0 || lc > LC_LP_MAX || lp > LC_LP_MAX
                 || lc + lp > LC_LP_MAX)
             throw new UnsupportedOptionsException(
@@ -382,6 +396,10 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code pb} is invalid
      */
     public void setPb(int pb) throws UnsupportedOptionsException {
+        setPbImpl(pb);
+    }
+
+    private void setPbImpl(int pb) throws UnsupportedOptionsException {
         if (pb < 0 || pb > PB_MAX)
             throw new UnsupportedOptionsException(
                     "pb must not exceed " + PB_MAX + ": " + pb);
@@ -415,6 +433,10 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code mode} is not supported
      */
     public void setMode(int mode) throws UnsupportedOptionsException {
+        setModeImpl(mode);
+    }
+
+    private void setModeImpl(int mode) throws UnsupportedOptionsException {
         if (mode < MODE_UNCOMPRESSED || mode > MODE_NORMAL)
             throw new UnsupportedOptionsException(
                     "Unsupported compression mode: " + mode);
@@ -440,6 +462,11 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code niceLen} is invalid
      */
     public void setNiceLen(int niceLen) throws UnsupportedOptionsException {
+        setNiceLenImpl(niceLen);
+    }
+
+    private void setNiceLenImpl(int niceLen)
+            throws UnsupportedOptionsException {
         if (niceLen < NICE_LEN_MIN)
             throw new UnsupportedOptionsException(
                     "Minimum nice length of matches is "
@@ -472,6 +499,11 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code mf} is not supported
      */
     public void setMatchFinder(int mf) throws UnsupportedOptionsException {
+        setMatchFinderImpl(mf);
+    }
+
+    private void setMatchFinderImpl(int mf)
+            throws UnsupportedOptionsException {
         if (mf != MF_HC4 && mf != MF_BT4)
             throw new UnsupportedOptionsException(
                     "Unsupported match finder: " + mf);
@@ -503,6 +535,11 @@ public class LZMA2Options extends FilterOptions {
      *                          {@code depthLimit} is invalid
      */
     public void setDepthLimit(int depthLimit)
+            throws UnsupportedOptionsException {
+        setDepthLimit(depthLimit);
+    }
+
+    private void setDepthLimitImpl(int depthLimit)
             throws UnsupportedOptionsException {
         if (depthLimit < 0)
             throw new UnsupportedOptionsException(
