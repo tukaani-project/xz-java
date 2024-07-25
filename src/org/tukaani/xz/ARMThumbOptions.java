@@ -10,7 +10,7 @@ import org.tukaani.xz.simple.ARMThumb;
 /**
  * BCJ filter for little endian ARM-Thumb instructions.
  */
-public class ARMThumbOptions extends BCJOptions {
+public final class ARMThumbOptions extends BCJOptions {
     private static final int ALIGNMENT = 2;
 
     public ARMThumbOptions() {
