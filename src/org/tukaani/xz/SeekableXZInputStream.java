@@ -1000,7 +1000,13 @@ public class SeekableXZInputStream extends SeekableInputStream {
         // This is a bit silly implementation. Here we locate the uncompressed
         // offset of the specified Block, then when doing the actual seek in
         // seek(), we need to find the Block number based on seekPos.
-        seekPos = getBlockPos(blockNumber);
+        //
+        // NOTE: getBlockPos is a public method that can be overridden.
+        // Version 1.9 and older called getBlockPos(blockNumber) here.
+        // Since 1.10, the private method locateBlockByNumber is used
+        // directly to ensure that subclasses cannot affect the behavior.
+        locateBlockByNumber(queriedBlockInfo, blockNumber);
+        seekPos = queriedBlockInfo.uncompressedOffset;
         seekNeeded = true;
     }
 
