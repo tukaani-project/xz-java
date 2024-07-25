@@ -424,6 +424,9 @@ public class XZOutputStream extends FinishableOutputStream {
      * Starting a new XZ Block means that the encoder state is reset.
      * Doing this very often will increase the size of the compressed
      * file a lot (more than plain {@code flush()} would do).
+     * <p>
+     * <b>Note:</b> {@code flush()} may call this method, and {@code finish()}
+     * (and thus {@code close()}) will call this method.
      *
      * @throws      XZIOException
      *                          XZ Stream has grown too big
