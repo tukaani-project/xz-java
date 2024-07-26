@@ -159,7 +159,7 @@
 
     <!-- It's an ugly quick hack. Maybe some day there will be a cleaner
          version (e.g. by using Maven). -->
-    <target name="maven" depends="dist, doc, jar"
+    <target name="maven" depends="doc, jar"
             description="Creates the files for a Maven repository">
         <mkdir dir="${maven_dir}"/>
 
