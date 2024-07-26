@@ -81,13 +81,15 @@
 
         <jar destfile="${jar_dir}/xz.jar">
             <fileset dir="${classes_dir}" includes="org/tukaani/xz/**"/>
-            <zipfileset prefix="META-INF/versions/9/" dir="${classes9_dir}"/>
+            <zipfileset prefix="META-INF/versions/9/" dir="${classes9_dir}"
+                        if:set="sourcever9"/>
             <manifest>
                 <attribute name="Implementation-Title" value="${title}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
                 <attribute name="Implementation-URL" value="${homepage}"/>
                 <attribute name="Sealed" value="true"/>
-                <attribute name="Multi-Release" value="true"/>
+                <attribute name="Multi-Release" value="true"
+                           if:set="sourcever9"/>
                 <!-- Attributes for OSGi bundles: -->
                 <attribute name="Bundle-ManifestVersion" value="2"/>
                 <attribute name="Bundle-SymbolicName" value="org.tukaani.xz"/>
