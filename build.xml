@@ -3,7 +3,8 @@
 <!-- SPDX-FileCopyrightText: The XZ for Java authors and contributors -->
 <!-- SPDX-FileContributor: Lasse Collin <lasse.collin@tukaani.org> -->
 
-<project name="XZ" default="jar">
+<project name="XZ" default="jar"
+         xmlns:if="ant:if" xmlns:unless="ant:unless">
 
     <property file="build.properties"/>
 
