@@ -41,6 +41,7 @@
                  packagenames="org.tukaani.xz"
                  windowtitle="XZ data compression"
                  nodeprecatedlist="true" nohelp="true"
+                 additionalparam="-notimestamp"
                  linkoffline="${extdoc_url} ${extdoc_dir}"/>
     </target>
 
