@@ -33,6 +33,13 @@
                  windowtitle="${title}"
                  nodeprecatedlist="true" nohelp="true">
             <arg value="-notimestamp"/>
+            <!-- javadoc's -locale option is buggy in OpenJDK 11/17/22.
+                 In OpenJDK 8 it works. Overriding JVM's default locale
+                 works with all versions, so do that instead of using
+                 locale="en" or locale="en_US". See:
+                 https://bugs.openjdk.org/browse/JDK-8222793 -->
+            <arg if:true="${javadoc_english}"
+                 line="-J-Duser.language=en -J-Duser.country=US"/>
         </javadoc>
     </target>
 
