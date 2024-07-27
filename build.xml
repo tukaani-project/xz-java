@@ -29,7 +29,7 @@
         <mkdir dir="${doc_dir}"/>
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
                  packagenames="org.tukaani.xz"
-                 windowtitle="XZ data compression"
+                 windowtitle="${title}"
                  nodeprecatedlist="true" nohelp="true"
                  additionalparam="-notimestamp"/>
     </target>
