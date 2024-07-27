@@ -9,13 +9,8 @@
     <property file="build.properties"/>
 
     <target name="clean"
-            description="Deletes generated files except 'extdoc'">
-        <delete dir="${build_dir}"/>
-    </target>
-
-    <target name="distclean" depends="clean"
             description="Deletes all generated files">
-        <delete dir="extdoc"/>
+        <delete dir="${build_dir}"/>
     </target>
 
     <target name="dist"
@@ -32,18 +27,11 @@
     <target name="doc"
             description="Generates HTML documentation with javadoc">
         <mkdir dir="${doc_dir}"/>
-        <mkdir dir="${extdoc_dir}"/>
-        <!-- Ant 1.10.9 doesn't recognize element-list. To workaround this
-             we rename element-list to package-list when downloading.
-             javadoc from Java 15 seems to be fine with this hack. -->
-        <get src="${extdoc_url}/${extdoc_file}"
-             dest="${extdoc_dir}/package-list" skipexisting="true"/>
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
                  packagenames="org.tukaani.xz"
                  windowtitle="XZ data compression"
                  nodeprecatedlist="true" nohelp="true"
-                 additionalparam="-notimestamp"
-                 linkoffline="${extdoc_url} ${extdoc_dir}"/>
+                 additionalparam="-notimestamp"/>
     </target>
 
     <target name="compile" description="Compiles the classes">

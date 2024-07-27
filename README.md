@@ -27,10 +27,7 @@ Building with Apache Ant
 ------------------------
 
   Type `ant` to compile the classes and create the .jar files.
-  Type `ant doc` to build the javadoc HTML documentation. Note
-  that building the documentation will download a small file named
-  `element-list` or `package-list` from Oracle to enable linking to
-  the documentation of the standard Java classes.
+  Type `ant doc` to build the javadoc HTML documentation.
 
   Notes about old build environments:
 
@@ -45,13 +42,6 @@ Building with Apache Ant
 
     The downside of the above is that then the `-source` and `-target`
     options will be used instead of `--release`.
-
-  * If you are using OpenJDK version older than 11:
-
-    Adjust `extdoc_url` and `extdoc_file` to point to an older URL
-    and to use `package-list` instead of `element-list`. This
-    modification isn't required if the documentation won't be
-    built.
 
   * If you are using OpenJDK version older than 9:
 
