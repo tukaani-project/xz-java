@@ -31,8 +31,9 @@
                  failonerror="true"
                  packagenames="org.tukaani.xz"
                  windowtitle="${title}"
-                 nodeprecatedlist="true" nohelp="true"
-                 additionalparam="-notimestamp"/>
+                 nodeprecatedlist="true" nohelp="true">
+            <arg value="-notimestamp"/>
+        </javadoc>
     </target>
 
     <target name="compile" description="Compiles the classes">
