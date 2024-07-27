@@ -157,10 +157,7 @@
         </jar>
     </target>
 
-    <!-- It's an ugly quick hack. Maybe some day there will be a cleaner
-         version (e.g. by using Maven). -->
-    <target name="maven" depends="doc, jar"
-            description="Creates the files for a Maven repository">
+    <target name="pom" description="Creates xz-*.pom for a Maven repository">
         <mkdir dir="${maven_dir}"/>
 
         <copy file="${pom_template}" tofile="${maven_dir}/xz-${version}.pom"
@@ -171,7 +168,10 @@
                 <filter token="HOMEPAGE" value="${homepage}"/>
             </filterset>
         </copy>
+    </target>
 
+    <target name="maven" depends="pom, doc, jar"
+            description="Creates POM and JAR files for a Maven repository">
         <copy file="${jar_dir}/xz.jar" tofile="${maven_dir}/xz-${version}.jar"
               preservelastmodified="true" overwrite="true"/>
 
