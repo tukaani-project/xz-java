@@ -28,6 +28,7 @@
             description="Generates HTML documentation with javadoc">
         <mkdir dir="${doc_dir}"/>
         <javadoc sourcepath="${src_dir}" destdir="${doc_dir}"
+                 failonerror="true"
                  packagenames="org.tukaani.xz"
                  windowtitle="${title}"
                  nodeprecatedlist="true" nohelp="true"
