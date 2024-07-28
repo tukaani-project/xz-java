@@ -55,18 +55,13 @@
             <compilerarg compiler="modern" line="-implicit:none"/>
         </javac>
 
-        <!-- Build Java 9 files only if sourcever9 is set: -->
-        <mkdir dir="${classes9_dir}"/>
-        <condition property="exclude_java9" value="**">
-            <not><isset property="sourcever9"/></not>
-        </condition>
-
-        <javac srcdir="." sourcepath="${src9_dir}:${src_dir}"
+        <mkdir unless:true="${java8only}" dir="${classes9_dir}"/>
+        <javac unless:true="${java8only}"
+               srcdir="." sourcepath="${src9_dir}:${src_dir}"
                destdir="${classes9_dir}"
                includeAntRuntime="false" debug="${debug}"
                release="${sourcever9}"
-               includesfile="fileset-src9.txt"
-               excludes="${exclude_java9}">
+               includesfile="fileset-src9.txt">
             <compilerarg compiler="modern" line="-Xlint"/>
             <compilerarg compiler="modern" line="-implicit:none"/>
         </javac>
@@ -79,14 +74,14 @@
         <jar destfile="${jar_dir}/xz.jar">
             <fileset dir="${classes_dir}" includes="org/tukaani/xz/**"/>
             <zipfileset prefix="META-INF/versions/9/" dir="${classes9_dir}"
-                        if:set="sourcever9"/>
+                        unless:true="${java8only}"/>
             <manifest>
                 <attribute name="Implementation-Title" value="${title}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
                 <attribute name="Implementation-URL" value="${homepage}"/>
                 <attribute name="Sealed" value="true"/>
                 <attribute name="Multi-Release" value="true"
-                           if:set="sourcever9"/>
+                           unless:true="${java8only}"/>
                 <!-- Attributes for OSGi bundles: -->
                 <attribute name="Bundle-ManifestVersion" value="2"/>
                 <attribute name="Bundle-SymbolicName" value="org.tukaani.xz"/>

@@ -46,9 +46,9 @@ Building with Apache Ant
 
   * If you are using OpenJDK version older than 9:
 
-    Comment the `sourcever9` line in the file `build.properties`.
-    When it is commented, `module-info.java` and other files
-    requiring Java 9 won't be built. `xz.jar` won't be a modular JAR.
+    To build with OpenJDK 8, use `-Djava8only=true` on the `ant`
+    command line. Then the files requiring Java >= 9 won't be built,
+    and `xz.jar` won't be a modular JAR.
 
   * If you are using OpenJDK version older than 8:
 
