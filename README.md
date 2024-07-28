@@ -28,6 +28,7 @@ Building with Apache Ant
 
   Type `ant` to compile the classes and create the .jar files.
   Type `ant doc` to build the javadoc HTML documentation.
+  Type `ant -projecthelp` to see all available targets.
 
   Notes about old build environments:
 
