@@ -8,6 +8,10 @@
 
     <property file="build.properties"/>
 
+    <tstamp>
+        <format property="timestamp" pattern="yyyy-MM-dd'T'HH:mm:ssXXX"/>
+    </tstamp>
+
     <target name="clean"
             description="Deletes all generated files">
         <delete dir="${build_dir}"/>
@@ -71,7 +75,7 @@
             description="Creates JAR packages">
         <mkdir dir="${jar_dir}"/>
 
-        <jar destfile="${jar_dir}/xz.jar">
+        <jar destfile="${jar_dir}/xz.jar" modificationtime="${timestamp}">
             <fileset dir="${classes_dir}" includes="org/tukaani/xz/**"/>
             <zipfileset prefix="META-INF/versions/9/" dir="${classes9_dir}"
                         unless:true="${java8only}"/>
@@ -95,7 +99,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/TestAllocSpeed.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/TestAllocSpeed.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="TestAllocSpeed.class">
             <manifest>
                 <attribute name="Main-Class" value="TestAllocSpeed"/>
@@ -103,7 +109,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/XZEncDemo.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/XZEncDemo.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="XZEncDemo.class">
             <manifest>
                 <attribute name="Main-Class" value="XZEncDemo"/>
@@ -111,7 +119,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/XZDecDemo.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/XZDecDemo.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="XZDecDemo.class">
             <manifest>
                 <attribute name="Main-Class" value="XZDecDemo"/>
@@ -119,7 +129,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/XZSeekEncDemo.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/XZSeekEncDemo.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="XZSeekEncDemo.class">
             <manifest>
                 <attribute name="Main-Class" value="XZSeekEncDemo"/>
@@ -127,7 +139,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/XZSeekDecDemo.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/XZSeekDecDemo.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="XZSeekDecDemo.class">
             <manifest>
                 <attribute name="Main-Class" value="XZSeekDecDemo"/>
@@ -135,7 +149,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/LZMAEncDemo.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/LZMAEncDemo.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="LZMAEncDemo.class">
             <manifest>
                 <attribute name="Main-Class" value="LZMAEncDemo"/>
@@ -143,7 +159,9 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/LZMADecDemo.jar" basedir="${classes_dir}"
+        <jar destfile="${jar_dir}/LZMADecDemo.jar"
+             modificationtime="${timestamp}"
+             basedir="${classes_dir}"
              includes="LZMADecDemo.class">
             <manifest>
                 <attribute name="Main-Class" value="LZMADecDemo"/>
@@ -176,9 +194,11 @@
               preservelastmodified="true" overwrite="true"/>
 
         <jar destfile="${maven_dir}/xz-${version}-javadoc.jar"
+             modificationtime="${timestamp}"
              basedir="${doc_dir}"/>
 
-        <jar destfile="${maven_dir}/xz-${version}-sources.jar">
+        <jar destfile="${maven_dir}/xz-${version}-sources.jar"
+             modificationtime="${timestamp}">
             <fileset dir="${src_dir}" includes="org/tukaani/xz/**"/>
             <zipfileset prefix="META-INF/versions/9/" dir="${src9_dir}"/>
         </jar>

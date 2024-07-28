@@ -32,6 +32,11 @@ Building with Apache Ant
 
   Notes about old build environments:
 
+  * If you are using Ant older than 1.10.2:
+
+    Edit `build.xml` and remove the `modificationtime="${timestamp}"`
+    attributes from the `<jar>` elements.
+
   * If you are using Ant older than 1.9.8:
 
     Edit `build.xml` and remove the release attributes from the
