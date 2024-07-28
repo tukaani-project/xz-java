@@ -152,10 +152,10 @@
         </jar>
     </target>
 
-    <target name="pom" description="Creates xz-*.pom for a Maven repository">
-        <mkdir dir="${maven_dir}"/>
+    <target name="pom" description="Creates xz.pom for a Maven repository">
+        <mkdir dir="${pom_dir}"/>
 
-        <copy file="${pom_template}" tofile="${maven_dir}/xz-${version}.pom"
+        <copy file="${pom_template}" tofile="${pom_dir}/xz.pom"
               overwrite="true">
             <filterset>
                 <filter token="VERSION" value="${version}"/>
@@ -167,6 +167,11 @@
 
     <target name="maven" depends="pom, doc, jar"
             description="Creates POM and JAR files for a Maven repository">
+        <mkdir dir="${maven_dir}"/>
+
+        <copy file="${pom_dir}/xz.pom" tofile="${maven_dir}/xz-${version}.pom"
+              preservelastmodified="true" overwrite="true"/>
+
         <copy file="${jar_dir}/xz.jar" tofile="${maven_dir}/xz-${version}.jar"
               preservelastmodified="true" overwrite="true"/>
 
