@@ -22,9 +22,7 @@
         <mkdir dir="${dist_dir}"/>
         <exec output="${dist_file}" logError="true" failonerror="true"
               executable="git">
-            <arg value="archive"/>
-            <arg value="--format=zip"/>
-            <arg value="HEAD"/>
+            <arg line="archive --format=zip -9 HEAD"/>
         </exec>
     </target>
 
