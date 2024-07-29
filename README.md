@@ -32,6 +32,24 @@ Building with Apache Ant
    * Type `ant doc` to build the javadoc HTML documentation.
    * Type `ant -projecthelp` to see all available targets.
 
+### Reproducible builds
+
+  Reproducible builds should be possible. A timestamp needs to be
+  specified which will be used for file modification times in the
+  JAR metadata. The timestamps are stored using the local timezone,
+  thus it's good to override it to GMT/UTC. On POSIX systems, the
+  following commands are equivalent:
+
+      $ ANT_OPTS=-Duser.timezone=GMT \
+            ant -Dant.tstamp.now.iso=2024-07-29T14:10:26Z
+
+      $ SOURCE_DATE_EPOCH=1722262226 TZ=UTC0 ant
+
+  When the Git repository is available, using the committer date
+  is one way to get a reasonable value:
+
+      $ SOURCE_DATE_EPOCH=$(git log -n1 --pretty=%ct) TZ=UTC0 ant
+
 ### Old build environments
 
   * If you are using Ant older than 1.10.2:
