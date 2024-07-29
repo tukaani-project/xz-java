@@ -23,14 +23,16 @@ Introduction
   speed optimizations). The default build options require OpenJDK 11
   or later, and create Java 8 compatible binaries.
 
+
 Building with Apache Ant
 ------------------------
 
-  Type `ant` to compile the classes and create the .jar files.
-  Type `ant doc` to build the javadoc HTML documentation.
-  Type `ant -projecthelp` to see all available targets.
+  All output files go into the `build` directory.
+   * Type `ant` to compile the classes and create the JAR files.
+   * Type `ant doc` to build the javadoc HTML documentation.
+   * Type `ant -projecthelp` to see all available targets.
 
-  Notes about old build environments:
+### Old build environments
 
   * If you are using Ant older than 1.10.2:
 
@@ -61,6 +63,7 @@ Building with Apache Ant
     which is Java 5 compatible and only requires editing
     `build.properties` to build.
 
+
 Building without Apache Ant
 ---------------------------
 
@@ -68,6 +71,7 @@ Building without Apache Ant
   under the `src` directory (possibly skip the demo files `src/*.java`).
   For module support and speed optimizations (Java >= 9), compile also
   all .java files under the `src9` directory.
+
 
 Demo programs
 -------------
@@ -81,6 +85,7 @@ Demo programs
   standard output:
 
     java -jar build/jar/XZDecDemo.jar foo.txt.xz
+
 
 Contact information
 -------------------
