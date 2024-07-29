@@ -99,75 +99,28 @@
             </manifest>
         </jar>
 
-        <jar destfile="${jar_dir}/TestAllocSpeed.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="TestAllocSpeed.class">
-            <manifest>
-                <attribute name="Main-Class" value="TestAllocSpeed"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
+        <macrodef name="jar.program">
+            <attribute name="name"/>
+            <sequential>
+                <jar destfile="${jar_dir}/@{name}.jar"
+                     modificationtime="${timestamp}"
+                     basedir="${classes_dir}"
+                     includes="@{name}.class">
+                    <manifest>
+                        <attribute name="Main-Class" value="@{name}"/>
+                        <attribute name="Class-Path" value="xz.jar"/>
+                    </manifest>
+                </jar>
+            </sequential>
+        </macrodef>
 
-        <jar destfile="${jar_dir}/XZEncDemo.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="XZEncDemo.class">
-            <manifest>
-                <attribute name="Main-Class" value="XZEncDemo"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
-
-        <jar destfile="${jar_dir}/XZDecDemo.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="XZDecDemo.class">
-            <manifest>
-                <attribute name="Main-Class" value="XZDecDemo"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
-
-        <jar destfile="${jar_dir}/XZSeekEncDemo.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="XZSeekEncDemo.class">
-            <manifest>
-                <attribute name="Main-Class" value="XZSeekEncDemo"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
-
-        <jar destfile="${jar_dir}/XZSeekDecDemo.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="XZSeekDecDemo.class">
-            <manifest>
-                <attribute name="Main-Class" value="XZSeekDecDemo"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
-
-        <jar destfile="${jar_dir}/LZMAEncDemo.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="LZMAEncDemo.class">
-            <manifest>
-                <attribute name="Main-Class" value="LZMAEncDemo"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
-
-        <jar destfile="${jar_dir}/LZMADecDemo.jar"
-             modificationtime="${timestamp}"
-             basedir="${classes_dir}"
-             includes="LZMADecDemo.class">
-            <manifest>
-                <attribute name="Main-Class" value="LZMADecDemo"/>
-                <attribute name="Class-Path" value="xz.jar"/>
-            </manifest>
-        </jar>
+        <jar.program name="TestAllocSpeed"/>
+        <jar.program name="XZEncDemo"/>
+        <jar.program name="XZDecDemo"/>
+        <jar.program name="XZSeekEncDemo"/>
+        <jar.program name="XZSeekDecDemo"/>
+        <jar.program name="LZMAEncDemo"/>
+        <jar.program name="LZMADecDemo"/>
     </target>
 
     <target name="pom" description="Creates xz.pom for a Maven repository">
