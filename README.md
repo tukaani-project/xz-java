@@ -40,15 +40,15 @@ Building with Apache Ant
   thus it's good to override it to GMT/UTC. On POSIX systems, the
   following commands are equivalent:
 
-      $ ANT_OPTS=-Duser.timezone=GMT \
-            ant -Dant.tstamp.now.iso=2024-07-29T14:10:26Z
+    $ ANT_OPTS=-Duser.timezone=GMT \
+          ant -Dant.tstamp.now.iso=2024-07-29T14:10:26Z
 
-      $ SOURCE_DATE_EPOCH=1722262226 TZ=UTC0 ant
+    $ SOURCE_DATE_EPOCH=1722262226 TZ=UTC0 ant
 
   When the Git repository is available, using the committer date
   is one way to get a reasonable value:
 
-      $ SOURCE_DATE_EPOCH=$(git log -n1 --pretty=%ct) TZ=UTC0 ant
+    $ SOURCE_DATE_EPOCH=$(git log -n1 --pretty=%ct) TZ=UTC0 ant
 
 ### Old build environments
 
