@@ -2,6 +2,106 @@
 XZ for Java release notes
 =========================
 
+1.10 (2024-07-29)
+-----------------
+
+  * Licensing change: From version 1.10 onwards, XZ for Java is under
+    the BSD Zero Clause License (0BSD). 1.9 and older are in the
+    public domain and obviously remain so; the change only affects
+    the new releases.
+
+    0BSD is an extremely permissive license which doesn't require
+    retaining or reproducing copyright or license notices when
+    distributing the code, thus in practice there is extremely
+    little difference to public domain.
+
+  * Mark copyright and license information in the source package so
+    that it is compliant to the [REUSE Specification version 3.2](
+    <https://reuse.software/spec-3.2/>).
+
+  * Improve LZMAInputStream.enableRelaxedEndCondition():
+
+      - Error detection is slightly better.
+
+      - The input position will always be at the end of the stream
+        after successful decompression.
+
+  * Support .lzma files that have both a known uncompressed size and
+    the end marker. Such files are uncommon but valid. The same issue
+    was fixed in XZ Utils 5.2.6 in 2022.
+
+  * Add ARM64 and RISC-V BCJ filters.
+
+  * Speed optimizations:
+      - Delta filter
+      - LZMA/LZMA2 decoder
+      - LZMA/LZMA2 encoder (partially Java >= 9 only)
+      - CRC64 (Java >= 9 only)
+
+  * Changes that affect API/ABI compatibility:
+
+      - Change XZOutputStream constructors to not call the method
+        `public void updateFilters(FilterOptions[] filterOptions)`.
+
+      - In SeekableXZInputStream, change the method
+        `public void seekToBlock(int blockNumber)` to not call
+        the method `public long getBlockPos(int blockNumber)`.
+
+      - Make the filter options classes `final`:
+          * ARM64Options
+          * ARMOptions
+          * ARMThumbOptions
+          * DeltaOptions
+          * IA64Options
+          * LZMA2Options
+          * PowerPCOptions
+          * RISCVOptions
+          * SPARCOptions
+          * X86Options
+
+  * Add new system properties:
+
+      - `org.tukaani.xz.ArrayCache` sets the default ArrayCache:
+        `Dummy` (default) or `Basic`. See the documentation of
+        ArrayCache and BasicArrayCache.
+
+      - `org.tukaani.xz.MatchLengthFinder` (Java >= 9 only) sets the
+        byte array comparison method used for finding match lengths in
+        LZMA/LZMA2 encoder: `UnalignedLongLE` (default on x86-64 and
+        ARM64) or `Basic` (default on other systems). The former could
+        be worth testing on other 64-bit little endian systems that
+        support fast unaligned memory access.
+
+  * Build system (Apache Ant):
+
+      - Building the documentation no longer downloads `element-list`
+        or `package-list` file; the build is now fully offline. Such
+        files aren't needed with OpenJDK >= 16 whose `javadoc` can
+        auto-link to platform documentation on docs.oracle.com. With
+        older OpenJDK versions, links to platform documentation aren't
+        generated anymore.
+
+      - Don't require editing of build.properties to build with
+        OpenJDK 8. Now it's enough to use `ant -Djava8only=true`.
+        Older OpenJDK versions are no longer supported because
+        the main source tree uses Java 8 features.
+
+      - Support reproducible builds. See the notes in README.md.
+
+      - Add a new Ant target `pom` that only creates xz.pom.
+
+      - Change `ant dist` to use `git archive` to create a .zip file.
+
+  * Convert the plain text documentation in the source tree to
+    Markdown (CommonMark).
+
+  * The binaries of 1.10 in the Maven Central require Java 8 and
+    contain optimized classes for Java >= 9 as multi-release JAR.
+    They were built with OpenJDK 21.0.4 on GNU/Linux using the
+    following command:
+
+        SOURCE_DATE_EPOCH=1722262226 TZ=UTC0 ant maven
+
 1.9 (2021-03-12)
 ----------------
 
