@@ -88,6 +88,11 @@
                  It's already used by Maven Archiver for Build-Jdk-Spec. -->
             <attribute name="Created-By" value="${java.specification.version}"
                        if:true="${manifest_cleanup}"/>
+
+            <!-- Unconditionally add Build-Jdk-Spec too because its real-world
+                 use is more clearly defined than that of Created-By. -->
+            <attribute name="Build-Jdk-Spec"
+                       value="${java.specification.version}"/>
         </manifest>
     </target>
 
