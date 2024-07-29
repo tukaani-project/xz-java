@@ -71,11 +71,32 @@
         </javac>
     </target>
 
-    <target name="jar" depends="compile"
+    <target name="manifest">
+        <mkdir dir="${manifest_dir}"/>
+
+        <manifest file="${manifest_base}">
+            <!-- The exact Ant version used for the build shouldn't make
+                 any difference in the produced files, so don't let it
+                 affect the manifest either. -->
+            <attribute name="Ant-Version" value="Intentionally omitted"
+                       if:true="${manifest_cleanup}"/>
+
+            <!-- Compiler output varies between major OpenJDK releases but
+                 it can be stable between minor releases, thus the minor
+                 version information can be annoying for reproducible builds.
+                 java.specification.version contains only the major version.
+                 It's already used by Maven Archiver for Build-Jdk-Spec. -->
+            <attribute name="Created-By" value="${java.specification.version}"
+                       if:true="${manifest_cleanup}"/>
+        </manifest>
+    </target>
+
+    <target name="jar" depends="compile, manifest"
             description="Creates JAR packages">
         <mkdir dir="${jar_dir}"/>
 
-        <jar destfile="${jar_dir}/xz.jar" modificationtime="${timestamp}">
+        <jar destfile="${jar_dir}/xz.jar" modificationtime="${timestamp}"
+             manifest="${manifest_base}">
             <fileset dir="${classes_dir}" includes="org/tukaani/xz/**"/>
             <zipfileset prefix="META-INF/versions/9/" dir="${classes9_dir}"
                         unless:true="${java8only}"/>
@@ -104,6 +125,7 @@
             <sequential>
                 <jar destfile="${jar_dir}/@{name}.jar"
                      modificationtime="${timestamp}"
+                     manifest="${manifest_base}"
                      basedir="${classes_dir}"
                      includes="@{name}.class">
                     <manifest>
@@ -136,7 +158,7 @@
         </copy>
     </target>
 
-    <target name="maven" depends="pom, doc, jar"
+    <target name="maven" depends="pom, manifest, doc, jar"
             description="Creates POM and JAR files for a Maven repository">
         <mkdir dir="${maven_dir}"/>
 
@@ -148,10 +170,12 @@
 
         <jar destfile="${maven_dir}/xz-${version}-javadoc.jar"
              modificationtime="${timestamp}"
+             manifest="${manifest_base}"
              basedir="${doc_dir}"/>
 
         <jar destfile="${maven_dir}/xz-${version}-sources.jar"
-             modificationtime="${timestamp}">
+             modificationtime="${timestamp}"
+             manifest="${manifest_base}">
             <fileset dir="${src_dir}" includes="org/tukaani/xz/**"/>
             <zipfileset prefix="META-INF/versions/9/" dir="${src9_dir}"/>
         </jar>
