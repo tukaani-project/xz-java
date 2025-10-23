@@ -17,6 +17,7 @@ People (in alphabetical order):
   - Christian Schlichtherle
   - Matthias Stevens
   - Alyosha Vasilieva
+  - Daniel Wilhelm
 
 Companies (in alphabetical order):
   - Cerner
