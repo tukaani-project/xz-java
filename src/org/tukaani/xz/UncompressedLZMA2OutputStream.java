@@ -66,6 +66,7 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
                                         - uncompPos, len);
                 System.arraycopy(buf, off, uncompBuf, uncompPos, copySize);
                 len -= copySize;
+                off += copySize;
                 uncompPos += copySize;
 
                 if (uncompPos == LZMA2OutputStream.COMPRESSED_SIZE_MAX)
