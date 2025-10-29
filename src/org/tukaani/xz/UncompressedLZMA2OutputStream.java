@@ -79,10 +79,14 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
     }
 
     private void writeChunk() throws IOException {
-        outData.writeByte(dictResetNeeded ? 0x01 : 0x02);
-        outData.writeShort(uncompPos - 1);
-        outData.write(uncompBuf, 0, uncompPos);
+        writeChunk(uncompBuf, 0, uncompPos);
         uncompPos = 0;
+    }
+
+    private void writeChunk(byte[] buf, int off, int len) throws IOException {
+        outData.writeByte(dictResetNeeded ? 0x01 : 0x02);
+        outData.writeShort(len - 1);
+        outData.write(buf, off, len);
         dictResetNeeded = false;
     }
 
