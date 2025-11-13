@@ -1,2 +1,5 @@
 /build/
 *.class
+.idea
+fuzz/.cifuzz*
+fuzz/target
