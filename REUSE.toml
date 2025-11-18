@@ -10,6 +10,7 @@ path = [
     'NEWS.md',
     'README.md',
     'REUSE.toml',
+    'SHA256SUMS',
     'THANKS.md',
     'fileset-src.txt',
     'fileset-src9.txt',
