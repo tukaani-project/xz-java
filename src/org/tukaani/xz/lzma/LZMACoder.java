@@ -126,7 +126,7 @@ abstract class LZMACoder {
             for (int i = 0; i < low.length; ++i)
                 RangeCoder.initProbs(low[i]);
 
-            for (int i = 0; i < low.length; ++i)
+            for (int i = 0; i < mid.length; ++i)
                 RangeCoder.initProbs(mid[i]);
 
             RangeCoder.initProbs(high);
