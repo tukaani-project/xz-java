@@ -63,7 +63,7 @@ public final class IA64 implements SimpleFilter {
                 instrNorm |= (dest & 0x0FFFFFL) << 13;
                 instrNorm |= (dest & 0x100000L) << (36 - 20);
 
-                instr &= (1 << bitRes) - 1;
+                instr &= (1L << bitRes) - 1;
                 instr |= instrNorm << bitRes;
 
                 for (int j = 0; j < 6; ++j)
