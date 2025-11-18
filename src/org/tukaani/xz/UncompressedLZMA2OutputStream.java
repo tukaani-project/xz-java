@@ -36,8 +36,7 @@ class UncompressedLZMA2OutputStream extends FinishableOutputStream {
         outData = new DataOutputStream(out);
 
         // We only allocate one array from the cache. We will call
-        // putArray directly in writeEndMarker and thus we don't use
-        // ResettableArrayCache here.
+        // putArray in writeEndMarker.
         this.arrayCache = arrayCache;
         uncompBuf = arrayCache.getByteArray(
                 LZMA2OutputStream.COMPRESSED_SIZE_MAX, false);
