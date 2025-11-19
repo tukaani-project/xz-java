@@ -1,4 +1,5 @@
 .gitattributes export-ignore
 .gitignore export-ignore
 
+/.github export-ignore
 /SHA256SUMS export-ignore
