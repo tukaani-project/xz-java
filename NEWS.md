@@ -2,6 +2,27 @@
 XZ for Java release notes
 =========================
 
+1.11 (2025-11-19)
+-----------------
+
+  * Fix a data corruption bug when encoding with the rarely-used option
+    `LZMA2Options.MODE_UNCOMPRESSED`. To trigger the bug, a `write`
+    call must cross an offset that is a multiple of 65536 bytes.
+    For example, one `write` of 70000 bytes or two `write` calls of
+    50000 bytes each would trigger the bug. The bug *isn't* triggered
+    if there are ten `write` calls of 8192 bytes each followed by one
+    123-byte `write`.
+
+    If encoding to a .xz file, a decoder would catch the issue because
+    the integrity check wouldn't match.
+
+  * The binaries of 1.10 in the Maven Central require Java 8 and
+    contain optimized classes for Java >= 9 as multi-release JAR.
+    They were built with OpenJDK 21.0.9 on GNU/Linux and can be
+    reproduced using the following command:
+
+        SOURCE_DATE_EPOCH=1763575020 TZ=UTC0 ant maven
+
 1.10 (2024-07-29)
 -----------------
 
