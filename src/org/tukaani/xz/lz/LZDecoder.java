@@ -24,6 +24,15 @@ public final class LZDecoder {
         bufSize = dictSize;
         buf = arrayCache.getByteArray(bufSize, false);
 
+        // getByte(0) needs to return 0x00 when no data has been decompressed.
+        // This requires initializing only one byte, so don't pass "true" as
+        // the second argument in the above arrayCache.getByteArray call.
+        //
+        // Note that LZMA2InputStream calls LZDecoder.reset() before decoding
+        // anything, thus it doesn't break even if this initialization was
+        // missing here. But LZMAInputStream has no reason to call reset().
+        buf[bufSize - 1] = 0x00;
+
         if (presetDict != null) {
             pos = Math.min(presetDict.length, dictSize);
             full = pos;
