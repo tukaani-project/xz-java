@@ -6,7 +6,14 @@ package org.tukaani.xz.lz;
 
 // See the version in the src9 directory for documentation.
 final class MatchLength {
-    static final int EXTRA_SIZE = 0;
+    // Initialize this in "static {}" below. If this was initialized here
+    // instead, compiler would pick the 0 and never see non-zero value when
+    // this class is replaced by the version in the src9 directory.
+    static final int EXTRA_SIZE;
+
+    static {
+        EXTRA_SIZE = 0;
+    }
 
     static int getLen(byte[] buf, int off, int delta, int len, int lenLimit) {
         assert off >= 0;
