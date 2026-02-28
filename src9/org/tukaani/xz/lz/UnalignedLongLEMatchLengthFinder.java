@@ -10,7 +10,7 @@ import org.tukaani.xz.common.ByteArrayView;
 // unaligned access. This is based on XZ Utils' memcmplen.h.
 // This may read up to 7 extra bytes past the end of the specified
 // end offset (off + lenLimit) so the caller must ensure that
-// there are EXTRA_SIZE bytes available at the end of the buffer.
+// there are getExtraSize() bytes available at the end of the buffer.
 //
 // In the extreme case of compressing a sequence of zero bytes, this
 // can reduce compression time by over 30 % compared to Arrays.mismatch.

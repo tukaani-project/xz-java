@@ -5,7 +5,7 @@
 package org.tukaani.xz.lz;
 
 interface MatchLengthFinder {
-    /** Returns value for {@code MatchLength.EXTRA_SIZE}. */
+    /** See {@code MatchLength.getExtraSize}. */
     int getExtraSize();
 
     /** See {@code MatchLength.getLen}. */

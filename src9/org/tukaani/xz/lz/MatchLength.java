@@ -7,13 +7,6 @@ package org.tukaani.xz.lz;
 import java.nio.ByteOrder;
 
 final class MatchLength {
-    /**
-     * Number of additional bytes that {@code getLen} might read even though
-     * it doesn't need them. The buffer must have this many bytes of extra
-     * space at the end to make it safe to use {@code getLen}.
-     */
-    static final int EXTRA_SIZE;
-
     private static final MatchLengthFinder matchLengthFinder;
 
     static {
@@ -48,8 +41,15 @@ final class MatchLength {
                                 "org.tukaani.xz.MatchLengthFinder. " +
                                 "Supported values: Basic, UnalignedLongLE");
         }
+    }
 
-        EXTRA_SIZE = matchLengthFinder.getExtraSize();
+    /**
+     * Returns the number of additional bytes that {@code getLen} might read
+     * even though it doesn't need them. The buffer must have this many bytes
+     * of extra space at the end to make it safe to use {@code getLen}.
+     */
+    static int getExtraSize() {
+        return matchLengthFinder.getExtraSize();
     }
 
     /**
