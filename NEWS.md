@@ -2,6 +2,27 @@
 XZ for Java release notes
 =========================
 
+1.12 (2026-03-01)
+-----------------
+
+  * Fix ArrayIndexOutOfBoundsException in the LZMA/LZMA2 encoder on
+    x86-64 and ARM64 when running on Java 9 or newer. The affected
+    code isn't used on Java 8. The bug is present in versions 1.10
+    and 1.11. If one cannot upgrade, one should set the property
+    `org.tukaani.xz.MatchLengthFinder=Basic` to disable the affected
+    code path.
+
+  * Fix ArrayCache usage in LZMAInputStream. If ArrayCache was enabled,
+    decompression was likely to fail quickly when the cache returns a
+    cached array. ArrayCache is disabled by default.
+
+  * The binaries of 1.10 in the Maven Central require Java 8 and
+    contain optimized classes for Java >= 9 as multi-release JAR.
+    They were built with OpenJDK 21.0.10 on GNU/Linux and can be
+    reproduced using the following command:
+
+        SOURCE_DATE_EPOCH=1772370000 TZ=UTC0 ant maven
+
 1.11 (2025-11-19)
 -----------------
 
