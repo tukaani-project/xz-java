@@ -16,7 +16,7 @@ XZ for Java release notes
     decompression was likely to fail quickly when the cache returns a
     cached array. ArrayCache is disabled by default.
 
-  * The binaries of 1.10 in the Maven Central require Java 8 and
+  * The binaries of 1.12 in the Maven Central require Java 8 and
     contain optimized classes for Java >= 9 as multi-release JAR.
     They were built with OpenJDK 21.0.10 on GNU/Linux and can be
     reproduced using the following command:
@@ -37,7 +37,7 @@ XZ for Java release notes
     If encoding to a .xz file, a decoder would catch the issue because
     the integrity check wouldn't match.
 
-  * The binaries of 1.10 in the Maven Central require Java 8 and
+  * The binaries of 1.11 in the Maven Central require Java 8 and
     contain optimized classes for Java >= 9 as multi-release JAR.
     They were built with OpenJDK 21.0.9 on GNU/Linux and can be
     reproduced using the following command:
