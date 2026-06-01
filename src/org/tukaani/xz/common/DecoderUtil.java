@@ -66,7 +66,7 @@ public class DecoderUtil extends Util {
 
         streamFlags.backwardSize = 0;
         for (int i = 0; i < 4; ++i)
-            streamFlags.backwardSize |= (buf[i + 4] & 0xFF) << (i * 8);
+            streamFlags.backwardSize |= (long)(buf[i + 4] & 0xFF) << (i * 8);
 
         streamFlags.backwardSize = (streamFlags.backwardSize + 1) * 4;
 
