@@ -11,6 +11,24 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
     private final long filterID;
     private final int startOffset;
 
+    /**
+     * Gets the alignment of the filtered instructions. The start offset
+     * must be a multiple of the alignment.
+     */
+    private static int getAlignment(long filterID) {
+        if (filterID == X86_FILTER_ID)
+            return 1;
+
+        if (filterID == ARMTHUMB_FILTER_ID || filterID == RISCV_FILTER_ID)
+            return 2;
+
+        if (filterID == IA64_FILTER_ID)
+            return 16;
+
+        // PowerPC, ARM, SPARC, and ARM64
+        return 4;
+    }
+
     BCJDecoder(long filterID, byte[] props)
             throws UnsupportedOptionsException {
         assert isBCJFilterID(filterID);
@@ -22,6 +40,11 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
             int n = 0;
             for (int i = 0; i < 4; ++i)
                 n |= (props[i] & 0xFF) << (i * 8);
+
+            int alignment = getAlignment(filterID);
+            if ((n & (alignment - 1)) != 0)
+                throw new UnsupportedOptionsException(
+                        "Start offset must be a multiple of " + alignment);
 
             startOffset = n;
         } else {
