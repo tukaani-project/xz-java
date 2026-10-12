@@ -11,7 +11,8 @@ public interface SimpleFilter {
             throws UnsupportedOptionsException {
         if ((startOffset & (alignment - 1)) != 0)
             throw new UnsupportedOptionsException(
-                    "Start offset must be a multiple of " + alignment);
+                    "BCJ filter start offset (" + startOffset +
+                    ") must be a multiple of " + alignment);
     }
 
     int code(byte[] buf, int off, int len);
