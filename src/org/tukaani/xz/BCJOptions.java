@@ -4,6 +4,8 @@
 
 package org.tukaani.xz;
 
+import org.tukaani.xz.simple.SimpleFilter;
+
 abstract class BCJOptions extends FilterOptions {
     private final int alignment;
     int startOffset = 0;
@@ -19,10 +21,7 @@ abstract class BCJOptions extends FilterOptions {
      */
     public void setStartOffset(int startOffset)
             throws UnsupportedOptionsException {
-        if ((startOffset & (alignment - 1)) != 0)
-            throw new UnsupportedOptionsException(
-                    "Start offset must be a multiple of " + alignment);
-
+        SimpleFilter.validateStartOffset(startOffset, alignment);
         this.startOffset = startOffset;
     }
 
