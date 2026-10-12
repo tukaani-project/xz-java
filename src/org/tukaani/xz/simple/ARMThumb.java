@@ -7,6 +7,8 @@ package org.tukaani.xz.simple;
 
 // BCJ filter for little endian ARM-Thumb instructions
 public final class ARMThumb implements SimpleFilter {
+    public static final int ALIGNMENT = 2;
+
     private final boolean isEncoder;
     private int pos;
 

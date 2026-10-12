@@ -7,6 +7,8 @@ package org.tukaani.xz.simple;
 
 // BCJ filter for little endian ARM instructions
 public final class ARM implements SimpleFilter {
+    public static final int ALIGNMENT = 4;
+
     private final boolean isEncoder;
     private int pos;
 

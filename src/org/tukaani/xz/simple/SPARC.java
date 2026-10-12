@@ -9,6 +9,8 @@ import org.tukaani.xz.common.ByteArrayView;
 
 // BCJ filter for SPARC instructions
 public final class SPARC implements SimpleFilter {
+    public static final int ALIGNMENT = 4;
+
     private final boolean isEncoder;
     private int pos;
 

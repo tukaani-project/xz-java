@@ -7,6 +7,8 @@ package org.tukaani.xz.simple;
 
 // BCJ filter for Itanium (IA-64) instructions
 public final class IA64 implements SimpleFilter {
+    public static final int ALIGNMENT = 16;
+
     private static final int[] BRANCH_TABLE = {
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,

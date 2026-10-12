@@ -9,6 +9,8 @@ import org.tukaani.xz.common.ByteArrayView;
 
 // BCJ filter for x86 instructions
 public final class X86 implements SimpleFilter {
+    public static final int ALIGNMENT = 1;
+
     private static final boolean[] MASK_TO_ALLOWED_STATUS
             = {true, true, true, false, true, false, false, false};
 

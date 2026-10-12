@@ -11,10 +11,8 @@ import org.tukaani.xz.simple.ARM;
  * BCJ filter for little endian ARM instructions.
  */
 public final class ARMOptions extends BCJOptions {
-    private static final int ALIGNMENT = 4;
-
     public ARMOptions() {
-        super(ALIGNMENT);
+        super(ARM.ALIGNMENT);
     }
 
     @Override

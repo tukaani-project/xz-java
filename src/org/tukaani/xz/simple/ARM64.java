@@ -9,6 +9,8 @@ import org.tukaani.xz.common.ByteArrayView;
 
 // BCJ filter for ARM64 (AArch64) instructions
 public final class ARM64 implements SimpleFilter {
+    public static final int ALIGNMENT = 4;
+
     private final boolean isEncoder;
     private int pos;
 

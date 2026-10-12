@@ -10,6 +10,8 @@ import org.tukaani.xz.common.ByteArrayView;
 //
 // See the comments in RISCVEncoder.java. Most of them aren't duplicated here.
 public final class RISCVDecoder implements SimpleFilter {
+    public static final int ALIGNMENT = 2;
+
     private int pos;
 
     public RISCVDecoder(int startPos) {
