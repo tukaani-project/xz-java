@@ -11,6 +11,35 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
     private final long filterID;
     private final int startOffset;
 
+    private static int getAlignment(long filterID) {
+        if (filterID == X86_FILTER_ID)
+            return X86.ALIGNMENT;
+
+        if (filterID == POWERPC_FILTER_ID)
+            return PowerPC.ALIGNMENT;
+
+        if (filterID == IA64_FILTER_ID)
+            return IA64.ALIGNMENT;
+
+        if (filterID == ARM_FILTER_ID)
+            return ARM.ALIGNMENT;
+
+        if (filterID == ARMTHUMB_FILTER_ID)
+            return ARMThumb.ALIGNMENT;
+
+        if (filterID == SPARC_FILTER_ID)
+            return SPARC.ALIGNMENT;
+
+        if (filterID == ARM64_FILTER_ID)
+            return ARM64.ALIGNMENT;
+
+        if (filterID == RISCV_FILTER_ID)
+            return RISCVDecoder.ALIGNMENT;
+
+        // This should never be reached.
+        throw new Error();
+    }
+
     BCJDecoder(long filterID, byte[] props)
             throws UnsupportedOptionsException {
         assert isBCJFilterID(filterID);
@@ -23,6 +52,7 @@ class BCJDecoder extends BCJCoder implements FilterDecoder {
             for (int i = 0; i < 4; ++i)
                 n |= (props[i] & 0xFF) << (i * 8);
 
+            SimpleFilter.validateStartOffset(n, getAlignment(filterID));
             startOffset = n;
         } else {
             throw new UnsupportedOptionsException(
