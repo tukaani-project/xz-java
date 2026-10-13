@@ -37,6 +37,10 @@ abstract class IndexBase {
     }
 
     void add(long unpaddedSize, long uncompressedSize) throws XZIOException {
+        if (unpaddedSize < Util.UNPADDED_SIZE_MIN
+                || unpaddedSize > Util.UNPADDED_SIZE_MAX)
+            throw invalidIndexException;
+
         blocksSum += (unpaddedSize + 3) & ~3;
         uncompressedSum += uncompressedSize;
         indexListSize += Util.getVLISize(unpaddedSize)

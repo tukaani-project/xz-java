@@ -10,6 +10,8 @@ public class Util {
     public static final int BLOCK_HEADER_SIZE_MAX = 1024;
     public static final long VLI_MAX = Long.MAX_VALUE;
     public static final int VLI_SIZE_MAX = 9;
+    public static final long UNPADDED_SIZE_MIN = 5;
+    public static final long UNPADDED_SIZE_MAX = VLI_MAX & ~3;
 
     public static int getVLISize(long num) {
         int size = 0;
