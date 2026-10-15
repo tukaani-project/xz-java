@@ -8,6 +8,9 @@ import org.tukaani.xz.common.Util;
 import org.tukaani.xz.XZIOException;
 
 abstract class IndexBase {
+    private static final long UNPADDED_SIZE_MIN = 5;
+    private static final long UNPADDED_SIZE_MAX = Util.VLI_MAX & ~3;
+
     private final XZIOException invalidIndexException;
     long blocksSum = 0;
     long uncompressedSum = 0;
@@ -37,6 +40,11 @@ abstract class IndexBase {
     }
 
     void add(long unpaddedSize, long uncompressedSize) throws XZIOException {
+        if (unpaddedSize < UNPADDED_SIZE_MIN
+                || unpaddedSize > UNPADDED_SIZE_MAX
+                || uncompressedSize < 0)
+            throw invalidIndexException;
+
         blocksSum += (unpaddedSize + 3) & ~3;
         uncompressedSum += uncompressedSize;
         indexListSize += Util.getVLISize(unpaddedSize)
