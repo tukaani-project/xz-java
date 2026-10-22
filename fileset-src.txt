@@ -1,5 +1,6 @@
 src/LZMADecDemo.java
 src/LZMAEncDemo.java
+src/SeekableXZInputStreamTest.java
 src/TestAllocSpeed.java
 src/XZDecDemo.java
 src/XZEncDemo.java

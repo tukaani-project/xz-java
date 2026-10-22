@@ -139,6 +139,7 @@
             </sequential>
         </macrodef>
 
+        <jar.program name="SeekableXZInputStreamTest"/>
         <jar.program name="TestAllocSpeed"/>
         <jar.program name="XZEncDemo"/>
         <jar.program name="XZDecDemo"/>
