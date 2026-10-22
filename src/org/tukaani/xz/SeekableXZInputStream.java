@@ -852,7 +852,7 @@ public class SeekableXZInputStream extends SeekableInputStream {
                 throw e;
         }
 
-        return size;
+        return size == 0 ? -1 : size;
     }
 
     /**
