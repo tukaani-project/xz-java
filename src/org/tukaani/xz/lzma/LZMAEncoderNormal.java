@@ -550,14 +550,14 @@ final class LZMAEncoderNormal extends LZMAEncoder {
                     int prevByte = lz.getByte(len, 1);
                     int price = matchAndLenPrice
                             + literalEncoder.getPrice(curByte, matchByte,
-                                                    prevByte, pos + len,
-                                                    nextState);
+                                                      prevByte, pos + len,
+                                                      nextState);
                     nextState.updateLiteral();
 
                     // Rep0
                     int nextPosState = (pos + len + 1) & posMask;
                     price += getLongRepAndLenPrice(0, len2,
-                                                nextState, nextPosState);
+                                                   nextState, nextPosState);
 
                     int i = optCur + len + 1 + len2;
                     while (optEnd < i)
