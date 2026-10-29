@@ -10,6 +10,7 @@ import org.tukaani.xz.SeekableXZInputStream;
 import org.tukaani.xz.XZOutputStream;
 
 public class SeekableXZInputStreamTest {
+    @SuppressWarnings("try")
     public static void main(String[] args) throws IOException {
         Path file = Files.createTempFile("seekable-xz-eof", ".xz");
         try {
